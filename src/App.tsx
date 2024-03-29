@@ -1,19 +1,22 @@
 import React from "react";
-import Header from "./components/views/Header";
+
 import AppRouter from "./components/routing/routers/AppRouter";
 
-/**
- * Happy coding!
- * React Template by Lucas Pelloni
- * Overhauled by Kyrill Hux
- * Updated by Marco Leder
- */
+//Import NextUIProvider component
+import {NextUIProvider} from "@nextui-org/react";
+import Login from "./components/views/Login";
+
 const App = () => {
   return (
-    <div>
-      <Header height="100" />
-      <AppRouter />
-    </div>
+    <NextUIProvider> {/* Wrap everything with NextUIProvider */}
+      <div>
+
+        {/*<Header height="100" />*/}
+        <AppRouter />
+        {/*<Login />*/}
+
+      </div>
+    </NextUIProvider>
   );
 };
 
