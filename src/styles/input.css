@@ -4,7 +4,7 @@
 
 body {
     /* Path to your image */
-    background-image: url('/src/styles/images/PeekSeekBackground.jpg');
+    background-image: url('../../public/images/PeekSeekBackground.jpg');
 
     /* Cover the entire page */
     background-size: cover;

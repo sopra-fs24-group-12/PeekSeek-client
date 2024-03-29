@@ -6,17 +6,22 @@ import {NextIcon} from "./NextIcon";
 import {PreviousIcon} from "./PreviousIcon";
 import {RepeatOneIcon} from "./RepeatOneIcon";
 import {ShuffleIcon} from "./ShuffleIcon";
-import PropTypes from "prop-types";
+
+// @ts-ignore
+import albumCover from '../../assets/album-cover.png';
+
+
 
 export default function Login() {
   const [liked, setLiked] = React.useState(false);
 
+
   return (
-    <section className="py-36">
-      <div className= "container flex items-center justify-center">
+    <section className="flex items-center justify-center min-h-screen">
+      <div className= "container max-w-lg mx-auto">
         <Card
           isBlurred
-          className="border-none bg-background/60 dark:bg-default-100/50 max-w-[610px]"
+          className="col-span-12 sm:col-span-4 h-[300px]"
           shadow="sm"
 
         >
@@ -28,7 +33,7 @@ export default function Login() {
                   className="object-cover"
                   height={200}
                   shadow="md"
-                  src="src/components/views/images/album-cover.png"
+                  src={albumCover}
                   width="100%"
                 />
               </div>
@@ -119,7 +124,9 @@ export default function Login() {
           </CardBody>
         </Card>
       </div>
+
     </section>
+
 
 
 
