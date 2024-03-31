@@ -5,7 +5,10 @@
   <meta charset="utf-8">
   <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="theme-color" content="#000000">
+  <!--<meta name="theme-color" content="#000000">
+  -->
+
+  <link rel="stylesheet" href="/output.css" >
   <!--
       manifest.json provides metadata used when your web app is added to the
       homescreen on Android. See https://developers.google.com/web/fundamentals/web-app-manifest/
@@ -21,15 +24,18 @@
       Learn how to configure a non-root public URL by running `npm run build` or 
       have a look at the documentation https://create-react-app.dev/docs/using-the-public-folder/.
     -->
-  <title>SoPra FS24 - Group XX</title>
+  <title>SoPra FS24 - Group 12</title>
 </head>
+<body style="margin: 0;">
 
-<body>
   <noscript>
     You need to enable JavaScript to run this app.
   </noscript>
-  <div id="app"></div>
-  <!--
+  <div class="background-image-container" style="width: 100%; position: relative; display: flex; align-items: center; justify-content: center;">
+    <img src="./images/background_image.jpg" style="position: absolute; object-fit: cover; width: 100%; height: 100%;"/>
+    <div id="app" style="position: absolute;"></div>
+  </div>
+  <!--s
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
 
@@ -40,5 +46,25 @@
       To create a production bundle, use `npm run build`.
     -->
 </body>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const container = document.querySelector(".background-image-container");
+
+    if (!container) {
+        return;
+      }
+      
+    let defaultScreenWidth = 0;
+    adjustContainerHeight();
+    window.addEventListener("resize", adjustContainerHeight);
+
+    function adjustContainerHeight() {
+      if (window.innerWidth !== defaultScreenWidth) {
+        defaultScreenWidth = window.innerWidth;
+        container.style.height = window.innerHeight + "px";
+      }
+    }
+});
+</script>
 
 </html>

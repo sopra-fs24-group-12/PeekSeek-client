@@ -1,93 +1,134 @@
-import React, { useState } from "react";
-import { api, handleError } from "helpers/api";
-import User from "models/User";
-import {useNavigate} from "react-router-dom";
-import { Button } from "components/ui/Button";
-import "styles/views/Login.scss";
-import BaseContainer from "components/ui/BaseContainer";
-import PropTypes from "prop-types";
+import React from "react";
+import { Card, CardBody, Image, Button, Slider, Skeleton } from "@nextui-org/react";
+import {HeartIcon} from "./HeartIcon";
+import {PauseCircleIcon} from "./PauseCircleIcon";
+import {NextIcon} from "./NextIcon";
+import {PreviousIcon} from "./PreviousIcon";
+import {RepeatOneIcon} from "./RepeatOneIcon";
+import {ShuffleIcon} from "./ShuffleIcon";
 
-/*
-It is possible to add multiple components inside a single file,
-however be sure not to clutter your files with an endless amount!
-As a rule of thumb, use one file per component and only add small,
-specific components that belong to the main one in the same file.
- */
-const FormField = (props) => {
-  return (
-    <div className="login field">
-      <label className="login label">{props.label}</label>
-      <input
-        className="login input"
-        placeholder="enter here.."
-        value={props.value}
-        onChange={(e) => props.onChange(e.target.value)}
-      />
-    </div>
-  );
-};
+// @ts-ignore
+import albumCover from '../../assets/album-cover.png';
 
-FormField.propTypes = {
-  label: PropTypes.string,
-  value: PropTypes.string,
-  onChange: PropTypes.func,
-};
 
-const Login = () => {
-  const navigate = useNavigate();
-  const [name, setName] = useState<string>(null);
-  const [username, setUsername] = useState<string>(null);
 
-  const doLogin = async () => {
-    try {
-      const requestBody = JSON.stringify({ username, name });
-      const response = await api.post("/users", requestBody);
+export default function Login() {
+  const [liked, setLiked] = React.useState(false);
 
-      // Get the returned user and update a new object.
-      const user = new User(response.data);
-
-      // Store the token into the local storage.
-      localStorage.setItem("token", user.token);
-
-      // Login successfully worked --> navigate to the route /game in the GameRouter
-      navigate("/game");
-    } catch (error) {
-      alert(
-        `Something went wrong during the login: \n${handleError(error)}`
-      );
-    }
-  };
 
   return (
-    <BaseContainer>
-      <div className="login container">
-        <div className="login form">
-          <FormField
-            label="Username"
-            value={username}
-            onChange={(un: string) => setUsername(un)}
-          />
-          <FormField
-            label="Name"
-            value={name}
-            onChange={(n) => setName(n)}
-          />
-          <div className="login button-container">
-            <Button
-              disabled={!username || !name}
-              width="100%"
-              onClick={() => doLogin()}
-            >
-              Login
-            </Button>
-          </div>
-        </div>
+    <section className="flex items-center justify-center min-h-screen">
+      <div className= "container max-w-lg mx-auto">
+        <Card
+          isBlurred
+          className="col-span-12 sm:col-span-4 h-[300px]"
+          shadow="sm"
+
+        >
+          <CardBody>
+            <div className="grid grid-cols-6 md:grid-cols-12 gap-6 md:gap-4 items-center justify-center">
+              <div className="relative col-span-6 md:col-span-4">
+                <Image
+                  alt="Album cover"
+                  className="object-cover"
+                  height={200}
+                  shadow="md"
+                  src={albumCover}
+                  width="100%"
+                />
+              </div>
+
+              <div className="flex flex-col col-span-6 md:col-span-8">
+                <div className="flex justify-between items-start">
+                  <div className="flex flex-col gap-0">
+                    <h3 className="font-semibold text-foreground/90">Daily Mix</h3>
+                    <p className="text-small text-foreground/80">12 Tracks</p>
+                    <h1 className="text-large font-medium mt-2">Frontend Radio</h1>
+                  </div>
+                  <Button
+                    isIconOnly
+                    className="text-default-900/60 data-[hover]:bg-foreground/10 -translate-y-2 translate-x-2"
+                    radius="full"
+                    variant="light"
+                    onPress={() => setLiked((v) => !v)}
+                  >
+                    <HeartIcon
+                      className={liked ? "[&>path]:stroke-transparent" : ""}
+                      fill={liked ? "currentColor" : "none"}
+                    />
+                  </Button>
+                </div>
+
+                <div className="flex flex-col mt-3 gap-1">
+                  <Slider
+                    aria-label="Music progress"
+                    classNames={{
+                      track: "bg-default-500/30",
+                      thumb: "w-2 h-2 after:w-2 after:h-2 after:bg-foreground",
+                    }}
+                    color="foreground"
+                    defaultValue={33}
+                    size="sm"
+                  />
+                  <div className="flex justify-between">
+                    <p className="text-small">1:23</p>
+                    <p className="text-small text-foreground/50">4:32</p>
+                  </div>
+                </div>
+
+                <div className="flex w-full items-center justify-center">
+                  <Button
+                    isIconOnly
+                    className="data-[hover]:bg-foreground/10"
+                    radius="full"
+                    variant="light"
+                  >
+                    <RepeatOneIcon className="text-foreground/80" />
+                  </Button>
+                  <Button
+                    isIconOnly
+                    className="data-[hover]:bg-foreground/10"
+                    radius="full"
+                    variant="light"
+                  >
+                    <PreviousIcon />
+                  </Button>
+                  <Button
+                    isIconOnly
+                    className="w-auto h-auto data-[hover]:bg-foreground/10"
+                    radius="full"
+                    variant="light"
+                  >
+                    <PauseCircleIcon size={54} />
+                  </Button>
+                  <Button
+                    isIconOnly
+                    className="data-[hover]:bg-foreground/10"
+                    radius="full"
+                    variant="light"
+                  >
+                    <NextIcon />
+                  </Button>
+                  <Button
+                    isIconOnly
+                    className="data-[hover]:bg-foreground/10"
+                    radius="full"
+                    variant="light"
+                  >
+                    <ShuffleIcon className="text-foreground/80" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+          </CardBody>
+        </Card>
       </div>
-    </BaseContainer>
-  );
-};
 
-/**
- * You can get access to the history object's properties via the useLocation, useNavigate, useParams, ... hooks.
- */
-export default Login;
+    </section>
+
+
+
+
+  );
+}
