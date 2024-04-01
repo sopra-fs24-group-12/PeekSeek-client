@@ -3,7 +3,7 @@
  * Initiate nextUI:
  */
 const {nextui} = require("@nextui-org/react");
-
+const colors = require('tailwindcss/colors')
 module.exports = {
   content: [
     "./src/**/*.{html,js,jsx,tsx,ts}",
@@ -11,6 +11,9 @@ module.exports = {
 
   ],
   theme: {
+    colors: {
+      gold: colors.yellow,
+    },
     extend: {},
   },
   darkMode: "class",
