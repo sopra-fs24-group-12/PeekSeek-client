@@ -11,8 +11,8 @@ interface BaseContainerProps {
 
 const BaseContainer: React.FC<BaseContainerProps> = ({ className, children, size = 'large' }) => {
   const containerClasses = {
-    large: 'w-full h-full overflow-auto',
-    small: 'max-w-sm h-auto overflow-auto',
+    large: 'w-full h-full overflow-auto shadow-lg',
+    small: 'max-w-sm h-auto overflow-auto shadow-lg',
   };
 
   const containerClass = containerClasses[size];
