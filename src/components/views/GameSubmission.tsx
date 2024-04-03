@@ -21,7 +21,7 @@ const GameSubmission = () => {
 
   return (
     <BaseContainer size="large">
-      <div className="flex flex-col md:flex-row w-full h-full">
+      <div className="flex flex-col items-center justify-center md:flex-row w-full h-full">
         {/* Container for the submission cards */}
         <div className="md:w-3/4 w-full p-4 flex flex-col">
           <div className="order-first grid lg:grid-cols-3 grid-cols-1 gap-4">
@@ -36,7 +36,7 @@ const GameSubmission = () => {
             ))}
           </div>
 
-          <div className="w-full flex justify-center p-4">
+          <div className="w-full flex justify-center pt-12 pb-4">
             <SubmitButton />
           </div>
         </div>

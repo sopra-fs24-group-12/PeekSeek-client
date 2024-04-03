@@ -8,7 +8,7 @@ const JoinButton: React.FC = () => {
       className="bg-gradient-to-tr from-blue-500 to-blue-200 text-black shadow-lg"
       onClick={() => {
         console.log("Submit action triggered");
-        // Place your submit logic here
+        // Place your logic here
       }}
     >
       Join
