@@ -21,10 +21,13 @@ const GameSubmission = () => {
 
   return (
     <BaseContainerLarge>
+      <div className='order-first text-center p-4'>
+        <h1 className='text-3xl font-bold text-gray-700'>Choose your Favourite Pick</h1>
+      </div>
       <div className="flex flex-col md:flex-row w-full h-full">
         {/* Container for the submission cards */}
         <div className="md:w-3/4 w-full p-4 flex flex-col">
-          <div className="order-first grid lg:grid-cols-3 grid-cols-1 gap-4">
+          <div className="grid lg:grid-cols-3 grid-cols-1 gap-4">
             {cardsData.map((card, index) => (
               <SubmissionCard
                 key={index}
