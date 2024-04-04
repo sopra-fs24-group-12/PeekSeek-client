@@ -10,7 +10,10 @@ const LandingPage = () => {
         Welcome to PeekSeek!
       </h1>
       <div className="flex-grow flex items-center justify-center mb-12">
-        <img src="/images/PeekSeek_logo.jpg" alt="PeekSeek Logo" style={{ width: '350px', height: '350px' }}/>
+        <img 
+          src="/images/PeekSeek_logo.jpg" 
+          alt="PeekSeek Logo" 
+          style={{ width: '350px', height: '350px' }}/>
       </div>
       <div className="w-full flex justify-center mb-4">
         <JoinButton/>

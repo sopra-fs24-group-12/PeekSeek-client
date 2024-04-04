@@ -5,6 +5,7 @@
   "dependencies": {
     "@nextui-org/react": "^2.2.10",
     "axios": "^1.6.7",
+    "boxicons": "^2.1.4",
     "eslint-config-react-app": "^7.0.1",
     "framer-motion": "^11.0.23",
     "next-themes": "^0.3.0",
