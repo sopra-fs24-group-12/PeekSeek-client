@@ -10,13 +10,13 @@ const BaseContainerLarge: React.FC<BaseContainerLargeProps> = ({ className, chil
   return (
     <div className={`fixed inset-0 flex justify-center items-center p-10 ${className || ''}`}>
       <Card
-        className="w-full h-auto"
+        className="w-full h-full"
         isBlurred
 
       >
         <CardBody
           className="flex flex-col justify-center items-center p-4"
-          style={{ maxHeight: 'calc(150vh)' }} // Adjust this value to ensure content fits without scrolling
+          style={{ maxHeight: 'calc(150vh)' }}
         >
           {children}
         </CardBody>
