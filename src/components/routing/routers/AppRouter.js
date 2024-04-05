@@ -7,6 +7,7 @@ import Login from "../../views/Login";
 import GameSubmission from "../../views/GameSubmission";
 import LandingPage from "../../views/LandingPage";
 import CreateLobby from "../../views/CreateLobby";
+import JoinPage from "../../views/JoinPage";
 
 /**
  * Main router of your application.
@@ -40,6 +41,10 @@ const AppRouter = () => {
 
         <Route path="/gamesub" element={<LoginGuard />}>
           <Route path="/gamesub" element={<GameSubmission />} />
+        </Route>
+
+        <Route path="/join" element={<LoginGuard />}>
+          <Route path="/join" element={<JoinPage />} />
         </Route>
 
         <Route path="/" element={

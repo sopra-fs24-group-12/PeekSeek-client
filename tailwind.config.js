@@ -16,6 +16,9 @@ module.exports = {
       },
    },
   },
+    "compilerOptions": {
+      "esModuleInterop": true,
+    },
   darkMode: "class",
   plugins: [nextui()],
 }
