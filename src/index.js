@@ -1,6 +1,10 @@
 import React from "react";
 import {createRoot} from "react-dom/client";
+<<<<<<< HEAD
 import "./input.css"
+=======
+//import "./styles/index.scss";
+>>>>>>> ebdeb8fda43ed305682c4617c11a3ec0c2ffe1b7
 import App from "./App";
 
 /**

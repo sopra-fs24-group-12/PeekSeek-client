@@ -5,8 +5,12 @@ import GameRouter from "./GameRouter";
 import {LoginGuard} from "../routeProtectors/LoginGuard";
 import Login from "../../views/Login";
 import GameSubmission from "../../views/GameSubmission";
+<<<<<<< HEAD
 import LandingPage from "../../views/LandingPage";
 import CreateLobby from "../../views/CreateLobby";
+=======
+import VotingResults from "../../views/VotingResults";
+>>>>>>> ebdeb8fda43ed305682c4617c11a3ec0c2ffe1b7
 
 /**
  * Main router of your application.
@@ -30,6 +34,7 @@ const AppRouter = () => {
           <Route path="/login" element={<Login/>} />
         </Route>
 
+<<<<<<< HEAD
         <Route path="/landing" element={<LoginGuard />}>
           <Route path="/landing" element={<LandingPage />} />
         </Route>
@@ -38,10 +43,19 @@ const AppRouter = () => {
           <Route path="/create" element={<CreateLobby />} />
         </Route>
 
+=======
+>>>>>>> ebdeb8fda43ed305682c4617c11a3ec0c2ffe1b7
         <Route path="/gamesub" element={<LoginGuard />}>
           <Route path="/gamesub" element={<GameSubmission />} />
         </Route>
 
+<<<<<<< HEAD
+=======
+        <Route path="/votingres" element={<LoginGuard />}>
+          <Route path="/votingres" element={<VotingResults />} />
+        </Route>
+
+>>>>>>> ebdeb8fda43ed305682c4617c11a3ec0c2ffe1b7
         <Route path="/" element={
           <Navigate to="/game" replace />
         }/>
