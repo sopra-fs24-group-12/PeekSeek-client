@@ -1,7 +1,7 @@
 import React from "react";
 import {Card, CardBody} from "@nextui-org/react";
 
-type ContainerSize = 'small' | 'large';
+type ContainerSize = 'landing' | 'small' | 'medium' | 'large';
 
 interface BaseContainerProps {
   className?: string;

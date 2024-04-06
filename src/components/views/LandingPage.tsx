@@ -5,7 +5,7 @@ import CreateButton from 'components/ui/CreateButton';
 
 const LandingPage = () => {
   return (
-    <BaseContainer size="small" className="flex flex-col items-center">
+    <BaseContainer size="landing" className="flex flex-col items-center">
       <h1 className="text-4xl font-bold text-center mt-8 mb-12">
         Welcome to PeekSeek!
       </h1>
