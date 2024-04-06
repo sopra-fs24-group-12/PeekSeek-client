@@ -7,7 +7,6 @@ import BackButton from 'components/ui/BackButton';
 import LobbyTable from 'components/ui/LobbyTable';
 
 const JoinPage = () => {
-  // ...useNavigate and other hooks or states
 
   return (
     <div className="relative min-h-screen w-screen">
@@ -19,9 +18,12 @@ const JoinPage = () => {
           size="small" 
           className="flex flex-col items-center">
           <LobbyTable />
-          <div className="w-full flex justify-center mt-8 mb-4">
-            <JoinButton />
-            <CreateButton />
+          <div className="w-full flex justify-center mt-24 mb-4">
+            <JoinButton
+              isDisabled={true}/>
+          </div>
+          <div className="w-full flex justify-center mb-4">
+            <CreateButton/>
           </div>
         </BaseContainer>
       </div>

@@ -15,50 +15,60 @@ export default function App() {
         aria-label="Example static collection table"
       >
         <TableHeader>
-          <TableColumn>NAME</TableColumn>
-          <TableColumn>ROLE</TableColumn>
-          <TableColumn>STATUS</TableColumn>
+          <TableColumn>LOBBY NAME</TableColumn>
+          <TableColumn>PARTICIPANTS</TableColumn>
         </TableHeader>
         <TableBody>
           <TableRow key="1">
-            <TableCell>Tony Reichert</TableCell>
-            <TableCell>CEO</TableCell>
-            <TableCell>Active</TableCell>
+            <TableCell>LOBBY A</TableCell>
+            <TableCell>4</TableCell>
           </TableRow>
           <TableRow key="2">
-            <TableCell>Zoey Lang</TableCell>
-            <TableCell>Technical Lead</TableCell>
-            <TableCell>Paused</TableCell>
+            <TableCell>LOBBY B</TableCell>
+            <TableCell>3</TableCell>
           </TableRow>
           <TableRow key="3">
-            <TableCell>Jane Fisher</TableCell>
-            <TableCell>Senior Developer</TableCell>
-            <TableCell>Active</TableCell>
+            <TableCell>LOBBY C</TableCell>
+            <TableCell>4</TableCell>
           </TableRow>
           <TableRow key="4">
-            <TableCell>William Howard</TableCell>
-            <TableCell>Community Manager</TableCell>
-            <TableCell>Vacation</TableCell>
+            <TableCell>LOBBY D</TableCell>
+            <TableCell>5</TableCell>
+          </TableRow>
+          <TableRow key="1">
+            <TableCell>LOBBY A</TableCell>
+            <TableCell>4</TableCell>
+          </TableRow>
+          <TableRow key="2">
+            <TableCell>LOBBY B</TableCell>
+            <TableCell>3</TableCell>
+          </TableRow>
+          <TableRow key="3">
+            <TableCell>LOBBY C</TableCell>
+            <TableCell>4</TableCell>
+          </TableRow>
+          <TableRow key="4">
+            <TableCell>LOBBY D</TableCell>
+            <TableCell>5</TableCell>
+          </TableRow>
+          <TableRow key="1">
+            <TableCell>LOBBY A</TableCell>
+            <TableCell>4</TableCell>
+          </TableRow>
+          <TableRow key="2">
+            <TableCell>LOBBY B</TableCell>
+            <TableCell>3</TableCell>
+          </TableRow>
+          <TableRow key="3">
+            <TableCell>LOBBY C</TableCell>
+            <TableCell>4</TableCell>
+          </TableRow>
+          <TableRow key="4">
+            <TableCell>LOBBY D</TableCell>
+            <TableCell>5</TableCell>
           </TableRow>
         </TableBody>
       </Table>
-      <RadioGroup 
-        label="Selection color"
-        orientation="horizontal"
-        value={selectedColor} 
-        onValueChange={setSelectedColor}
-      >
-        {colors.map((color) => (
-          <Radio
-            key={color}
-            color={"secondary"}  
-            value={color}
-            className="capitalize"
-          >
-            {color}
-          </Radio>  
-        ))}
-      </RadioGroup>
     </div>
   );
 }
