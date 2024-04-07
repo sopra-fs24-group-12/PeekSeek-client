@@ -10,7 +10,7 @@ const JoinPage = () => {
 
   return (
     <div className="relative min-h-screen w-screen">
-      <div className="absolute inset-x-0 top-4 left-4">
+      <div className="absolute top-4 left-4">
         <BackButton/>
       </div>
       <div className="flex justify-center items-center h-full">

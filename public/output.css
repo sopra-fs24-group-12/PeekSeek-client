@@ -666,6 +666,10 @@ video {
   bottom: 0px;
 }
 
+.bottom-16 {
+  bottom: 4rem;
+}
+
 .bottom-\[10\%\] {
   bottom: 10%;
 }
@@ -708,6 +712,10 @@ video {
 
 .left-\[5\%\] {
   left: 5%;
+}
+
+.right-0 {
+  right: 0px;
 }
 
 .right-1 {
@@ -944,6 +952,10 @@ video {
 
 .mt-2 {
   margin-top: 0.5rem;
+}
+
+.mt-24 {
+  margin-top: 6rem;
 }
 
 .mt-3 {
@@ -1273,6 +1285,10 @@ video {
 
 .w-\[25\%\] {
   width: 25%;
+}
+
+.w-\[35\%\] {
+  width: 35%;
 }
 
 .w-\[80\%\] {
@@ -2221,6 +2237,11 @@ video {
   background-color: hsl(var(--nextui-background) / 0.8);
 }
 
+.bg-blue-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(191 219 254 / var(--tw-bg-opacity));
+}
+
 .bg-content1 {
   --tw-bg-opacity: 1;
   background-color: hsl(var(--nextui-content1) / var(--nextui-content1-opacity, var(--tw-bg-opacity)));
@@ -2496,6 +2517,11 @@ video {
   padding-right: 1.5rem;
 }
 
+.px-8 {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
 .px-unit-0 {
   padding-left: var(--nextui-spacing-unit-0);
   padding-right: var(--nextui-spacing-unit-0);
@@ -2712,10 +2738,6 @@ video {
 
 .uppercase {
   text-transform: uppercase;
-}
-
-.capitalize {
-  text-transform: capitalize;
 }
 
 .\!text-danger {
