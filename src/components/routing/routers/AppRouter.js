@@ -5,9 +5,9 @@ import GameRouter from "./GameRouter";
 import {LoginGuard} from "../routeProtectors/LoginGuard";
 import Login from "../../views/Login";
 import GameSubmission from "../../views/GameSubmission";
-import LandingPage from "../../views/LandingPage";
+import Landing from "../../views/Landing";
 import CreateLobby from "../../views/CreateLobby";
-import JoinPage from "../../views/JoinPage";
+import Join from "../../views/Join";
 
 /**
  * Main router of your application.
@@ -32,7 +32,7 @@ const AppRouter = () => {
         </Route>
 
         <Route path="/landing" element={<LoginGuard />}>
-          <Route path="/landing" element={<LandingPage />} />
+          <Route path="/landing" element={<Landing />} />
         </Route>
 
         <Route path="/create" element={<LoginGuard />}>
@@ -44,7 +44,7 @@ const AppRouter = () => {
         </Route>
 
         <Route path="/join" element={<LoginGuard />}>
-          <Route path="/join" element={<JoinPage />} />
+          <Route path="/join" element={<Join />} />
         </Route>
 
         <Route path="/" element={

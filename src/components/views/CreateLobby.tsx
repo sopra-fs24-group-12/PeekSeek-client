@@ -7,16 +7,8 @@ import { useNavigate } from "react-router-dom";
 
 
 const CreateLobby = () => {
-/*
-  const radius = [
-    "full",
-    "lg",
-    "md",
-    "sm",
-    "none",
-  ];
-*/
 
+  
 return (
     <div className="relative min-h-screen w-screen">
       <div className="absolute inset-x-0 top-4 left-4">
