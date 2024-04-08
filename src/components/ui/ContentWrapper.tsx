@@ -8,11 +8,11 @@ interface ContentWrapperProps {
 const ContentWrapper: React.FC<ContentWrapperProps> = ({ children }) => {
   return (
     <Card
-      css={{ mw: "100%", p: "$6", boxShadow: "$lg" }} // Adjust maxWidth, padding, and boxShadow as needed
+      // css={{ mw: "100%", p: "$6", boxShadow: "$lg" }} // Adjust maxWidth, padding, and boxShadow as needed
       isBlurred
     >
       <CardBody
-        css={{ d: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}
+        // css={{ d: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}
       >
         {children}
       </CardBody>
