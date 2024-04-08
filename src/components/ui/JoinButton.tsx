@@ -10,6 +10,7 @@ const JoinButton: React.FC<JoinButtonProps> = ({ isDisabled }) => {
     <Button
       disabled={isDisabled}
       radius="full"
+      size = "lg"
       className="bg-gradient-to-tr from-blue-500 to-blue-200 text-black shadow-lg"
       onClick={() => {
         if (!isDisabled) {

@@ -3,7 +3,7 @@ import { api, handleError } from "helpers/api";
 import { useNavigate } from "react-router-dom";
 
 //import UI elements
-import BaseContainerLarge from "../ui/BaseContainerLarge";
+import BaseContainer from "../ui/BaseContainer";
 import SubmissionCard from "../ui/SubmissionCard";
 import Chat from "../ui/Chat";
 import SubmitButton from "../ui/SubmitButton";
@@ -20,7 +20,8 @@ const GameSubmission = () => {
   ];
 
   return (
-    <BaseContainerLarge>
+    <BaseContainer
+      size="large">
       <div className='order-first text-center p-4'>
         <h1 className='text-3xl font-bold text-gray-700'>Choose your Favourite Pick</h1>
       </div>
@@ -49,7 +50,7 @@ const GameSubmission = () => {
           <Chat />
         </div>
       </div>
-    </BaseContainerLarge>
+    </BaseContainer>
   );
 }
 

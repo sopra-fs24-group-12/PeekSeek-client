@@ -4,7 +4,7 @@ import AppRouter from "./components/routing/routers/AppRouter";
 
 //Import NextUIProvider component
 import {NextUIProvider} from "@nextui-org/react";
-import Login from "./components/views/Login";
+import Landing from "./components/views/Landing";
 
 const App = () => {
   return (

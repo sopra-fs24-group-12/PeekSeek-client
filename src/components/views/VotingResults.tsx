@@ -2,7 +2,7 @@ import React from "react";
 
 
 //import UI Elements
-import BaseContainerLarge from "../ui/BaseContainerLarge";
+import BaseContainer from "../ui/BaseContainer";
 import WinningCard from "../ui/WinningCard";
 import Leaderboard from "../ui/Leaderboard";
 import Timer from "../ui/Timer";
@@ -35,7 +35,8 @@ const VotingResults = () => {
 
 
   return (
-    <BaseContainerLarge>
+    <BaseContainer
+      size="large">
       <div className="flex flex-col items-center justify-center w-full">
         <WinningCard
           key={mockWinningSubmission.id}
@@ -57,7 +58,7 @@ const VotingResults = () => {
           </div>
         </div>
       </div>
-    </BaseContainerLarge>
+    </BaseContainer>
   );
 };
 

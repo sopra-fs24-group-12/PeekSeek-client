@@ -3,7 +3,6 @@ import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import {GameGuard} from "../routeProtectors/GameGuard";
 import GameRouter from "./GameRouter";
 import {LoginGuard} from "../routeProtectors/LoginGuard";
-import Login from "../../views/Login";
 import GameSubmission from "../../views/GameSubmission";
 import Landing from "../../views/Landing";
 import CreateLobby from "../../views/CreateLobby";
@@ -29,12 +28,12 @@ const AppRouter = () => {
           <Route path="/game/*" element={<GameRouter base="/game"/>} />
         </Route>
 
-        <Route path="/login" element={<LoginGuard />}>
-          <Route path="/login" element={<Login/>} />
-        </Route>
-
         <Route path="/landing" element={<LoginGuard />}>
           <Route path="/landing" element={<Landing />} />
+        </Route>
+
+        <Route path="/join" element={<LoginGuard />}>
+          <Route path="/join" element={<Join />} />
         </Route>
 
         <Route path="/create" element={<LoginGuard />}>
@@ -45,16 +44,12 @@ const AppRouter = () => {
           <Route path="/gamesub" element={<GameSubmission />} />
         </Route>
 
-        <Route path="/voting" element={<LoginGuard />}>
-          <Route path="/voting" element={<VotingResults />} />
-        </Route>
-
-        <Route path="/join" element={<LoginGuard />}>
-          <Route path="/join" element={<Join />} />
-        </Route>
-
         <Route path="/game" element={<LoginGuard />}>
           <Route path="/game" element={<Game />} />
+        </Route>
+
+        <Route path="/voting" element={<LoginGuard />}>
+          <Route path="/voting" element={<VotingResults />} />
         </Route>
 
         <Route path="/" element={
