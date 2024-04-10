@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@nextui-org/react";
-import { twMerge } from 'tailwind-merge'
+import { twMerge } from "tailwind-merge"
 
 const SubmitButton: React.FC = () => {
   return (
