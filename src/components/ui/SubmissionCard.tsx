@@ -12,11 +12,11 @@ interface SubmissionCardProps {
 
 const SubmissionCard: React.FC<SubmissionCardProps> =
   ({
-     cityName,
-     quest,
-     anonymousName,
-     imageUrl,
-   }) => {
+    cityName,
+    quest,
+    anonymousName,
+    imageUrl,
+  }) => {
     return (
       <Card className="py-4 mx-auto max-w-sm">
         <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
