@@ -1,9 +1,8 @@
 import React from "react";
 import { Card, CardHeader, CardBody, Image } from "@nextui-org/react";
 
-
 // @ts-ignore
-import placeholder from '../../assets/modelSubmission.png';
+import placeholder from "../../assets/modelSubmission.png";
 interface SubmissionCardProps {
   cityName: string;
   quest: string;
@@ -38,5 +37,3 @@ const WinningCard: React.FC<SubmissionCardProps> =
   };
 
 export default WinningCard;
-
-
