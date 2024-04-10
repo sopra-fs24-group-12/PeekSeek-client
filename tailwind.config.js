@@ -12,7 +12,7 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: {
-          'background': "url('/public/images/background_image.jpg')",
+          'background': "url('/public/images/backgroundimage.jpg')",
       },
    },
   },
