@@ -4,13 +4,12 @@ import { Button } from "@nextui-org/react";
 const BackButton: React.FC = () => {
   return (
     <Button
-      className="items-center"
       radius="full"
       size = "lg"
-      color = "default"
+      className="shadow-lg"
       onClick={() => {
-        console.log("Going back");
-        // Pl ace your submit logic here
+        console.log("Looking to create a lobby");
+        // Place your logic here
       }}
     >
       Back

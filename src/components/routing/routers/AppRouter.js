@@ -3,12 +3,14 @@ import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import {GameGuard} from "../routeProtectors/GameGuard";
 import GameRouter from "./GameRouter";
 import {LoginGuard} from "../routeProtectors/LoginGuard";
-import GameSubmission from "../../views/GameSubmission";
 import Landing from "../../views/Landing";
 import CreateLobby from "../../views/CreateLobby";
 import Join from "../../views/Join";
+import Lobby from "../../views/Lobby";
 import Game from "../../views/Game";
+import GameSubmission from "../../views/GameSubmission";
 import VotingResults from "../../views/VotingResults";
+
 
 /**
  * Main router of your application.
@@ -40,12 +42,16 @@ const AppRouter = () => {
           <Route path="/create" element={<CreateLobby />} />
         </Route>
 
-        <Route path="/gamesub" element={<LoginGuard />}>
-          <Route path="/gamesub" element={<GameSubmission />} />
+        <Route path="/lobby" element={<LoginGuard />}>
+          <Route path="/lobby" element={<Lobby />} />
         </Route>
 
         <Route path="/game" element={<LoginGuard />}>
           <Route path="/game" element={<Game />} />
+        </Route>
+
+        <Route path="/gamesub" element={<LoginGuard />}>
+          <Route path="/gamesub" element={<GameSubmission />} />
         </Route>
 
         <Route path="/voting" element={<LoginGuard />}>
@@ -53,7 +59,7 @@ const AppRouter = () => {
         </Route>
 
         <Route path="/" element={
-          <Navigate to="/game" replace />
+          <Navigate to="/landing" replace />
         }/>
 
       </Routes>

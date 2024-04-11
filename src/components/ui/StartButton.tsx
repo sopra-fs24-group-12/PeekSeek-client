@@ -1,20 +1,21 @@
 import React from "react";
 import { Button } from "@nextui-org/react";
 
-const GameButton: React.FC = () => {
+const StartButton: React.FC = () => {
   return (
     <Button
       radius="full"
       size = "lg"
-      className="bg-gradient-to-tr from-brown-500 to-brown-200 text-black shadow-lg"
+      color = "default"
+      className="bg-gradient-to-tr from-green-600 to-green-600 mr-6 shadow-lg"
       onClick={() => {
-        console.log("Giving up on game");
+        console.log("Leaving lobby");
         // Place your logic here
       }}
     >
-      Cannot find it!
+      Start
     </Button>
   );
 };
 
-export default GameButton;
+export default StartButton;
