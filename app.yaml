@@ -20,3 +20,6 @@ handlers:
   - url: /.*
     static_files: build/index.html
     upload: build/index.html
+#    add public/images to app engine
+  - url: /images
+    static_dir: public/images
