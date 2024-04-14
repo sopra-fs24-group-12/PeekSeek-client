@@ -14,9 +14,14 @@ handlers:
   - url: /(.*\.(json|ico))$
     static_files: build/\1
     upload: build/.*\.(json|ico)$
+    #    add public/images to app engine
+  - url: /images
+    static_dir: public/images
   - url: /
     static_files: build/index.html
     upload: build/index.html
   - url: /.*
     static_files: build/index.html
     upload: build/index.html
+
+
