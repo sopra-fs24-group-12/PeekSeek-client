@@ -2374,7 +2374,7 @@ video {
 }
 
 .bg-background {
-  background-image: url('/public/backgroundimage.jpg');
+  background-image: url('/public/images/backgroundimage.jpg');
 }
 
 .bg-gradient-to-tr {
@@ -4423,7 +4423,7 @@ video {
 
 .after\:bg-background::after {
   content: var(--tw-content);
-  background-image: url('/public/backgroundimage.jpg');
+  background-image: url('/public/images/backgroundimage.jpg');
 }
 
 .after\:text-danger::after {
