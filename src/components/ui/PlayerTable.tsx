@@ -3,7 +3,7 @@ import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from 
 
 const PlayerTable: React.FC = () => {
   return (
-    <div className="w-[250px] max-w-2xl ml-8 shadow-lg">
+    <div className="w-[250px] max-w-2xl ml-8 shadow-lg items-center">
       <Table color={"default"} aria-label="Example static collection table">
         <TableHeader>
           <TableColumn>Players</TableColumn>

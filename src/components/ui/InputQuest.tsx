@@ -4,26 +4,35 @@ import ContentWrapper from "./ContentWrapper";
 
 const InputQuest: React.FC = () => {
   // State for multiple quests
-  const [quests, setQuests] = React.useState(['', '', '', '']); // Initial state with four empty strings for four inputs
+  const [quests, setQuests] = React.useState(["", "", "", ""]); // Initial state: 4 empty input fields
 
   // Handler for input change
   const handleQuestChange = (index: number, value: string) => {
+    console.log(`Input changed at index ${index} with value: '${value}'`);
+
     const newQuests = [...quests];
     newQuests[index] = value;
+    
+    // Add a new input field if typing in the last one
+    if (index === quests.length - 1 && value !== "") {
+      newQuests.push("");
+    }
+
     setQuests(newQuests);
   };
 
+
   return (
     <ContentWrapper>
-        <h6 className="font-bold text-center mt-2 mb-4">Your Quests:</h6>
+      <h6 className="font-bold text-center mt-2 mb-4">Your Quests</h6>
       {quests.map((quest, index) => (
         <Input
-          key={index}
           isClearable
+          key={index}
           placeholder={`Quest #${index + 1}`}
           value={quest}
           onChange={(e) => handleQuestChange(index, e.target.value)}
-          className="mb-2 mr-14"
+          className="mb-2 ml-4 mr-4"
         />
       ))}
     </ContentWrapper>

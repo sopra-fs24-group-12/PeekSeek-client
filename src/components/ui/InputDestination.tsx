@@ -6,7 +6,7 @@ const InputDestination: React.FC = () => {
   return (
     <div className="w-[400px] h-[120px] px-8 rounded-2xl flex flex-col justify-center items-center bg-gradient-to-tr from-gray-300 to-gray-200 text-white shadow-lg">
         <label htmlFor="destination" className="flex text-black mb-2 font-semibold text-sm uppercase">
-        Your destination:
+        Your destination
       </label>
       <Input
         isClearable

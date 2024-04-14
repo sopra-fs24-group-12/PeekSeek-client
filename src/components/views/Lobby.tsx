@@ -1,17 +1,15 @@
 import React, { useState } from "react";
 import { api, handleError } from "helpers/api";
 import { useNavigate } from "react-router-dom";
-import {Input} from "@nextui-org/react"; 
 import BaseContainer from "../ui/BaseContainer";
 import LeaveButton from "../ui/LeaveButton";
 import StartButton from "../ui/StartButton";
 import PlayerTable from "../ui/PlayerTable";
-import InputDestination from "components/ui/InputDestination";
+import AutocompleteDestination from "../ui/AutocompleteDestination";
 import InputQuest from "components/ui/InputQuest"
-import ContentWrapper from "components/ui/ContentWrapper";
+
 
 const Lobby = () => {
-// Create a state for each input field if needed
     const [quest, setQuest] = React.useState("");
   
     return (
@@ -22,7 +20,7 @@ const Lobby = () => {
             <PlayerTable />
           </div>
           <div className="flex-1 items-center justify-center">
-            <InputDestination />
+            <AutocompleteDestination />
             </div>
           <div className="flex flex-col w-full items-end mr-8">
             <InputQuest />
