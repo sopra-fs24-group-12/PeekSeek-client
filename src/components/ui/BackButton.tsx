@@ -10,7 +10,7 @@ const BackButton: React.FC = () => {
       color = "default"
       onClick={() => {
         console.log("Going back");
-        // Pl ace your submit logic here
+        // Place your submit logic here
       }}
     >
       Back
