@@ -7,6 +7,8 @@ import LobbyTable from "components/ui/LobbyTable";
 
 const JoinLobby = () => {
 
+  const staticMapImageUrl = "URL_STATIC_MAP";
+
   return (
     <div className="relative min-h-screen w-screen">
       <div className="absolute top-4 left-4">

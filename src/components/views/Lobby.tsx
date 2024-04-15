@@ -10,30 +10,39 @@ import InputQuest from "components/ui/InputQuest"
 
 
 const Lobby = () => {
-    const [quest, setQuest] = React.useState("");
-  
-    return (
-      <BaseContainer size="large" className="flex flex-col items-center p-4">
-        <h1 className="text-3xl font-bold text-gray-700 my-4 text-center">Lobby Name</h1>
-        <div className="flex w-full">
-          <div className="flex flex-col w-full items-start">
-            <PlayerTable />
-          </div>
-          <div className="flex-1 items-center justify-center">
-            <AutocompleteDestination />
-            </div>
-          <div className="flex flex-col w-full items-end mr-8">
-            <InputQuest />
-            </div>
-            <div className="w-full flex justify-between px-12 absolute bottom-16">
-                <LeaveButton />
-                <StartButton />
+  const [quest, setQuest] = React.useState("");
+
+  return (
+    <BaseContainer 
+      size="large" 
+      className="flex flex-col items-center p-4">
+      <h1 className="text-3xl font-bold text-gray-700 my-4 text-center">Lobby Name</h1>
+      <div className="flex w-full justify-between gap-8">
+        <div className="flex-1 mr-8">
+          <PlayerTable />
+        </div>
+        <div className="flex flex-col items-center gap-8">
+          <AutocompleteDestination />
+          <div className="rounded-full overflow-hidden shadow-lg" 
+            style={{ width: "400px", height: "400px" }}>
+            <img
+              // src={staticMapImageUrl}
+              src="/images/placeholder_map.jpg" 
+              alt="Static Map"
+              className="object-cover w-full h-full"
+            />
           </div>
         </div>
-      </BaseContainer>
-    );
-  };
-  
-  export default Lobby;
+        <div className="flex-1 mr-8">
+          <InputQuest />
+        </div>
+        <div className="w-full flex justify-between px-12 absolute bottom-16">
+          <LeaveButton />
+          <StartButton />
+        </div>
+      </div>
+    </BaseContainer>
+  );
+};
 
-  
+export default Lobby;
