@@ -5,7 +5,8 @@ import GameRouter from "./GameRouter";
 import {LoginGuard} from "../routeProtectors/LoginGuard";
 import Landing from "../../views/Landing";
 import CreateLobby from "../../views/CreateLobby";
-import Join from "../../views/Join";
+import JoinLobby from "../../views/JoinLobby";
+import JoinUser from "../../views/JoinUser";
 import Lobby from "../../views/Lobby";
 import Game from "../../views/Game";
 import GameSubmission from "../../views/GameSubmission";
@@ -34,8 +35,12 @@ const AppRouter = () => {
           <Route path="/landing" element={<Landing />} />
         </Route>
 
-        <Route path="/join" element={<LoginGuard />}>
-          <Route path="/join" element={<Join />} />
+        <Route path="/joinlobby" element={<LoginGuard />}>
+          <Route path="/joinlobby" element={<JoinLobby />} />
+        </Route>
+
+        <Route path="/joinuser" element={<LoginGuard />}>
+          <Route path="/joinuser" element={<JoinUser />} />
         </Route>
 
         <Route path="/create" element={<LoginGuard />}>
