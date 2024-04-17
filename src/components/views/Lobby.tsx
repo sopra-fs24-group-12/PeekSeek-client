@@ -5,8 +5,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import BaseContainer from "../ui/BaseContainer";
 import StartButton from "../ui/StartButton";
 import PlayerTable from "../ui/PlayerTable";
-import { Button, Input } from "@nextui-org/react";
+import { Autocomplete, AutocompleteItem, Button, Input } from "@nextui-org/react";
 import ContentWrapper from "components/ui/ContentWrapper";
+import { useAsyncList } from "react-stately";
+import { SearchIcon } from "components/ui/SearchIcon";
+
 
 const Lobby = () => {
   const [quests, setQuests] = React.useState(["", "", "", ""]);
@@ -14,18 +17,11 @@ const Lobby = () => {
   const {lobbyId} =  useParams();
   const navigate = useNavigate();
   const [lobbyName, setLobbyName] = useState("");
-  //const [cityName, setCityName] = useState("Zürich");
   const [admin, setAdmin] = useState(true);
   const [roundDurationSeconds, setRoundDurationSeconds] = useState();
   const [lat, setLat] = useState("");
   const [lng, setLng] = useState("");
-
   const [cityName, setCityName] = useState("");
-
-  // Define the handleChange function to update cityName
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCityName(event.target.value);
-  };
 
   function filterNonEmptyQuests(): string[] {
     const nonEmptyQuests = quests.filter((str) => {
@@ -46,7 +42,7 @@ const Lobby = () => {
   };
 
   useEffect(() => {
-    localStorage.setItem("token", "89a26f05-cd07-46c5-881c-8afb5264ef1a");
+    localStorage.setItem("token", "0d1454b7-6dba-4cac-a804-248d3bb52e0d");
     localStorage.setItem("username", "admin");
 
     async function fetchData() {
@@ -113,6 +109,7 @@ const Lobby = () => {
     };
   }, [])
 
+
   const InputQuests = () => {
     const handleQuestChange = (index: number, value: string) => {
       console.log(`Input changed at index ${index} with value: '${value}'`);
@@ -128,6 +125,12 @@ const Lobby = () => {
       setQuests(newQuests);
     };
 
+    const deleteQuest = (index: number) => {
+      const newQuests = [...quests];
+      newQuests.splice(index, 1);
+      setQuests(newQuests);
+    }
+
     return (
       <ContentWrapper>
         <h6 className="font-bold text-center mt-2 mb-4">Your Quests</h6>
@@ -139,7 +142,7 @@ const Lobby = () => {
             value={quest}
             onChange={(e) => handleQuestChange(index, e.target.value)}
             className="mb-2 ml-4 mr-4"
-            onClear={() => handleQuestChange(index, '')}
+            onClear={() => deleteQuest(index)}
             disabled={!admin}
           />
         ))}
@@ -148,9 +151,8 @@ const Lobby = () => {
   };
 
   const CityInputField: React.FC = () => {
-    // Initialize the state for cityName
+    //const [cityName, setCityName] = useState("");
 
-    // Define the handleChange function
     const handleChange = (event) => {
       // Update the cityName state with the new value
       setCityName(event.target.value);
@@ -170,12 +172,13 @@ const Lobby = () => {
     );
   };
 
+
   const SaveButton: React.FC = () => {
     async function save() {
       const headers = {
         "Authorization": localStorage.getItem("token")
       };
-      const body = JSON.stringify({quests: filterNonEmptyQuests(), gameLocation: cityName, roundDurationSeconds});
+      const body = JSON.stringify({quests: filterNonEmptyQuests(), gameLocation: cityName || "Zürich", roundDurationSeconds});
       try {
         await api.put("/lobbies/" + lobbyId, body, { headers });
       } catch(error) {
@@ -236,7 +239,7 @@ const Lobby = () => {
 
     return (
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-        <div style={{ height: "60px" }}></div>
+        <div style={{ height: "25px" }}></div>
         <div style={{ borderRadius: "50%", overflow: "hidden", width: "550px", height: "550px" }}>
           <img src={imageUrl} alt="Google Map" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         </div>
