@@ -1,6 +1,6 @@
 import React from "react";
-import {Input} from "@nextui-org/react";
 import {SearchIcon} from "./SearchIcon";
+import { Input, Dropdown, DropdownMenu, DropdownItem } from "@nextui-org/react";
 
 const InputDestination: React.FC = () => {
   return (

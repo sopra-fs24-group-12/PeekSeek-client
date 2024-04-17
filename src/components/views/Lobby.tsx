@@ -7,6 +7,7 @@ import StartButton from "../ui/StartButton";
 import PlayerTable from "../ui/PlayerTable";
 import AutocompleteDestination from "../ui/AutocompleteDestination";
 import InputQuest from "components/ui/InputQuest"
+import DropdownDestination from "components/ui/DropdownDestination"
 
 
 const Lobby = () => {
@@ -22,7 +23,7 @@ const Lobby = () => {
           <PlayerTable />
         </div>
         <div className="flex flex-col items-center gap-8">
-          <AutocompleteDestination />
+          <DropdownDestination />
           <div className="rounded-full overflow-hidden shadow-lg" 
             style={{ width: "400px", height: "400px" }}>
             <img
