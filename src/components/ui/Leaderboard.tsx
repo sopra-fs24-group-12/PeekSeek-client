@@ -1,6 +1,6 @@
-import React from 'react';
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue } from '@nextui-org/react';
-import ContentWrapper from './ContentWrapper';
+import React from "react";
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue } from "@nextui-org/react";
+import ContentWrapper from "./ContentWrapper";
 
 interface LeaderboardEntry {
   rank: number;
@@ -15,9 +15,9 @@ interface LeaderboardProps {
 
 const Leaderboard: React.FC<LeaderboardProps> = ({ data }) => {
   const columns = [
-    { key: 'rank', label: 'RANK' },
-    { key: 'name', label: 'NAME' },
-    { key: 'totalPoints', label: 'TOTAL POINTS' },
+    { key: "rank", label: "RANK" },
+    { key: "name", label: "NAME" },
+    { key: "totalPoints", label: "TOTAL POINTS" },
   ];
 
 
@@ -46,14 +46,15 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ data }) => {
             <TableRow key={item.rank}>
               {columnKey => {
                 // Special handling for the 'totalPoints' to style the bonus points part
-                if (columnKey === 'totalPoints') {
+                if (columnKey === "totalPoints") {
                   return (
                     <TableCell>
-                      {item.basePoints} <span style={{ color: 'green' }}>+ {item.bonusPoints}</span>
+                      {item.basePoints} <span style={{ color: "green" }}>+ {item.bonusPoints}</span>
                     </TableCell>
                   );
                 }
                 // Default rendering for other cells
+              
                 return <TableCell>{getKeyValue(item, columnKey)}</TableCell>;
               }}
             </TableRow>

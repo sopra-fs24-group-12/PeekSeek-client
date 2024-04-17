@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface TimerProps {
   initialTimeInSeconds: number;
@@ -42,8 +42,8 @@ const Timer: React.FC<TimerProps> = ({ initialTimeInSeconds, timeInSeconds, titl
             transform={`rotate(-90 ${viewBoxSize / 2} ${viewBoxSize / 2})`} // Center of the new SVG size
           />
         </svg>
-        <span className="absolute text-red-600 font-bold text-2xl" style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-          {String(Math.floor(timeInSeconds / 60)).padStart(2, '0')}:{String(timeInSeconds % 60).padStart(2, '0')}
+        <span className="absolute text-red-600 font-bold text-2xl" style={{ top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
+          {String(Math.floor(timeInSeconds / 60)).padStart(2, "0")}:{String(timeInSeconds % 60).padStart(2, "0")}
         </span>
       </div>
     </div>

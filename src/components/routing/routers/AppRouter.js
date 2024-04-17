@@ -10,6 +10,7 @@ import Lobby from "../../views/Lobby";
 import Game from "../../views/Game";
 import GameSubmission from "../../views/GameSubmission";
 import VotingResults from "../../views/VotingResults";
+import GameSummary from "../../views/GameSummary";
 
 
 /**
@@ -35,6 +36,10 @@ const AppRouter = () => {
         </Route>
 
         <Route path="/lobby/:lobbyId" element={<Lobby />} />
+
+        <Route path="/gamesummary" element={<LoginGuard />}>
+          <Route path="/gamesummary" element={<GameSummary />} />
+        </Route>
 
         <Route path="/game" element={<LoginGuard />}>
           <Route path="/game" element={<Game />} />

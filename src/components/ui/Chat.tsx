@@ -3,13 +3,13 @@ import { Card, CardHeader, CardBody } from "@nextui-org/react";
 
 const Chat: React.FC = () => {
   return (
-    <Card className="h-full mx-auto max-w-md overflow-hidden" style={{ maxHeight: '610px' }}>
+    <Card className="h-full mx-auto max-w-md overflow-hidden" style={{ maxHeight: "610px" }}>
       <CardHeader className="justify-center">
         <h3 className="text-xl font-bold">Chat</h3>
       </CardHeader>
       <CardBody
         className="overflow-y-auto"
-        style={{ maxHeight: '500px' }} // Sets a specific height for the chat body
+        style={{ maxHeight: "500px" }} // Sets a specific height for the chat body
       >
         {/* Placeholder content - adjust as needed for your chat UI */}
         <div className="p-4">

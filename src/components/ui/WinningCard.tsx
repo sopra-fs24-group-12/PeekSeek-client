@@ -1,9 +1,8 @@
 import React from "react";
 import { Card, CardHeader, CardBody, Image } from "@nextui-org/react";
 
-
 // @ts-ignore
-import placeholder from '../../assets/modelSubmission.png';
+import placeholder from "../../assets/modelSubmission.png";
 interface SubmissionCardProps {
   cityName: string;
   quest: string;
@@ -13,11 +12,11 @@ interface SubmissionCardProps {
 
 const WinningCard: React.FC<SubmissionCardProps> =
   ({
-     cityName,
-     quest,
-     anonymousName,
-     imageUrl,
-   }) => {
+    cityName,
+    quest,
+    anonymousName,
+    imageUrl,
+  }) => {
     return (
       <Card className="py-4 mx-auto max-w-sm">
         <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
@@ -38,5 +37,3 @@ const WinningCard: React.FC<SubmissionCardProps> =
   };
 
 export default WinningCard;
-
-

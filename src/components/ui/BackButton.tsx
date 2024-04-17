@@ -8,8 +8,8 @@ const BackButton: React.FC = () => {
       size = "lg"
       className="shadow-lg"
       onClick={() => {
-        console.log("Looking to create a lobby");
-        // Place your logic here
+        console.log("Going back");
+        // Place your submit logic here
       }}
     >
       Back
