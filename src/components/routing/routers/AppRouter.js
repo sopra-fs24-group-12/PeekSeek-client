@@ -26,25 +26,15 @@ const AppRouter = () => {
     <BrowserRouter>
       <Routes>
 
-        <Route path="/game/*" element={<GameGuard />}>
-          <Route path="/game/*" element={<GameRouter base="/game"/>} />
-        </Route>
+        <Route path="/landing" element={<Landing />} />
 
-        <Route path="/landing" element={<LoginGuard />}>
-          <Route path="/landing" element={<Landing />} />
-        </Route>
-
-        <Route path="/join" element={<LoginGuard />}>
-          <Route path="/join" element={<Join />} />
-        </Route>
+        <Route path="/join" element={<Join />} />
 
         <Route path="/create" element={<LoginGuard />}>
           <Route path="/create" element={<CreateLobby />} />
         </Route>
 
-        <Route path="/lobby" element={<LoginGuard />}>
-          <Route path="/lobby" element={<Lobby />} />
-        </Route>
+        <Route path="/lobby/:lobbyId" element={<Lobby />} />
 
         <Route path="/game" element={<LoginGuard />}>
           <Route path="/game" element={<Game />} />
