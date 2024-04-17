@@ -4,9 +4,10 @@ import { Button } from "@nextui-org/react";
 const BackButton: React.FC = () => {
   return (
     <Button
+      className="items-center"
       radius="full"
       size = "lg"
-      className="shadow-lg"
+      color = "default"
       onClick={() => {
         console.log("Going back");
         // Place your submit logic here
