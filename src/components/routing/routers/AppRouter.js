@@ -3,13 +3,15 @@ import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import {GameGuard} from "../routeProtectors/GameGuard";
 import GameRouter from "./GameRouter";
 import {LoginGuard} from "../routeProtectors/LoginGuard";
-import GameSubmission from "../../views/GameSubmission";
 import Landing from "../../views/Landing";
 import CreateLobby from "../../views/CreateLobby";
 import Join from "../../views/Join";
+import Lobby from "../../views/Lobby";
 import Game from "../../views/Game";
+import GameSubmission from "../../views/GameSubmission";
 import VotingResults from "../../views/VotingResults";
 import GameSummary from "../../views/GameSummary";
+
 
 /**
  * Main router of your application.
@@ -25,25 +27,15 @@ const AppRouter = () => {
     <BrowserRouter>
       <Routes>
 
-        <Route path="/game/*" element={<GameGuard />}>
-          <Route path="/game/*" element={<GameRouter base="/game"/>} />
-        </Route>
+        <Route path="/landing" element={<Landing />} />
 
-        <Route path="/landing" element={<LoginGuard />}>
-          <Route path="/landing" element={<Landing />} />
-        </Route>
-
-        <Route path="/join" element={<LoginGuard />}>
-          <Route path="/join" element={<Join />} />
-        </Route>
+        <Route path="/join" element={<Join />} />
 
         <Route path="/create" element={<LoginGuard />}>
           <Route path="/create" element={<CreateLobby />} />
         </Route>
 
-        <Route path="/gamesub" element={<LoginGuard />}>
-          <Route path="/gamesub" element={<GameSubmission />} />
-        </Route>
+        <Route path="/lobby/:lobbyId" element={<Lobby />} />
 
         <Route path="/gamesummary" element={<LoginGuard />}>
           <Route path="/gamesummary" element={<GameSummary />} />
@@ -53,12 +45,16 @@ const AppRouter = () => {
           <Route path="/game" element={<Game />} />
         </Route>
 
+        <Route path="/gamesub" element={<LoginGuard />}>
+          <Route path="/gamesub" element={<GameSubmission />} />
+        </Route>
+
         <Route path="/voting" element={<LoginGuard />}>
           <Route path="/voting" element={<VotingResults />} />
         </Route>
 
         <Route path="/" element={
-          <Navigate to="/game" replace />
+          <Navigate to="/landing" replace />
         }/>
 
       </Routes>
