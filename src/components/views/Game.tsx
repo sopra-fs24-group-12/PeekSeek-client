@@ -25,7 +25,7 @@ const libs: Library[] = ["places"];
 
 function MyGoogleMap() {
 
-  const {lobbyId} =  useParams();
+  const {gameId} =  useParams();
   const navigate = useNavigate();
   const [quest, setQuest] = useState("Landmark");
   const [cityName, setCityName] = useState("Zurich, Switzerland");
@@ -47,34 +47,34 @@ function MyGoogleMap() {
   const [streetView, setStreetView] = useState(null);
 
   
-  // useEffect(() => {
-  //
-  //   //only for dev purposes
-  //   localStorage.setItem("token", "1");
-  //   localStorage.setItem("username", "admin");
-  //
-  //   async function fetchData() {
-  //     const headers = {
-  //       "Authorization": localStorage.getItem("token"),
-  //     };
-  //     const response = await api.get(`/games/${lobbyId}/round`, { headers });
-  //     console.log("API Response:", response.data);
-  //
-  //
-  //     setQuest(response.data.currentRound);
-  //     setCityName(response.data.geoCodingData.formAddress);
-  //     setRoundDurationSeconds(response.data.roundDurationSeconds);
-  //     setLat(response.data.geoCodingData.lat);
-  //     setLng(response.data.geoCodingData.lng);
-  //     setResLatNe(response.data.geoCodingData.resLatNe);
-  //     setResLngNe(response.data.geoCodingData.resLngNe);
-  //     setResLatSw(response.data.geoCodingData.resLatSw);
-  //     setResLngSw(response.data.geoCodingData.resLngSw);
-  //     // setMapCenter({lat,lng});
-  //
-  //   }
-  //   fetchData();
-  // }, [])
+  useEffect(() => {
+
+    //only for dev purposes
+    localStorage.setItem("token", "79ce7a12-1083-44eb-906d-6844a741656e");
+    localStorage.setItem("username", "silvan");
+
+    async function fetchData() {
+      const headers = {
+        "Authorization": localStorage.getItem("token"),
+      };
+      const response = await api.get(`/games/${gameId}/round`, { headers });
+      console.log("API Response:", response.data);
+
+
+      setQuest(response.data.quest);
+      setCityName(response.data.geoCodingData.formAddress);
+      setRoundDurationSeconds(response.data.roundDurationSeconds);
+      setLat(response.data.geoCodingData.lat);
+      setLng(response.data.geoCodingData.lng);
+      setResLatNe(response.data.geoCodingData.resLatNe);
+      setResLngNe(response.data.geoCodingData.resLngNe);
+      setResLatSw(response.data.geoCodingData.resLatSw);
+      setResLngSw(response.data.geoCodingData.resLngSw);
+      // setMapCenter({lat,lng});
+
+    }
+    fetchData();
+  }, [])
   
 
   //TODO: New file for this
@@ -83,7 +83,7 @@ function MyGoogleMap() {
       "elementType": "labels",
       "stylers": [
         {
-          "visibility": "off"
+          "visibility": "on"
         }
       ]
     },
