@@ -1,20 +1,21 @@
 import React from "react";
 import { Button } from "@nextui-org/react";
 
-const CreateButton: React.FC = () => {
+const LeaveButton: React.FC = () => {
   return (
     <Button
       radius="full"
       size = "lg"
-      className="bg-gradient-to-tr from-yellow-500 to-yellow-200 text-black shadow-lg"
+      color = "default"
+      className="shadow-lg"
       onClick={() => {
-        console.log("Want to create new lobby");
+        console.log("Leaving lobby");
         // Place your logic here
       }}
     >
-      Create Lobby
+      Leave Lobby
     </Button>
   );
 };
 
-export default CreateButton;
+export default LeaveButton;

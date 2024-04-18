@@ -1,4 +1,3 @@
-// JoinPage.tsx or similar
 import React from "react";
 import BaseContainer from "../ui/BaseContainer";
 import JoinButton from "components/ui/JoinButton";
@@ -6,7 +5,9 @@ import CreateButton from "components/ui/CreateButton";
 import BackButton from "components/ui/BackButton";
 import LobbyTable from "components/ui/LobbyTable";
 
-const JoinPage = () => {
+const JoinLobby = () => {
+
+  const staticMapImageUrl = "URL_STATIC_MAP";
 
   return (
     <div className="relative min-h-screen w-screen">
@@ -31,4 +32,4 @@ const JoinPage = () => {
   );
 };
 
-export default JoinPage;
+export default JoinLobby;
