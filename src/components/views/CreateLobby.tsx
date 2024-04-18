@@ -1,22 +1,19 @@
-import React from 'react'; 
-import BaseContainer from '../ui/BaseContainer'; 
-import CreateButton from 'components/ui/CreateButton';
-import BackButton from 'components/ui/BackButton';
-import {Input} from "@nextui-org/react"; 
+import React from "react";
+import BaseContainer from "../ui/BaseContainer";
+import CreateButton from "components/ui/CreateButton";
+import BackButton from "components/ui/BackButton";
+import {Input} from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 
-
 const CreateLobby = () => {
-
-  
-return (
+  return (
     <div className="relative min-h-screen w-screen">
       <div className="absolute top-4 left-4">
         <BackButton/>
       </div>
       <div className="flex justify-center items-center h-full">
-        <BaseContainer 
-          size="small" 
+        <BaseContainer
+          size="small"
           className="flex flex-col items-center">
           <div className="flex-row flex-wrap md:flex-nowrap mt-16 mb-16 mr-16 ml-16 gap-4">
             <text>Admin Username</text>
@@ -33,7 +30,6 @@ return (
       </div>
     </div>
   );
-
 };
 
 export default CreateLobby;

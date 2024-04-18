@@ -17,12 +17,12 @@ const mockWinningSubmission = {
 };
 
 const mockLeaderboardData = [
-  { rank: 1, name: 'Nils', basePoints: 100, bonusPoints: 50 },
-  { rank: 2, name: 'Ece', basePoints: 90, bonusPoints: 45 },
-  { rank: 3, name: 'Youssef', basePoints: 85, bonusPoints: 40 },
-  { rank: 4, name: 'Georg', basePoints: 80, bonusPoints: 35 },
-  { rank: 4, name: 'Silvan', basePoints: 80, bonusPoints: 35 },
-  { rank: 4, name: 'Böhlen', basePoints: 80, bonusPoints: 35 },
+  { rank: 1, name: "Nils", basePoints: 100, bonusPoints: 50 },
+  { rank: 2, name: "Ece", basePoints: 90, bonusPoints: 45 },
+  { rank: 3, name: "Youssef", basePoints: 85, bonusPoints: 40 },
+  { rank: 4, name: "Georg", basePoints: 80, bonusPoints: 35 },
+  { rank: 4, name: "Silvan", basePoints: 80, bonusPoints: 35 },
+  { rank: 4, name: "Böhlen", basePoints: 80, bonusPoints: 35 },
 ];
 
 // Mock initial time for the timer in seconds

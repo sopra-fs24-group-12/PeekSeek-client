@@ -1,9 +1,9 @@
-import React from 'react';
-import BaseContainer from '../ui/BaseContainer';
-import BackButton from 'components/ui/BackButton';
-import GameButton from 'components/ui/GameButton';
-import GameSubmitButton from 'components/ui/GameSubmitButton';
-import CreateButton from 'components/ui/CreateButton';
+import React from "react";
+import BaseContainer from "../ui/BaseContainer";
+import BackButton from "components/ui/BackButton";
+import GameButton from "components/ui/GameButton";
+import GameSubmitButton from "components/ui/GameSubmitButton";
+import CreateButton from "components/ui/CreateButton";
 
 
 const Game = () => {
@@ -17,8 +17,8 @@ const Game = () => {
           <h3 className="text-xl font-bold my-4">Find a Landmark in Rome!</h3>
           {/* Placeholder image- map will go here */}
           <img 
-          src="/images/placeholder_map.jpg" 
-          className="w-full h-full"/>
+            src="../../../public/images/placeholdermap.jpg"
+            className="w-full h-full"/>
         </BaseContainer>
         <div className="w-3/4 flex justify-between px-4 absolute bottom-16">
           <GameButton />
