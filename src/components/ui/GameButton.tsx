@@ -1,15 +1,17 @@
 import React from "react";
 import { Button } from "@nextui-org/react";
 
-const GameButton: React.FC = () => {
+
+interface GameButtonProps {
+  onClick: () => void; // Define the onClick prop type
+}
+
+const GameButton: React.FC<GameButtonProps> = ({ onClick }) => {
   return (
     <Button
       radius="full"
       className="bg-gradient-to-tr from-brown-500 to-brown-200 text-black shadow-lg"
-      onClick={() => {
-        console.log("Giving up on game");
-        // Place your logic here
-      }}
+      onClick={onClick}
     >
       Cannot find it!
     </Button>

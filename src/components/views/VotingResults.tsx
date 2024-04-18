@@ -30,11 +30,11 @@ const initialTime = 30;
 
 const VotingResults = () => {
 
-  //todo: use websockets for time. this is just a mock time
+  //TODO: use websockets for time. this is just a mock time
   const timeRemaining = 16
 
 
-  return (
+  return ( 
     <BaseContainer
       size="large">
       <div className="flex flex-col items-center justify-center w-full">
