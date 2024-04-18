@@ -4,7 +4,7 @@ import { Button } from "@nextui-org/react";
 const BackButton: React.FC = () => {
   return (
     <Button
-      className="items-center"
+      className="items-center shadow-lg"
       radius="full"
       size = "lg"
       color = "default"
