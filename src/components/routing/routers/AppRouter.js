@@ -47,6 +47,10 @@ const AppRouter = () => {
           <Route path="/create" element={<CreateLobby />} />
         </Route>
 
+        <Route path="/lobby" element={<LoginGuard />}>
+          <Route path="/lobby" element={<Lobby />} />
+        </Route>
+
         <Route path="/gamesub" element={<LoginGuard />}>
           <Route path="/gamesub" element={<GameSubmission />} />
         </Route>
