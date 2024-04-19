@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardHeader, CardBody, Image, CardFooter, Button } from "@nextui-org/react";
 
 // @ts-ignore
 import placeholder from "../../assets/modelSubmission.png";
+
 interface SubmissionCardProps {
   cityName: string;
   quest: string;
@@ -11,7 +12,27 @@ interface SubmissionCardProps {
   onImageClick: () => void;  // Handler for clicking the card
   onPickClick: () => void;
   onBanClick: () => void;
+  onUnpickClick: () => void;
+  onUnbanClick: () => void;
+  isPicked: boolean;
+  isBanned: boolean;
 }
+
+const greenBorderStyle = {
+  borderRadius: "8px",
+  boxShadow: "0 0 18px 5px rgba(72, 187, 120, 0.7)",
+};
+
+const redBorderStyle = {
+  borderRadius: "8px", // Rounded corners
+  boxShadow: "0 0 18px 5px rgba(204, 0, 0, 0.7)",
+};
+
+const noBorderStyle = {
+  borderRadius: "8px",
+  boxShadow: "none",
+};
+
 
 const SubmissionCard: React.FC<SubmissionCardProps> =
   ({
@@ -21,11 +42,28 @@ const SubmissionCard: React.FC<SubmissionCardProps> =
      imageUrl,
      onImageClick,
      onPickClick,
-     onBanClick
+     onBanClick,
+     onUnpickClick,
+     onUnbanClick,
+     isPicked,
+     isBanned,
    }) => {
+
+
+    const determineBorderStyle = () => {
+      if (isBanned) {
+        return redBorderStyle;
+      } else if (isPicked) {
+        return greenBorderStyle;
+      } else {
+        return noBorderStyle;
+      }
+    };
+
     return (
-      <Card
-        className="py-4 mx-auto max-w-xs"
+      <Card style={determineBorderStyle()}
+            className="py-4 mx-auto max-w-xs"
+
       >
         <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
           <p className="text-tiny uppercase font-bold">{cityName}</p>
@@ -45,17 +83,17 @@ const SubmissionCard: React.FC<SubmissionCardProps> =
         </CardBody>
         <CardFooter className="flex justify-center space-x-4">
           <Button
-            onClick={onPickClick}
+            onClick={!isPicked ? onPickClick : onUnpickClick}
             radius="full"
             size="sm"
             className="items-center bg-gradient-to-tr from-yellow-500 to-yellow-200 text-black shadow-sm"
-          >Pick</Button>
+          >{!isPicked ? "Pick" : "Unpick"}</Button>
           <Button
-            onClick={onBanClick}
+            onClick={!isBanned ? onBanClick : onUnbanClick}
             radius="full"
             size="sm"
             className="items-center bg-gradient-to-tr from-red-600 to-red-500 text-white shadow-sm"
-          >Ban</Button>
+          >{!isBanned ? "Ban" : "Unban"}</Button>
         </CardFooter>
       </Card>
     );
