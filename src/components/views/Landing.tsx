@@ -11,7 +11,7 @@ const LandingPage = () => {
       </h1>
       <div className="flex-grow flex items-center justify-center mb-12">
         <img
-          src="/images/PeekSeek_logo.jpg"
+          src="/images/PeekSeeklogo.jpg"
           alt="PeekSeek Logo"
           style={{ width: "350px", height: "350px" }}/>
       </div>

@@ -8,7 +8,7 @@ const CreateButton: React.FC = () => {
       size = "lg"
       className="bg-gradient-to-tr from-yellow-500 to-yellow-200 text-black shadow-lg"
       onClick={() => {
-        console.log("Want to create new lobby");
+        console.log("Looking to create a lobby");
         // Place your logic here
       }}
     >

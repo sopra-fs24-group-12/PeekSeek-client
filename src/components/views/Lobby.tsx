@@ -6,6 +6,7 @@ import BaseContainer from "../ui/BaseContainer";
 import StartButton from "../ui/StartButton";
 import PlayerTable from "../ui/PlayerTable";
 import { Button, Input } from "@nextui-org/react";
+import ContentWrapper from "components/ui/ContentWrapper";
 import ScrollableContentWrapper from "components/ui/ScrollableContentWrapper";
 import TimeButtons from "../ui/TimeButtons";
 import { notification } from "antd";
@@ -190,10 +191,11 @@ const Lobby = () => {
               placeholder={`Quest #${index + 1}`}
               value={quest}
               onChange={(e) => handleQuestChange(index, e.target.value)}
-              className="mb-2 ml-4 mr-4"
+              className="mb-2"
               onClear={() => deleteQuest(index)}
               disabled={!admin}
               fullWidth
+              style={{ boxSizing: "border-box" }}
             />
         ))}
         </div>
@@ -322,12 +324,14 @@ const Lobby = () => {
       {contextHolder}
       <h1 className="text-3xl font-bold text-gray-700 my-4 text-center">{lobbyName}</h1>
       <div className="flex w-full">
-      <TimeButtons selectedDuration={roundDurationSeconds} setRoundDurationSeconds={setRoundDurationSeconds} />
-        <div className="flex flex-col w-full items-start">
+        <div className="flex flex-col w-full items-start gap-4">
+          <TimeButtons selectedDuration={roundDurationSeconds} setRoundDurationSeconds={setRoundDurationSeconds} />
           <PlayerTable players={players} />
         </div>
         <div className="flex-1 items-center justify-center">
+        <ContentWrapper>
           <CityInputField />
+        </ContentWrapper>
           <GoogleMapStaticImage />
         </div>
         <div className="flex flex-col w-full items-end mr-8">

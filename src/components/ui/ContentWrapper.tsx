@@ -11,8 +11,15 @@ const ContentWrapper: React.FC<ContentWrapperProps> = ({ children }) => {
       // css={{ mw: "100%", p: "$6", boxShadow: "$lg" }} // Adjust maxWidth, padding, and boxShadow as needed
       isBlurred
     >
-      <CardBody
-        // css={{ d: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}
+      <CardBody style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        maxHeight: "450px",
+        overflowY: "auto",
+        width: "100%"
+        }}
       >
         {children}
       </CardBody>
