@@ -1,21 +1,20 @@
 import React from "react";
 import { Button } from "@nextui-org/react";
 
-const BackButton: React.FC = () => {
-  return (
-    <Button
-      className="items-center"
-      radius="full"
-      size = "lg"
-      color = "default"
-      onClick={() => {
-        console.log("Going back");
-        // Place your submit logic here
-      }}
-    >
-      Back
-    </Button>
-  );
-};
+interface click {
+  onClick: () => void;
+}
+
+const BackButton: React.FC <click> = ({ onClick }) => (
+  <Button
+    className="items-center"
+    radius="full"
+    size="lg"
+    color="default"
+    onClick={onClick}
+  >
+    Back
+  </Button>
+);
 
 export default BackButton;
