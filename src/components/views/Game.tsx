@@ -20,7 +20,7 @@ const containerStyle = {
 
 //TODO: timer, websocket, async? await? since at first it loads zurich, then the actual location
 
-const API_Key = "";
+const API_Key = "AIzaSyCV8oO7Ljb9jVEL1TYfIJwsNfDlY8r6nbg";
 
 const libs: Library[] = ["places"];
 
@@ -46,11 +46,12 @@ function MyGoogleMap() {
   const [mapCenterStart, setMapCenterStart] = useState({lat: 47.3768866, lng: 8.541694});
   const [map, setMap] = useState(null);
   const [streetView, setStreetView] = useState(null);
+  const [noSubmission, setNoSubmission] = useState(false);
 
   useEffect(() => {
     //only for dev purposes
-    localStorage.setItem("token", "4a3d8a87-23e9-4a44-a313-c9987820f3d3");
-    localStorage.setItem("username", "a");
+    localStorage.setItem("token", "14cc311e-8ecc-458f-86e0-7c45955f8a3f");
+    localStorage.setItem("username", "b");
   
     async function fetchData() {
       const headers = {
@@ -150,13 +151,13 @@ function MyGoogleMap() {
     const headers = {
       "Authorization": localStorage.getItem("token")
     };
-    const body = JSON.stringify({lat, lng, heading, pitch});
+    const body = JSON.stringify({lat,lng,heading,pitch,noSubmission});
     const response = await api.post("games/" + gameId + "/submission", body, { headers });
-    console.log("API Response:", response.data);
     //navigate(`/games/${lobbyId}/round`);
   }
 
   const submitNow = () => {
+    console.log("Found something submission...")
     console.log("Successfully submitted");
     console.log("Latitude: " + lat);
     console.log("Longitude: " + lng);
@@ -167,18 +168,11 @@ function MyGoogleMap() {
   };
   
   const submitEmptyNow = () => {
-    console.log("Submitted");
-    console.log("Latitude: " + mapCenterStart.lat);
-    console.log("Longitude: " + mapCenterStart.lng);
-    console.log("Heading: " + 90);
-    console.log("Pitch: " + 0);
-
-    mapCenter.lat = mapCenterStart.lat;
-    mapCenter.lng = mapCenterStart.lng;
-    setPitch(0);
-    setHeading(90);
+    console.log("Can't find it submission button clicked!");
+    setNoSubmission(true);
+    console.log(`Setting noSubmission to + ${noSubmission} `);
     submit();
-  }
+  };
 
   return (
     <div className="relative min-h-screen w-screen flex flex-col items-center">
