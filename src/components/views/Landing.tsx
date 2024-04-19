@@ -4,6 +4,10 @@ import JoinButton from "components/ui/JoinButton";
 import CreateButton from "components/ui/CreateButton";
 
 const LandingPage = () => {
+  const handleClick = () => {
+    console.log('Button clicked!');
+    
+  };
   return (
     <BaseContainer size="landing" className="flex flex-col items-center">
       <h1 className="text-4xl font-bold text-center mt-8 mb-12">
@@ -16,7 +20,7 @@ const LandingPage = () => {
           style={{ width: "350px", height: "350px" }}/>
       </div>
       <div className="w-full flex justify-center mb-4">
-        <JoinButton/>
+        <JoinButton onClick = {handleClick}/>
       </div>
       <div className="w-full flex justify-center mb-12">
         <CreateButton/>

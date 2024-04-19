@@ -4,13 +4,20 @@ import BackButton from "components/ui/BackButton";
 import GameButton from "components/ui/GameButton";
 import GameSubmitButton from "components/ui/GameSubmitButton";
 import CreateButton from "components/ui/CreateButton";
+import { useNavigate, useParams } from "react-router-dom";
 
 
 const Game = () => {
+  const navigate = useNavigate();
+  const handleBackClick = () => {
+    console.log('Button clicked!');
+    navigate("/joinlobby");
+  };
+
   return (
     <div className="relative min-h-screen w-screen flex flex-col items-center">
       <div className="absolute top-4 left-4">
-        <BackButton/>
+        <BackButton onClick={handleBackClick}/>
       </div>
       <div className="w-3/4 flex flex-col items-center">
         <BaseContainer size="medium" className="flex flex-col items-center mb-20">
