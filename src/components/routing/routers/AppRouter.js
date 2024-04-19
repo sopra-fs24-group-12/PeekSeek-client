@@ -35,9 +35,7 @@ const AppRouter = () => {
           <Route path="/landing" element={<Landing />} />
         </Route>
 
-        <Route path="/joinlobby" element={<LoginGuard />}>
-          <Route path="/joinlobby" element={<JoinLobby />} />
-        </Route>
+        <Route path="/joinlobby" element={<JoinLobby />} />
 
         <Route path="/joinuser" element={<LoginGuard />}>
           <Route path="/joinuser" element={<JoinUser />} />
