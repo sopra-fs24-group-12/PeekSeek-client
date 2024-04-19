@@ -3,11 +3,12 @@ import BaseContainer from '../ui/BaseContainer';
 import CreateButton from 'components/ui/CreateButton';
 import BackButton from 'components/ui/BackButton';
 import {Input} from "@nextui-org/react"; 
-import { useNavigate } from "react-router-dom";
 import JoinButton from 'components/ui/JoinButton';
+import { useNavigate, useParams } from "react-router-dom";
 
 
 const JoinUser = () => {
+    const navigate = useNavigate();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -15,6 +16,11 @@ const JoinUser = () => {
     const [isLoading, setIsLoading] = useState(true);
   
     const isJoinDisabled = !username || (lobbyRequiresPassword && !password);
+    
+    const handleBackClick = () => {
+        console.log('Button clicked!');
+        navigate("/joinlobby");
+      };
 
     useEffect(() => {
         const fetchLobbyData = async () => {
@@ -48,7 +54,7 @@ const JoinUser = () => {
     return (
         <div className="relative min-h-screen w-screen">
         <div className="absolute top-4 left-4">
-            <BackButton/>
+            <BackButton onClick={handleBackClick}/>
         </div>
         <div className="flex justify-center items-center h-full">
             <BaseContainer 
