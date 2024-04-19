@@ -34,8 +34,8 @@ function MyGoogleMap() {
   const [currentRound, setCurrentRound] = useState();
   const [nrOfRounds, setNrOfRounds] = useState();
 
-  const [lat, setLat] = useState(0);
-  const [lng, setLng] = useState(0);
+  const [lat, setLat] = useState<number | null>(null);
+  const [lng, setLng] = useState<number | null>(null);
   const [pitch, setPitch] = useState(0);
   const [heading, setHeading] = useState(0);
   const [resLatNe, setResLatNe] = useState(47.434665);
@@ -49,7 +49,7 @@ function MyGoogleMap() {
 
   useEffect(() => {
     //only for dev purposes
-    localStorage.setItem("token", "4a3d8a87-23e9-4a44-a313-c9987820f3d3");
+    localStorage.setItem("token", "");
     localStorage.setItem("username", "a");
   
     async function fetchData() {
@@ -165,7 +165,7 @@ function MyGoogleMap() {
     
     submit();
   };
-  
+
   const submitEmptyNow = () => {
     console.log("Submitted");
     console.log("Latitude: " + mapCenterStart.lat);
@@ -173,8 +173,8 @@ function MyGoogleMap() {
     console.log("Heading: " + 90);
     console.log("Pitch: " + 0);
 
-    mapCenter.lat = mapCenterStart.lat;
-    mapCenter.lng = mapCenterStart.lng;
+    setLat(mapCenterStart.lat);
+    setLng(mapCenterStart.lng);
     setPitch(0);
     setHeading(90);
     submit();
@@ -188,56 +188,58 @@ function MyGoogleMap() {
       <div className="w-3/4 flex flex-col items-center">
         <BaseContainer size="medium" className="flex flex-col items-center mb-20">
           <h3 className="text-xl font-bold my-4">Find a {quest} in {cityName}!</h3>
-          <LoadScript googleMapsApiKey={API_Key} libraries={libs}>
-            <ReactGoogleMap
-              mapContainerStyle={containerStyle}
-              center={mapCenter}
-              zoom={15}
-              onLoad={(map) => {
-                const bounds = new window.google.maps.LatLngBounds(
-                  new window.google.maps.LatLng(resLatSw, resLngSw),  // Southwest
-                  new window.google.maps.LatLng(resLatNe, resLngNe)   // Northeast
-                );
-                map.fitBounds(bounds);
-                map.setOptions({ restriction: { latLngBounds: bounds, strictBounds: true } });
-                setMap(map);
-                map.set("styles", bareMapStyle);
-              }}
-              onCenterChanged={() => handleCenterChanged(map)}
-            >
-              <StreetViewPanorama
-                onLoad={(panorama) => {
-                  setStreetView(panorama);
-                  panorama.addListener("position_changed", () => {
-                    const newPosition = panorama.getPosition();
-                    const newLat = newPosition.lat();
-                    const newLng = newPosition.lng();
-
-                    // Update the lat and lng states
-                    setLat(newLat);
-                    setLng(newLng);
-
-                    // Now you can use newLat and newLng as needed
-                    console.log("New street view latitude: " + newLat);
-                    console.log("New street view longitude: " + newLng);
-                  });
-                  panorama.addListener("pov_changed", () => {
-                    const pov = panorama.getPov();
-                    const newPitch = pov.pitch;
-                    const newHeading = pov.heading;
-
-                    // Update the pitch and heading states
-                    setPitch(newPitch);
-                    setHeading(newHeading);
-
-                    // Now you can use newPitch and newHeading as needed
-                    console.log("New street view pitch: " + newPitch);
-                    console.log("New street view heading: " + newHeading);
-                  });
+          {lat && lng && (
+            <LoadScript googleMapsApiKey={API_Key} libraries={libs}>
+              <ReactGoogleMap
+                mapContainerStyle={containerStyle}
+                center={mapCenter}
+                zoom={15}
+                onLoad={(map) => {
+                  const bounds = new window.google.maps.LatLngBounds(
+                    new window.google.maps.LatLng(resLatSw, resLngSw),  // Southwest
+                    new window.google.maps.LatLng(resLatNe, resLngNe)   // Northeast
+                  );
+                  map.fitBounds(bounds);
+                  map.setOptions({ restriction: { latLngBounds: bounds, strictBounds: true } });
+                  setMap(map);
+                  map.set("styles", bareMapStyle);
                 }}
-              />
-            </ReactGoogleMap>
-          </LoadScript>
+                onCenterChanged={() => handleCenterChanged(map)}
+              >
+                <StreetViewPanorama
+                  onLoad={(panorama) => {
+                    setStreetView(panorama);
+                    panorama.addListener("position_changed", () => {
+                      const newPosition = panorama.getPosition();
+                      const newLat = newPosition.lat();
+                      const newLng = newPosition.lng();
+
+                      // Update the lat and lng states
+                      setLat(newLat);
+                      setLng(newLng);
+
+                      // Now you can use newLat and newLng as needed
+                      console.log("New street view latitude: " + newLat);
+                      console.log("New street view longitude: " + newLng);
+                    });
+                    panorama.addListener("pov_changed", () => {
+                      const pov = panorama.getPov();
+                      const newPitch = pov.pitch;
+                      const newHeading = pov.heading;
+
+                      // Update the pitch and heading states
+                      setPitch(newPitch);
+                      setHeading(newHeading);
+
+                      // Now you can use newPitch and newHeading as needed
+                      console.log("New street view pitch: " + newPitch);
+                      console.log("New street view heading: " + newHeading);
+                    });
+                  }}
+                />
+              </ReactGoogleMap>
+            </LoadScript>
+          )}
         </BaseContainer>
         <div className="w-3/4 flex justify-between px-4 absolute bottom-16">
           <GameButton onClick={submitEmptyNow}/>
