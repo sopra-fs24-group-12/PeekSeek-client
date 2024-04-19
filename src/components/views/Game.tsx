@@ -12,6 +12,7 @@ import GameSubmitButton from "components/ui/GameSubmitButton";
 
 //imports for Google Maps API
 import { GoogleMap as ReactGoogleMap, LoadScript, StreetViewPanorama , Marker } from "@react-google-maps/api";
+import { GoogleMapStyle as googleMapsStyling} from "../../assets/GoogleMapStyle";
 
 const containerStyle = {
   width: "100%",
@@ -20,7 +21,7 @@ const containerStyle = {
 
 //TODO: timer, websocket, async? await? since at first it loads zurich, then the actual location
 
-const API_Key = "AIzaSyCV8oO7Ljb9jVEL1TYfIJwsNfDlY8r6nbg";
+const API_Key = "";
 
 const libs: Library[] = ["places"];
 
@@ -46,12 +47,12 @@ function MyGoogleMap() {
   const [mapCenterStart, setMapCenterStart] = useState({lat: 47.3768866, lng: 8.541694});
   const [map, setMap] = useState(null);
   const [streetView, setStreetView] = useState(null);
-  const [noSubmission, setNoSubmission] = useState(false);
+  const [noSubmission, setNoSubmission] = useState<boolean>(false);
 
   useEffect(() => {
     //only for dev purposes
-    localStorage.setItem("token", "14cc311e-8ecc-458f-86e0-7c45955f8a3f");
-    localStorage.setItem("username", "b");
+    localStorage.setItem("token", "2ae5e306-e333-468d-8939-a4292601d694");
+    localStorage.setItem("username", "a");
   
     async function fetchData() {
       const headers = {
@@ -73,61 +74,7 @@ function MyGoogleMap() {
     }
     fetchData();
   }, [])
-  
 
-  //TODO: New file for this
-  const bareMapStyle = [
-    {
-      "elementType": "labels",
-      "stylers": [
-        {
-          "visibility": "on"
-        }
-      ]
-    },
-    {
-      "featureType": "administrative",
-      "elementType": "geometry",
-      "stylers": [
-        {
-          "visibility": "off"
-        }
-      ]
-    },
-    {
-      "featureType": "administrative.neighborhood",
-      "stylers": [
-        {
-          "visibility": "off"
-        }
-      ]
-    },
-    {
-      "featureType": "poi",
-      "stylers": [
-        {
-          "visibility": "off"
-        }
-      ]
-    },
-    {
-      "featureType": "road",
-      "elementType": "labels.icon",
-      "stylers": [
-        {
-          "visibility": "off"
-        }
-      ]
-    },
-    {
-      "featureType": "transit",
-      "stylers": [
-        {
-          "visibility": "off"
-        }
-      ]
-    }
-  ];
   
   const handleCenterChanged = (map) => {
     if(map){
@@ -151,7 +98,7 @@ function MyGoogleMap() {
     const headers = {
       "Authorization": localStorage.getItem("token")
     };
-    const body = JSON.stringify({lat, lng, heading, pitch});
+    const body = JSON.stringify({lat, lng, heading, pitch, noSubmission});
     const response = await api.post("games/" + gameId + "/submission", body, { headers });
     console.log("API Response:", response.data);
     //navigate(`/games/${lobbyId}/round`);
@@ -163,16 +110,21 @@ function MyGoogleMap() {
     console.log("Longitude: " + lng);
     console.log("Heading: " + heading);
     console.log("Pitch: " + pitch);
-    
     submit();
   };
-  
-  const submitEmptyNow = () => {
+
+  function submitEmptyNow() {
     console.log("Can't find it submission button clicked!");
-    setNoSubmission(true);
-    console.log(`Setting noSubmission to + ${noSubmission} `);
-    submit();
+    setNoSubmission(true); // This sets the state
   }
+
+  useEffect(() => {
+    if (noSubmission) {
+      console.log(`Setting noSubmission to: ${noSubmission}`);
+      submit(); // Perform the submission after state update
+      setNoSubmission(false); // Optionally reset if needed
+    }
+  }, [noSubmission]); // This effect runs only when noSubmission changes
 
   return (
     <div className="relative min-h-screen w-screen flex flex-col items-center">
@@ -196,7 +148,7 @@ function MyGoogleMap() {
                   map.fitBounds(bounds);
                   map.setOptions({ restriction: { latLngBounds: bounds, strictBounds: true } });
                   setMap(map);
-                  map.set("styles", bareMapStyle);
+                  map.set("styles", googleMapsStyling);
                 }}
                 onCenterChanged={() => handleCenterChanged(map)}
               >
