@@ -6,14 +6,23 @@ const StartButton: React.FC = () => {
     <Button
       radius="full"
       size = "lg"
-      color = "default"
       className="bg-gradient-to-tr from-green-600 to-green-600 mr-6 shadow-lg"
+      // make the button round
+      style={{
+        borderRadius: '100%',
+        width: '80px', 
+        height: '90px',
+        padding: '0',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
       onClick={() => {
-        console.log("Leaving lobby");
+        console.log("Starting game");
         // Place your logic here
       }}
     >
-      Start
+      Start!
     </Button>
   );
 };

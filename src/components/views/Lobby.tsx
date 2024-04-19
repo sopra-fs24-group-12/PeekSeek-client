@@ -181,7 +181,8 @@ const Lobby = () => {
 
     return (
       <ScrollableContentWrapper>
-        <h6 className="font-bold text-center mt-2 mb-4">Your Quests</h6>
+        <h6 className="font-bold mt-2 mb-2">Your Quests</h6>
+        <p className="text-left text-sm mt-0 mb-4 font-semibold">Find a...</p>
         <div style={{ overflowY: "auto", maxHeight: "500px", width: "100%" }}>
           {localQuests.map((quest, index) => (
             <Input
@@ -199,7 +200,12 @@ const Lobby = () => {
             />
         ))}
         </div>
-        <Button onClick={saveQuestsToGlobal}>Save Quests</Button>
+        <Button 
+          radius="md"
+          size="sm"
+          style={{ marginTop: "10px" }}
+          onClick={saveQuestsToGlobal}>Save Quests
+        </Button>
       </ScrollableContentWrapper>
     );
   };
@@ -220,7 +226,7 @@ const Lobby = () => {
     };
 
     return (
-      <div>
+      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
         <Input
           type="text"
           label="Your Destination"
@@ -231,7 +237,11 @@ const Lobby = () => {
           style={{ width: "300px" }}
           disabled={!admin}
         />
-        <Button onClick={saveCityNameToGlobal}>Save Destination</Button>
+        <Button 
+          radius="md"
+          size="sm"
+          style={{ paddingLeft: "20px", paddingRight: "20px" }}
+          onClick={saveCityNameToGlobal}>Save Destination</Button>
       </div>
     );
   };
@@ -257,6 +267,7 @@ const Lobby = () => {
         radius="full"
         size = "lg"
         color = "default"
+        className="shadow-lg"
         onClick={() => {
           console.log("Saving settings");
           save();
@@ -324,11 +335,11 @@ const Lobby = () => {
       {contextHolder}
       <h1 className="text-3xl font-bold text-gray-700 my-4 text-center">{lobbyName}</h1>
       <div className="flex w-full">
-        <div className="flex flex-col w-full items-start gap-4">
+        <div className="flex flex-col w-full items-start gap-4 ml-6">
           <TimeButtons selectedDuration={roundDurationSeconds} setRoundDurationSeconds={setRoundDurationSeconds} />
           <PlayerTable players={players} />
         </div>
-        <div className="flex-1 items-center justify-center">
+        <div className="flex-1 items-center justify-center px-16">
         <ContentWrapper>
           <CityInputField />
         </ContentWrapper>
@@ -337,7 +348,7 @@ const Lobby = () => {
         <div className="flex flex-col w-full items-end mr-8">
           <InputQuests />
         </div>
-        <div className="w-full flex justify-between px-12 absolute bottom-16">
+        <div className="w-full flex justify-between px-12 absolute bottom-8">
           <LeaveButton />
           <StartButton />
           <SaveButton />

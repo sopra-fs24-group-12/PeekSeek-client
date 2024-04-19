@@ -18,7 +18,7 @@ const TimeButtons = ({ selectedDuration, setRoundDurationSeconds }) => {
         {durations.map(time => (
           <Button
             key={time.value}
-            className={`bg-gradient-to-tr from-orange-500 to-orange-200 text-black shadow-lg ${selectedDuration === time.value ? 'opacity-75' : ''}`}
+            className={`bg-gradient-to-tr from-orange-500 to-orange-200 text-black shadow-lg ${selectedDuration === time.value ? 'border-4 border-green-500 bg-orange-700' : ''}`}
             onClick={() => setRoundDurationSeconds(time.value)}
           >
             {time.label}
