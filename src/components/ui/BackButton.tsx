@@ -5,7 +5,8 @@ interface click {
   onClick: () => void;
 }
 
-const BackButton: React.FC <click> = ({ onClick }) => (
+const BackButton: React.FC <click> = ({ onClick }) => {
+  return (
   <Button
     className="items-center"
     radius="full"
@@ -16,5 +17,6 @@ const BackButton: React.FC <click> = ({ onClick }) => (
     Back
   </Button>
 );
+};
 
 export default BackButton;
