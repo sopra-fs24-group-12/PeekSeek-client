@@ -18,8 +18,8 @@ const ContentWrapper: React.FC<ContentWrapperProps> = ({ children }) => {
         alignItems: "center",
         maxHeight: "450px",
         overflowY: "auto",
-        width: "100%"
-        }}
+        width: "100%",
+      }}
       >
         {children}
       </CardBody>
