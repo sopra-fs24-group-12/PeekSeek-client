@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { api, handleError } from "helpers/api";
 import { Client } from "@stomp/stompjs";
 import { Library } from "@googlemaps/js-api-loader";
-import { getWebsocketDomain } from 'helpers/getDomain';
+import { getWebsocketDomain } from "helpers/getDomain";
 
 //imports for UI
 import BaseContainer from "../ui/BaseContainer";
@@ -12,24 +12,24 @@ import GameButton from "components/ui/GameButton";
 import GameSubmitButton from "components/ui/GameSubmitButton";
 
 //imports for Google Maps API
-import { GoogleMap as ReactGoogleMap, LoadScript, StreetViewPanorama , Marker } from "@react-google-maps/api";
-import { GoogleMapStyle as googleMapsStyling} from "../../assets/GoogleMapStyle";
+import { GoogleMap as ReactGoogleMap, LoadScript, StreetViewPanorama, Marker } from "@react-google-maps/api";
+import { GoogleMapStyle as googleMapsStyling } from "../../assets/GoogleMapStyle";
 import Timer from "../ui/Timer";
 
 const containerStyle = {
   width: "100%",
-  height: "100%"
+  height: "100%",
 };
 
 //TODO: timer, websocket, async? await? since at first it loads zurich, then the actual location
 
-const API_Key = "";
+const API_Key = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
 const libs: Library[] = ["places"];
 
 function MyGoogleMap() {
 
-  const {gameId} =  useParams();
+  const { gameId } = useParams();
   const navigate = useNavigate();
   const [quest, setQuest] = useState("Landmark");
   const [cityName, setCityName] = useState("Zurich, Switzerland");
@@ -45,24 +45,24 @@ function MyGoogleMap() {
   const [resLngNe, setResLngNe] = useState(8.625452899999999);
   const [resLatSw, setResLatSw] = useState(47.32021839999999);
   const [resLngSw, setResLngSw] = useState(8.448018099999999);
-  const [mapCenter, setMapCenter] = useState({lat: 47.3768866, lng: 8.541694});
-  const [mapCenterStart, setMapCenterStart] = useState({lat: 47.3768866, lng: 8.541694});
+  const [mapCenter, setMapCenter] = useState({ lat: 47.3768866, lng: 8.541694 });
+  const [mapCenterStart, setMapCenterStart] = useState({ lat: 47.3768866, lng: 8.541694 });
   const [map, setMap] = useState(null);
   const [streetView, setStreetView] = useState(null);
   const [noSubmission, setNoSubmission] = useState<boolean>(false);
-  const [remainingTime, setRemainingTime] = useState(10)
+  const [remainingTime, setRemainingTime] = useState(10);
 
   useEffect(() => {
     //only for dev purposes
-    localStorage.setItem("token", "2ae5e306-e333-468d-8939-a4292601d694");
-    localStorage.setItem("username", "a");
-  
+    // localStorage.setItem("token", "2ae5e306-e333-468d-8939-a4292601d694");
+    // localStorage.setItem("username", "a");
+
     async function fetchData() {
       try {
         const headers = {
           "Authorization": localStorage.getItem("token"),
         };
-        console.log("Game ID:", headers.Authorization)
+        console.log("Game ID:", headers.Authorization);
         const response = await api.get("/games/" + gameId + "/round", { headers });
         console.log("API Response:", response.data);
         setQuest(response.data.quest);
@@ -77,12 +77,13 @@ function MyGoogleMap() {
         setMapCenter({ lat, lng });
       } catch (error) {
         alert(
-          `Something went wrong while fetching round information: \n${handleError(error)}`
+          `Something went wrong while fetching round information: \n${handleError(error)}`,
         );
       }
     }
+
     fetchData();
-  }, [])
+  }, []);
 
   useEffect(() => {
     let client = new Client();
@@ -93,42 +94,42 @@ function MyGoogleMap() {
         console.log(str);
       },
       onConnect: () => {
-        const destination = `/topic/games/` + gameId;
-        const timerDestination = `/topic/games/` + gameId + "/timer";
+        const destination = "/topic/games/" + gameId;
+        const timerDestination = "/topic/games/" + gameId + "/timer";
         client && client.subscribe(destination, (message) => {
           let messageParsed = JSON.parse(message.body);
-          console.log('Received message:', messageParsed);
+          console.log("Received message:", messageParsed);
           if (messageParsed.status === "voting") {
             navigate(`/gamesub/${gameId}/`);
           }
         });
         client && client.subscribe(timerDestination, (message) => {
           let messageParsed = JSON.parse(message.body);
-          console.log('Received message from topic 2:', messageParsed);
+          console.log("Received message from topic 2:", messageParsed);
           setRemainingTime(messageParsed.secondsRemaining);
         });
       },
 
-    })
+    });
     client.activate();
 
     return () => {
       client && client.deactivate();
     };
-  }, [])
-  
+  }, []);
+
   const handleCenterChanged = (map) => {
-    if(map){
+    if (map) {
       // Get the new center of the map
       const newCenter = map.getCenter();
-      
+
       const tempLat = newCenter.lat();
       const tempLng = newCenter.lng();
 
       // Get the latitude and longitude of the new center
       setLat(tempLat);
       setLng(tempLng);
-      
+
       // Now you can use lat and lng as needed
       console.log("New center latitude: " + tempLat);
       console.log("New center longitude: " + tempLng);
@@ -137,9 +138,9 @@ function MyGoogleMap() {
 
   async function submit() {
     const headers = {
-      "Authorization": localStorage.getItem("token")
+      "Authorization": localStorage.getItem("token"),
     };
-    const body = JSON.stringify({lat, lng, heading, pitch, noSubmission});
+    const body = JSON.stringify({ lat, lng, heading, pitch, noSubmission });
     const response = await api.post("games/" + gameId + "/submission", body, { headers });
     console.log("API Response:", response.data);
     //navigate(`/games/${lobbyId}/round`);
@@ -172,7 +173,7 @@ function MyGoogleMap() {
       {/*<div className="absolute top-4 left-4">
         <BackButton />
       </div>*/}
-      <div className="font-bold text-lg mt-16">{`TIME REMAINING: ` + remainingTime}</div>
+      <div className="font-bold text-lg mt-16">{"TIME REMAINING: " + remainingTime}</div>
       <div className="w-3/4 flex flex-col items-center">
         <BaseContainer size="medium" className="flex flex-col items-center mb-20">
           <h3 className="text-xl font-bold my-4">Find a {quest} in {cityName}!</h3>
@@ -185,7 +186,7 @@ function MyGoogleMap() {
                 onLoad={(map) => {
                   const bounds = new window.google.maps.LatLngBounds(
                     new window.google.maps.LatLng(resLatSw, resLngSw),  // Southwest
-                    new window.google.maps.LatLng(resLatNe, resLngNe)   // Northeast
+                    new window.google.maps.LatLng(resLatNe, resLngNe),   // Northeast
                   );
                   map.fitBounds(bounds);
                   map.setOptions({ restriction: { latLngBounds: bounds, strictBounds: true } });
@@ -230,8 +231,8 @@ function MyGoogleMap() {
           )}
         </BaseContainer>
         <div className="w-3/4 flex justify-between px-4 absolute bottom-16">
-          <GameButton onClick={submitEmptyNow}/>
-          <GameSubmitButton onClick={submitNow}/>
+          <GameButton onClick={submitEmptyNow} />
+          <GameSubmitButton onClick={submitNow} />
         </div>
       </div>
     </div>
