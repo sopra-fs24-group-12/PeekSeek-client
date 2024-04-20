@@ -59,15 +59,22 @@ const JoinUser = () => {
     }, []);
     */
 
-    const handleJoinClick = () => {
+    const handleJoinClick = async () => {
         try{
         const requestBody = JSON.stringify({username, lobbyPassword});
-        const response = api.put("/lobbies/" + id + "/join", requestBody);
+        const response = await api.put("/lobbies/" + id + "/join", requestBody);
         localStorage.setItem("token:", response.headers);
-        navigate("/lobby/" + id);
+        if (response.status >= 300){
+            navigate("/joinlobby");
+        }
+        else{
+            navigate("/lobby/" + id);
+        }
+        
     }
         catch(error){
-            alert("Please provide the correct password for the lobby you are joining")
+            alert("Please provide the correct password for the lobby you are joining");
+            navigate("/joinlobby");
         }
         /* --> Ece's code
         if (!username) {
