@@ -9,7 +9,6 @@ import ExternalLinkButton from "../ui/ExternalLinkButton";
 import BackDashboardButton from "../ui/BackDashboardButton";
 
 
-
 const mockLeaderboardData = [
   { rank: 1, name: "Nils", basePoints: 100, bonusPoints: 50 },
   { rank: 2, name: "Ece", basePoints: 90, bonusPoints: 45 },
@@ -20,11 +19,26 @@ const mockLeaderboardData = [
 ];
 
 const externalLinks = [
-  { url: "https://www.google.com/maps/@47.371779,8.5366792,3a,75y,264.91h,90.77t/data=!3m6!1e1!3m4!1spvbPYFSzTaFhKV-uabCaZw!2e0!7i16384!8i8192?entry=ttu", label: "Winning Submission 1" },
-  { url: "https://www.google.com/maps/@47.371779,8.5366792,3a,75y,264.91h,90.77t/data=!3m6!1e1!3m4!1spvbPYFSzTaFhKV-uabCaZw!2e0!7i16384!8i8192?entry=ttu", label: "Winning Submission 2" },
-  { url: "https://www.google.com/maps/@47.371779,8.5366792,3a,75y,264.91h,90.77t/data=!3m6!1e1!3m4!1spvbPYFSzTaFhKV-uabCaZw!2e0!7i16384!8i8192?entry=ttu", label: "Winning Submission 3" },
-  { url: "https://www.google.com/maps/@47.371779,8.5366792,3a,75y,264.91h,90.77t/data=!3m6!1e1!3m4!1spvbPYFSzTaFhKV-uabCaZw!2e0!7i16384!8i8192?entry=ttu", label: "Winning Submission 4" },
-  { url: "https://www.google.com/maps/@47.371779,8.5366792,3a,75y,264.91h,90.77t/data=!3m6!1e1!3m4!1spvbPYFSzTaFhKV-uabCaZw!2e0!7i16384!8i8192?entry=ttu", label: "Winning Submission 5" }
+  {
+    url: "https://www.google.com/maps/@47.371779,8.5366792,3a,75y,264.91h,90.77t/data=!3m6!1e1!3m4!1spvbPYFSzTaFhKV-uabCaZw!2e0!7i16384!8i8192?entry=ttu",
+    label: "Winning Submission 1",
+  },
+  {
+    url: "https://www.google.com/maps/@47.371779,8.5366792,3a,75y,264.91h,90.77t/data=!3m6!1e1!3m4!1spvbPYFSzTaFhKV-uabCaZw!2e0!7i16384!8i8192?entry=ttu",
+    label: "Winning Submission 2",
+  },
+  {
+    url: "https://www.google.com/maps/@47.371779,8.5366792,3a,75y,264.91h,90.77t/data=!3m6!1e1!3m4!1spvbPYFSzTaFhKV-uabCaZw!2e0!7i16384!8i8192?entry=ttu",
+    label: "Winning Submission 3",
+  },
+  {
+    url: "https://www.google.com/maps/@47.371779,8.5366792,3a,75y,264.91h,90.77t/data=!3m6!1e1!3m4!1spvbPYFSzTaFhKV-uabCaZw!2e0!7i16384!8i8192?entry=ttu",
+    label: "Winning Submission 4",
+  },
+  {
+    url: "https://www.google.com/maps/@47.371779,8.5366792,3a,75y,264.91h,90.77t/data=!3m6!1e1!3m4!1spvbPYFSzTaFhKV-uabCaZw!2e0!7i16384!8i8192?entry=ttu",
+    label: "Winning Submission 5",
+  },
 ];
 const GameSummary = () => {
   // Mock data for city and number of quests
@@ -49,12 +63,12 @@ const GameSummary = () => {
             <ExternalLinkButton key={link.url} url={link.url} label={link.label} />
           ))}
         </div>
-        <div className='w-2/3 flex flex-col p-4'> {/* Right part for Leaderboard and Google Maps */}
+        <div className="w-2/3 flex flex-col p-4"> {/* Right part for Leaderboard and Google Maps */}
           <Leaderboard data={mockLeaderboardData} />
           <div
             id="google-maps-container"
             className="aspect-w-2 h-40 aspect-h-3 bg-gray-200 mt-4 rounded-lg cursor-pointer"
-            onClick={() => console.log('Clicked onto map with Winning Submissions!')}
+            onClick={() => console.log("Clicked onto map with Winning Submissions!")}
           >
             {/* Placeholder for Map with Winning Submissions */}
             <p className="text-center text-gray-500 pt-20">Google Maps</p>
@@ -63,6 +77,6 @@ const GameSummary = () => {
       </div>
     </BaseContainer>
   );
-}
+};
 
 export default GameSummary;

@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import { Button, ButtonGroup } from "@nextui-org/react";
 import ContentWrapper from "./ContentWrapper";
 
@@ -18,7 +18,7 @@ const TimeButtons = ({ selectedDuration, setRoundDurationSeconds }) => {
         {durations.map(time => (
           <Button
             key={time.value}
-            className={`bg-gradient-to-tr from-orange-500 to-orange-200 text-black shadow-lg ${selectedDuration === time.value ? 'border-4 border-green-500 bg-orange-700' : ''}`}
+            className={`bg-gradient-to-tr from-orange-500 to-orange-200 text-black shadow-lg ${selectedDuration === time.value ? "border-4 border-green-500 bg-orange-700" : ""}`}
             onClick={() => setRoundDurationSeconds(time.value)}
           >
             {time.label}
@@ -27,12 +27,12 @@ const TimeButtons = ({ selectedDuration, setRoundDurationSeconds }) => {
       </ButtonGroup>
     </ContentWrapper>
   );
-}
+};
 
 TimeButtons.propTypes = {
   selectedDuration: PropTypes.number.isRequired,
   setRoundDurationSeconds: PropTypes.func.isRequired,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
 };
 
 export default TimeButtons;

@@ -8,24 +8,24 @@ interface ContentWrapperProps {
 }
 
 const ScrollableContentWrapper: React.FC<ContentWrapperProps> = ({ children }) => {
-    return (
-        <Card
-            isBlurred
-        >
-        <CardBody style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            maxHeight: "500px",
-            overflowY: "visible",
-            width: "100%"
-            }}
-              >
-                {children}
-              </CardBody>
-        </Card>
-    );
-    };
+  return (
+    <Card
+      isBlurred
+    >
+      <CardBody style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        maxHeight: "500px",
+        overflowY: "visible",
+        width: "100%",
+      }}
+      >
+        {children}
+      </CardBody>
+    </Card>
+  );
+};
 
 export default ScrollableContentWrapper;
