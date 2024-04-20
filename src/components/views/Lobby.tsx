@@ -10,6 +10,7 @@ import ContentWrapper from "components/ui/ContentWrapper";
 import ScrollableContentWrapper from "components/ui/ScrollableContentWrapper";
 import TimeButtons from "../ui/TimeButtons";
 import { notification } from "antd";
+import { getWebsocketDomain } from "helpers/getDomain";
 
 const Lobby = () => {
   const [quests, setQuests] = React.useState(["", "", "", ""]);
@@ -59,7 +60,7 @@ const Lobby = () => {
 
 
   useEffect(() => {
-    localStorage.setItem("token", "3053a482-6e4f-4076-9246-2d9a0e4beb78");
+    localStorage.setItem("token", "46a03a2f-ab07-4845-803c-7055b4d86b7b");
     localStorage.setItem("username", "admin");
 
     async function fetchData() {
@@ -125,7 +126,7 @@ const Lobby = () => {
 
   useEffect(() => {
     let client = new Client();
-    const websocketUrl = 'ws://localhost:8080/ws';
+    const websocketUrl = getWebsocketDomain();
     client.configure({
       brokerURL: websocketUrl,
       debug: function(str) {
