@@ -59,7 +59,9 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({voteData, gameId}) => {
       navigate("/voting/" + gameId); // TODO: navigate to loading screen
 
     } catch (error) {
-      handleError(error);
+      alert(
+        `Something went wrong while submitting your votes: \n${handleError(error)}`
+      );
     }
   }
 

@@ -144,7 +144,9 @@ const GameSubmission = () => {
   //
   //       setCardsData(transformedData);
   //     } catch (error) {
-  //       handleError(error);
+  //       alert(
+  //           `Something went wrong while fetching submission information: \n${handleError(error)}`
+  //       );
   //     }
   //   }
   //

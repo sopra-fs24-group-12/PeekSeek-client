@@ -55,22 +55,28 @@ function MyGoogleMap() {
     localStorage.setItem("username", "a");
   
     async function fetchData() {
-      const headers = {
-        "Authorization": localStorage.getItem("token"),
-      };
-      console.log("Game ID:", headers.Authorization)
-      const response = await api.get("/games/" + gameId + "/round", { headers });
-      console.log("API Response:", response.data);
-      setQuest(response.data.quest);
-      setCityName(response.data.geoCodingData.formAddress);
-      setRoundDurationSeconds(response.data.roundDurationSeconds);
-      setLat(response.data.geoCodingData.lat);
-      setLng(response.data.geoCodingData.lng);
-      setResLatNe(response.data.geoCodingData.resLatNe);
-      setResLngNe(response.data.geoCodingData.resLngNe);
-      setResLatSw(response.data.geoCodingData.resLatSw);
-      setResLngSw(response.data.geoCodingData.resLngSw);
-      setMapCenter({lat,lng});
+      try {
+        const headers = {
+          "Authorization": localStorage.getItem("token"),
+        };
+        console.log("Game ID:", headers.Authorization)
+        const response = await api.get("/games/" + gameId + "/round", { headers });
+        console.log("API Response:", response.data);
+        setQuest(response.data.quest);
+        setCityName(response.data.geoCodingData.formAddress);
+        setRoundDurationSeconds(response.data.roundDurationSeconds);
+        setLat(response.data.geoCodingData.lat);
+        setLng(response.data.geoCodingData.lng);
+        setResLatNe(response.data.geoCodingData.resLatNe);
+        setResLngNe(response.data.geoCodingData.resLngNe);
+        setResLatSw(response.data.geoCodingData.resLatSw);
+        setResLngSw(response.data.geoCodingData.resLngSw);
+        setMapCenter({ lat, lng });
+      } catch (error) {
+        alert(
+          `Something went wrong while fetching round information: \n${handleError(error)}`
+        );
+      }
     }
     fetchData();
   }, [])

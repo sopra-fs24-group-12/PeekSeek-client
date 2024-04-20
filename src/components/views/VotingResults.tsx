@@ -71,7 +71,9 @@ const VotingResults = () => {
           console.log("Invalid or empty response data");
         }
       } catch (error) {
-        handleError(error);
+        alert(
+          `Something went wrong while fetching information: \n${handleError(error)}`
+        );
       }
 
       try {
@@ -95,7 +97,9 @@ const VotingResults = () => {
         )
 
       } catch (error) {
-        handleError(error);
+        alert(
+          `Something went wrong while fetching information: \n${handleError(error)}`
+        );
       }
 
     }
