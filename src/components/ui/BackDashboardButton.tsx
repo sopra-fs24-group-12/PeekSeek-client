@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 const BackDashboardButton: React.FC = () => {
   const navigate = useNavigate();
+
   return (
     <Button
       className="items-center"

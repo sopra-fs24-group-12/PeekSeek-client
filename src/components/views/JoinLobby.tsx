@@ -1,4 +1,3 @@
-
 // JoinPage.tsx or similar
 import React, { useEffect, useState } from "react";
 import BaseContainer from "../ui/BaseContainer";
@@ -10,50 +9,60 @@ import { useNavigate, useParams } from "react-router-dom";
 import { api, handleError } from "helpers/api";
 import Lobby from "models/Lobby";
 import PropTypes from "prop-types";
-import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKeyValue, Radio, RadioGroup } from "@nextui-org/react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
+  getKeyValue,
+  Radio,
+  RadioGroup,
+} from "@nextui-org/react";
 
 
 const JoinLobby = () => {
   const navigate = useNavigate();
   const staticMapImageUrl = "URL_STATIC_MAP";
   const [username, setUsername] = useState<string>(null);
-  const [password, setPassword] = useState<string> (null);
+  const [password, setPassword] = useState<string>(null);
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
-  const {id} = useParams();
+  const { id } = useParams();
   const handleBackClick = () => {
-    console.log('Button clicked!');
+    console.log("Button clicked!");
     navigate("/joinlobby");
   };
   const handleClick = () => {
-    console.log('Button clicked!');
+    console.log("Button clicked!");
     doLogin();
   };
 
   const doLogin = async () => {
     try {
-      const requestBody = JSON.stringify({username, password}); //
+      const requestBody = JSON.stringify({ username, password }); //
       const response = await api.post("/lobbies/" + id + "/join", localStorage.getItem("token"));
-      
-     
+
+
       navigate("/game");
     } catch (error) {
       alert(
-        `Something went wrong during the login: \n${handleError(error)}`
+        `Something went wrong during the login: \n${handleError(error)}`,
       );
     }
   };
 
 
   const handleSelectionChange = (selectedKeys) => {
-   
+
     const selectedKey = selectedKeys[0];
-    
-    console.log("selected id " + selectedKeys[0])    
+
+    console.log("selected id " + selectedKeys[0]);
   };
 
   const handleClickList = () => {
-    console.log('Button clicked!');
-    
+    console.log("Button clicked!");
+
     navigate("/joinuser/" + selectedLobbyId);
   };
 
@@ -62,10 +71,10 @@ const JoinLobby = () => {
       try {
         const response = await api.get("/lobbies");
 
-        
+
         setLobbies(response.data);
 
-        
+
         console.log("request to:", response.request.responseURL);
         console.log("status code:", response.status);
         console.log("status text:", response.statusText);
@@ -76,12 +85,12 @@ const JoinLobby = () => {
       } catch (error) {
         console.error(
           `Something went wrong while fetching the lobbies: \n${handleError(
-            error
-          )}`
+            error,
+          )}`,
         );
         console.error("Details:", error);
         alert(
-          "Something went wrong while fetching the lobbies! See the console for details."
+          "Something went wrong while fetching the lobbies! See the console for details.",
         );
       }
     }
@@ -117,19 +126,19 @@ const JoinLobby = () => {
                   <TableCell>{lobby.id}</TableCell>
                   <TableCell>{lobby.name}</TableCell>
                   <TableCell>{lobby.joinedParticipants}</TableCell>
-                </TableRow>
+                </TableRow>,
               )}
             </TableBody>
           )}
         </Table>
         <div className="w-full flex justify-center mt-24 mb-4">
           <JoinButton
-            onClick={handleClickList}/>
+            onClick={handleClickList} />
         </div>
       </div>
 
     );
-  }
+  };
   const columns = [
     {
       key: "id",
@@ -152,52 +161,52 @@ const JoinLobby = () => {
   return (
     <div className="relative min-h-screen w-screen">
       <div className="absolute top-4 left-4">
-        <BackButton onClick={handleBackClick}/>
+        <BackButton onClick={handleBackClick} />
       </div>
       <div className="flex justify-center items-center h-full">
-        <BaseContainer 
-          size="small" 
+        <BaseContainer
+          size="small"
           className="flex flex-col items-center">
           <div className="flex flex-col gap-3">
-        <Table
-          color={"default"}
-          selectionMode="single"
-          //defaultSelectedKeys={["2"]}
-          //selectedKeys={selectedKeys}
-          aria-label="Example static collection table"
-          //onSelectionChange={handleSelectionChange}
-          //onSelectionChange={setSelectedKeys}
-          //selectionBehavior={selectionBehavior}
-          onRowAction={(key) =>setSelectedLobbyId(key)}
-        >
-          <TableHeader>
-            <TableColumn>ID</TableColumn>
-            <TableColumn>LOBBY NAME</TableColumn>
-            <TableColumn>NR OF JOINED PARTICIPANTS</TableColumn>
-            <TableColumn>MAX NR OF PARTICIPANTS</TableColumn>
-          </TableHeader>
-{lobbies && (
-            <TableBody>
-              {lobbies.map((lobby: Lobby) =>
-                <TableRow key={lobby.id}>
-                  <TableCell>{lobby.id}</TableCell>
-                  <TableCell>{lobby.name}</TableCell>
-                  <TableCell>{lobby.joinedParticipants}</TableCell>
-                  <TableCell>{lobby.maxParticipants}</TableCell>
-                </TableRow>
+            <Table
+              color={"default"}
+              selectionMode="single"
+              //defaultSelectedKeys={["2"]}
+              //selectedKeys={selectedKeys}
+              aria-label="Example static collection table"
+              //onSelectionChange={handleSelectionChange}
+              //onSelectionChange={setSelectedKeys}
+              //selectionBehavior={selectionBehavior}
+              onRowAction={(key) => setSelectedLobbyId(key)}
+            >
+              <TableHeader>
+                <TableColumn>ID</TableColumn>
+                <TableColumn>LOBBY NAME</TableColumn>
+                <TableColumn>NR OF JOINED PARTICIPANTS</TableColumn>
+                <TableColumn>MAX NR OF PARTICIPANTS</TableColumn>
+              </TableHeader>
+              {lobbies && (
+                <TableBody>
+                  {lobbies.map((lobby: Lobby) =>
+                    <TableRow key={lobby.id}>
+                      <TableCell>{lobby.id}</TableCell>
+                      <TableCell>{lobby.name}</TableCell>
+                      <TableCell>{lobby.joinedParticipants}</TableCell>
+                      <TableCell>{lobby.maxParticipants}</TableCell>
+                    </TableRow>,
+                  )}
+                </TableBody>
               )}
-            </TableBody>
-          )}
-        </Table>
-        <div className="w-full flex justify-center mt-24 mb-4">
-          <JoinButton
-            onClick={handleClickList}
-            isDisabled = {!selectedLobbyId}/>
-        </div>
-      </div>
+            </Table>
+            <div className="w-full flex justify-center mt-24 mb-4">
+              <JoinButton
+                onClick={handleClickList}
+                isDisabled={!selectedLobbyId} />
+            </div>
+          </div>
 
           <div className="w-full flex justify-center mb-4">
-            <CreateButton/>
+            <CreateButton />
           </div>
         </BaseContainer>
       </div>
