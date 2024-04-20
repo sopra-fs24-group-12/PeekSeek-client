@@ -46,8 +46,6 @@ const CreateLobby = () => {
      
       const lobby = new Lobby(response.data);
 
-
-      //const token = response.headers["Access-Control-Expose-Headers"];
       
       localStorage.setItem("token", response.headers);
       console.log("This should be the token" + response.headers);

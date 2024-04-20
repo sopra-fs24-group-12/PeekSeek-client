@@ -22,48 +22,13 @@ const JoinUser = () => {
         console.log('Button clicked!');
         navigate("/joinlobby");
       };
-    /* -- > Ece's code
-    useEffect(() => {
-        const fetchLobbyData = async () => {
-          try {
-            /*
-            const response = await fetch("backend");    // will change
-            const data = await response.json();
-            // if requiresPassword is returned as boolean
-            setLobbyRequiresPassword(data.requiresPassword);
-            const response = await api.get("/lobbies/" + id);
-
-            //await new Promise((resolve) => setTimeout(resolve, 1000));
-
-            //setLobbies(response.data);
-
-            //alert(lobbies);
-
-            // This is just some data for you to see what is available.
-            // Feel free to remove it.
-            console.log("request to:", response.request.responseURL);
-            console.log("status code:", response.status);
-            console.log("status text:", response.statusText);
-            console.log("requested data:", response.data);
-
-            // See here to get more data.
-            console.log(response);
-            } catch (error) {
-                console.error("Failed to fetch lobby data:", error);
-            } finally {
-                setIsLoading(false);
-          }
-        };
-        
-        fetchLobbyData();
-    }, []);
-    */
+    
 
     const handleJoinClick = async () => {
         try{
         const requestBody = JSON.stringify({username, lobbyPassword});
         const response = await api.put("/lobbies/" + id + "/join", requestBody);
-        localStorage.setItem("token:", response.headers);
+        localStorage.setItem("token", response.headers);
         if (response.status >= 300){
             navigate("/joinlobby");
         }
@@ -76,14 +41,7 @@ const JoinUser = () => {
             alert("Please provide the correct password for the lobby you are joining");
             navigate("/joinlobby");
         }
-        /* --> Ece's code
-        if (!username) {
-            setError("Username cannot be empty");
-            alert("Username cannot be empty");
-        } else {
-            console.log("Joining lobby");
-            setError(""); // Clear any errors if successful
-        }*/
+        
     };
 
 

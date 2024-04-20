@@ -34,7 +34,7 @@ const JoinLobby = () => {
       const requestBody = JSON.stringify({username, password}); //
       const response = await api.post("/lobbies/" + id + "/join", localStorage.getItem("token"));
       
-      //localStorage.setItem("token", response.data.token);
+     
       navigate("/game");
     } catch (error) {
       alert(
@@ -62,14 +62,10 @@ const JoinLobby = () => {
       try {
         const response = await api.get("/lobbies");
 
-        //await new Promise((resolve) => setTimeout(resolve, 1000));
-
+        
         setLobbies(response.data);
 
-        //alert(lobbies);
-
-        // This is just some data for you to see what is available.
-        // Feel free to remove it.
+        
         console.log("request to:", response.request.responseURL);
         console.log("status code:", response.status);
         console.log("status text:", response.statusText);
