@@ -19,7 +19,7 @@ const ContentWrapper: React.FC<ContentWrapperProps> = ({ children }) => {
         maxHeight: "450px",
         overflowY: "auto",
         width: "100%"
-        }}
+      }}
       >
         {children}
       </CardBody>
