@@ -4,14 +4,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Client } from "@stomp/stompjs";
 import { getWebsocketDomain } from 'helpers/getDomain';
 
-
 //import UI elements
 import BaseContainer from "../ui/BaseContainer";
 import SubmissionCard from "../ui/SubmissionCard";
-import Chat from "../ui/Chat";
 import SubmitButton from "../ui/SubmitButton";
 import Timer from "../ui/Timer";
-import game from "./Game";
 
 
 interface CardData {
@@ -21,6 +18,7 @@ interface CardData {
   anonymousName: string;
   imageUrl?: string;
   link: string;
+  noSubmission: boolean;
 }
 
 class ExtendedDictionary {
@@ -57,7 +55,7 @@ const GameSubmission = () => {
   const [banned, setBanned] = useState(new ExtendedDictionary());
   const [remainingSeconds, setRemainingSeconds] = useState(0);
   const navigate = useNavigate();
-  // const [cardsData, setCardsData] = useState<CardData[]>([]);
+  const [cardsData, setCardsData] = useState<CardData[]>([]);
 
 
   const mergeDataForSubmission = (): ExtendedDictionary => {
@@ -84,6 +82,9 @@ const GameSubmission = () => {
 
     return `${baseUrl}?${params}`;
   }
+
+  const animalNames = ["Koala", "Bear", "Giraffe", "Zebra", "Gazelle", "Elephant"];
+  const shuffledAnimalNames = [...animalNames].sort(() => Math.random() - 0.5);
 
   useEffect(() => {
     let client = new Client();
@@ -118,93 +119,109 @@ const GameSubmission = () => {
     };
   }, [])
 
-  // useEffect(() => {
-  //   //only for dev purposes
-  //   localStorage.setItem("token", "e4406427-b4e0-426c-870b-1a44d6b474ca");
-  //   localStorage.setItem("username", "a");
-  //
-  //   async function fetchData() {
-  //     const headers = {
-  //       "Authorization": localStorage.getItem("token"),
-  //     };
-  //
-  //     try {
-  //       const response = await api.get("/games/" + gameId + "/submissions", { headers });
-  //       console.log("API Response 1:", response.data);
-  //
-  //       const response1 = await api.get("/games/" + gameId + "/round", { headers });
-  //       console.log("API Response 2:", response1.data);
-  //
-  //       const transformedData: CardData[] = response.data.map((item: any) => ({
-  //         id: item.id,
-  //         cityName: response1.data.gameLocation,
-  //         quest: response1.data.quest,
-  //         anonymousName: `Anonymous ${item.id}`,
-  //         imageUrl: !item.noSubmission ? generateStreetViewImageLink(item.submittedLocation.lat, item.submittedLocation.lng, item.submittedLocation.heading, item.submittedLocation.pitch) : "", // Use item.image if available, otherwise empty string
-  //         //link: "https://example.com/link1"
-  //       }));
-  //
-  //       setCardsData(transformedData);
-  //     } catch (error) {
-  //       alert(
-  //           `Something went wrong while fetching submission information: \n${handleError(error)}`
-  //       );
-  //     }
-  //   }
-  //
-  //   fetchData();
-  // }, [])
+  useEffect(() => {
+    localStorage.setItem("token", "aeeafad9-60c5-4662-8ea7-6909a7d8b9e5");
+    localStorage.setItem("username", "a");
 
-  const cardsData = [
-    {
-      id: 1,
-      cityName: "Rome",
-      quest: "Locate the best sunrise spot",
-      anonymousName: "Anonymous Koala",
-      imageUrl: generateStreetViewImageLink("10", "10", "10", "10"),
-      link: "https://example.com/link1",
-    },
-    {
-      id: 2,
-      cityName: "Rome",
-      quest: "Locate the best sunrise spot",
-      anonymousName: "Anonymous Bear",
-      imageUrl: generateStreetViewImageLink("10", "10", "10", "10"),
-      link: "https://example.com/link1",
-    },
-    {
-      id: 3,
-      cityName: "Rome",
-      quest: "Locate the best sunrise spot",
-      anonymousName: "Anonymous Giraffe",
-      imageUrl: generateStreetViewImageLink("10", "10", "10", "10"),
-      link: "https://example.com/link1",
-    },
-    {
-      id: 4,
-      cityName: "Rome",
-      quest: "Locate the best sunrise spot",
-      anonymousName: "Anonymous Zebra",
-      imageUrl: generateStreetViewImageLink("10", "10", "10", "10"),
-      link: "https://example.com/link1",
-    },
-    {
-      id: 5,
-      cityName: "Rome",
-      quest: "Locate the best sunrise spot",
-      anonymousName: "Anonymous Gazelle",
-      imageUrl: generateStreetViewImageLink("11", "11", "11", "11"),
-      link: "https://example.com/link1",
-    },
-    {
-      id: 6,
-      cityName: "Rome",
-      quest: "Locate the best sunrise spot",
-      anonymousName: "Anonymous Elephant",
-      imageUrl: generateStreetViewImageLink("10", "10", "10", "10"),
-      link: "https://example.com/link1",
-    },
-  ];
+    async function fetchData() {
+      const headers = {
+        "Authorization": localStorage.getItem("token"),
+      };
+
+      try {
+        const response = await api.get("/games/" + gameId + "/submissions", { headers });
+        console.log("API Response 1:", response.data);
+
+        const response1 = await api.get("/games/" + gameId + "/round", { headers });
+        console.log("API Response 2:", response1.data);
+
+        const transformedData: CardData[] = response.data.map((item: any, index: number) => ({
+          id: item.id,
+          cityName: !item.noSubmission? response1.data.gameLocation: "",
+          quest: !item.noSubmission? response1.data.quest: "",
+          anonymousName: !item.noSubmission?`Anonymous ${shuffledAnimalNames[index]}`: "NOTHING FOUND",
+          imageUrl: !item.noSubmission ? generateStreetViewImageLink(item.submittedLocation.lat, item.submittedLocation.lng, item.submittedLocation.heading, item.submittedLocation.pitch) : "", // Use item.image if available, otherwise empty string
+          noSubmission: item.noSubmission
+          //link: "https://example.com/link1"
+        }));
+
+        transformedData.sort((a, b) => {
+          if (a.noSubmission && !b.noSubmission) {
+            return 1;
+          } else if (!a.noSubmission && b.noSubmission) {
+            return -1;
+          } else {
+            return 0;
+          }
+        });
+
+        setCardsData(transformedData);
+      } catch (error) {
+        alert(
+            `Something went wrong while fetching submission information: \n${handleError(error)}`
+        );
+      }
+    }
+
+    fetchData();
+  }, [])
+
+  // const cardsData = [
+  //   {
+  //     id: 1,
+  //     cityName: "Rome",
+  //     quest: "Locate the best sunrise spot",
+  //     anonymousName: "Anonymous Koala",
+  //     imageUrl: generateStreetViewImageLink("10", "10", "10", "10"),
+  //     link: "https://example.com/link1",
+  //     noSubmission: true,
+  //   },
+  //   {
+  //     id: 2,
+  //     cityName: "Rome",
+  //     quest: "Locate the best sunrise spot",
+  //     anonymousName: "Anonymous Bear",
+  //     imageUrl: generateStreetViewImageLink("10", "10", "10", "10"),
+  //     link: "https://example.com/link1",
+  //     noSubmission: false,
+  //   },
+  //   {
+  //     id: 3,
+  //     cityName: "Rome",
+  //     quest: "Locate the best sunrise spot",
+  //     anonymousName: "Anonymous Giraffe",
+  //     imageUrl: generateStreetViewImageLink("10", "10", "10", "10"),
+  //     link: "https://example.com/link1",
+  //     noSubmission: false,
+  //   },
+  //   {
+  //     id: 4,
+  //     cityName: "Rome",
+  //     quest: "Locate the best sunrise spot",
+  //     anonymousName: "Anonymous Zebra",
+  //     imageUrl: generateStreetViewImageLink("10", "10", "10", "10"),
+  //     link: "https://example.com/link1",
+  //     noSubmission: false,
+  //   },
+  //   {
+  //     id: 5,
+  //     cityName: "Rome",
+  //     quest: "Locate the best sunrise spot",
+  //     anonymousName: "Anonymous Gazelle",
+  //     imageUrl: generateStreetViewImageLink("11", "11", "11", "11"),
+  //     link: "https://example.com/link1",
+  //     noSubmission: false,
+  //   },
+  //   {
+  //     id: 6,
+  //     cityName: "Rome",
+  //     quest: "Locate the best sunrise spot",
+  //     anonymousName: "Anonymous Elephant",
+  //     imageUrl: generateStreetViewImageLink("10", "10", "10", "10"),
+  //     link: "https://example.com/link1",
+  //     noSubmission: false,
+  //   },
+  // ];
 
 
   const handleImageClick = (url: string) => {
@@ -272,6 +289,7 @@ const GameSubmission = () => {
                 onUnbanClick={() => handleUnbanClick(card.id)}
                 isPicked={pickedCardId === card.id}
                 isBanned={banned.hasKey(card.id)}
+                noSubmission={card.noSubmission}
               />
             ))}
           </div>

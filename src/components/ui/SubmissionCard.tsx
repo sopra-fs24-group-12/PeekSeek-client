@@ -16,6 +16,7 @@ interface SubmissionCardProps {
   onUnbanClick: () => void;
   isPicked: boolean;
   isBanned: boolean;
+  noSubmission: boolean;
 }
 
 const greenBorderStyle = {
@@ -47,6 +48,7 @@ const SubmissionCard: React.FC<SubmissionCardProps> =
      onUnbanClick,
      isPicked,
      isBanned,
+     noSubmission,
    }) => {
 
 
@@ -62,8 +64,7 @@ const SubmissionCard: React.FC<SubmissionCardProps> =
 
     return (
       <Card style={determineBorderStyle()}
-            className="py-4 mx-auto max-w-xs"
-
+            className={`py-4 mx-auto max-w-xs ${noSubmission ? 'opacity-50 pointer-events-none' : ''}`}
       >
         <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
           <p className="text-tiny uppercase font-bold">{cityName}</p>
