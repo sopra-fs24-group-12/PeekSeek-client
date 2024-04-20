@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { api, handleError } from "helpers/api";
 import { Client } from "@stomp/stompjs";
 import { Library } from "@googlemaps/js-api-loader";
+import { getWebsocketDomain } from 'helpers/getDomain';
 
 //imports for UI
 import BaseContainer from "../ui/BaseContainer";

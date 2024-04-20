@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { api, handleError } from "helpers/api";
 import { useNavigate, useParams } from "react-router-dom";
 import { Client } from "@stomp/stompjs";
+import { getWebsocketDomain } from 'helpers/getDomain';
+
 
 //import UI elements
 import BaseContainer from "../ui/BaseContainer";
@@ -85,7 +87,7 @@ const GameSubmission = () => {
 
   useEffect(() => {
     let client = new Client();
-    const websocketUrl = 'ws://localhost:8080/ws';
+    const websocketUrl = getWebsocketDomain();
     client.configure({
       brokerURL: websocketUrl,
       debug: function(str) {

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { api, handleError } from "helpers/api";
+import { getWebsocketDomain } from 'helpers/getDomain';
 
 //import UI Elements
 import BaseContainer from "../ui/BaseContainer";
@@ -108,7 +109,7 @@ const VotingResults = () => {
 
   useEffect(() => {
     let client = new Client();
-    const websocketUrl = 'ws://localhost:8080/ws';
+    const websocketUrl = getWebsocketDomain();
     client.configure({
       brokerURL: websocketUrl,
       debug: function(str) {
