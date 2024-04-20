@@ -3,6 +3,7 @@ import { Card, CardHeader, CardBody, Image, CardFooter, Button } from "@nextui-o
 
 // @ts-ignore
 import placeholder from "../../assets/modelSubmission.png";
+
 interface SubmissionCardProps {
   cityName: string;
   quest: string;
@@ -14,15 +15,16 @@ interface SubmissionCardProps {
 }
 
 const SubmissionCard: React.FC<SubmissionCardProps> =
-  ({
-     cityName,
-     quest,
-     anonymousName,
-     imageUrl,
-     onImageClick,
-     onPickClick,
-     onBanClick
-   }) => {
+  (
+    {
+      cityName,
+      quest,
+      anonymousName,
+      imageUrl,
+      onImageClick,
+      onPickClick,
+      onBanClick,
+    }) => {
     return (
       <Card
         className="py-4 mx-auto max-w-xs"

@@ -15,7 +15,7 @@ import { getWebsocketDomain } from "helpers/getDomain";
 const Lobby = () => {
   const [quests, setQuests] = React.useState(["", "", "", ""]);
   const [players, setPlayers] = useState([]);
-  const {lobbyId} =  useParams();
+  const { lobbyId } = useParams();
   const navigate = useNavigate();
   const [lobbyName, setLobbyName] = useState("");
   const [admin, setAdmin] = useState(false);
@@ -29,16 +29,17 @@ const Lobby = () => {
   interface InputQuestsProps {
     disabled: boolean;
   }
-  
+
   interface CityInputFieldProps {
     disabled: boolean;
   }
-  
+
   function filterNonEmptyQuests(): string[] {
     return quests.filter((str) => {
       if (typeof str === "string") {
         return str.trim() !== "";
       }
+
       return false;
     });
   }
@@ -69,19 +70,19 @@ const Lobby = () => {
       };
 
       try {
-        const response = await api.get(`/lobbies/${lobbyId}`, {headers});
+        const response = await api.get(`/lobbies/${lobbyId}`, { headers });
         console.log("API Response:", response.data);
 
         setLobbyName(response.data.name);
         setPlayers(response.data.participants);
         if (response.data.quests === null || response.data.quests.length === 0) {
-          setQuests(["", "", "", ""])
+          setQuests(["", "", "", ""]);
         } else {
           setQuests([...response.data.quests, ""]);
         }
         setRoundDurationSeconds(response.data.roundDurationSeconds || 120);
         setCityName(response.data.gameLocation);
-        setAdmin(response.data.adminUsername === localStorage.getItem("username"))
+        setAdmin(response.data.adminUsername === localStorage.getItem("username"));
         if (response.data.gameLocationCoordinates) {
           setLat(response.data.gameLocationCoordinates.lat);
           setLng(response.data.gameLocationCoordinates.lng);
@@ -90,15 +91,15 @@ const Lobby = () => {
           setLng("0");
         }
         setSettingsConfirmed(response.data.quests && response.data.quests.length > 0 && response.data.gameLocation);
-      } catch(error) {
+      } catch (error) {
         alert(
-          `Something went wrong while fetching lobby information: \n${handleError(error)}`
+          `Something went wrong while fetching lobby information: \n${handleError(error)}`,
         );
       }
     }
 
     fetchData();
-  }, [])
+  }, []);
 
   useEffect(() => {
     const handleUnload = async (event) => {
@@ -109,18 +110,18 @@ const Lobby = () => {
       event.preventDefault();
 
       try {
-        await api.delete(`/lobbies/${lobbyId}/leave`, {headers});
+        await api.delete(`/lobbies/${lobbyId}/leave`, { headers });
       } catch (error) {
         alert(
-          `Something went wrong while leaving the lobby: \n${handleError(error)}`
+          `Something went wrong while leaving the lobby: \n${handleError(error)}`,
         );
       }
     };
 
-    window.addEventListener('beforeunload', handleUnload);
+    window.addEventListener("beforeunload", handleUnload);
 
     return () => {
-      window.removeEventListener('beforeunload', handleUnload);
+      window.removeEventListener("beforeunload", handleUnload);
     };
   }, []);
 
@@ -133,10 +134,10 @@ const Lobby = () => {
         console.log(str);
       },
       onConnect: () => {
-        const destination = `/topic/lobby/` + lobbyId;
+        const destination = "/topic/lobby/" + lobbyId;
         client && client.subscribe(destination, (message) => {
           let messageParsed = JSON.parse(message.body);
-          console.log('Received message:', messageParsed);
+          console.log("Received message:", messageParsed);
 
           if (messageParsed.status === "joined") {
             addPlayer(messageParsed.username);
@@ -147,13 +148,13 @@ const Lobby = () => {
             if (messageParsed.newAdmin) {
               if (messageParsed.newAdmin === localStorage.getItem("username")) {
                 setAdmin(true);
-                openNotification("You are the new admin!")
+                openNotification("You are the new admin!");
               }
             }
           } else if (messageParsed.status === "update") {
             setCityName(messageParsed.gameLocation);
             if (messageParsed.quests === null || messageParsed.quests.length === 0) {
-              setQuests(["", "", "", ""])
+              setQuests(["", "", "", ""]);
             } else {
               setQuests([...messageParsed.quests, ""]);
             }
@@ -167,18 +168,18 @@ const Lobby = () => {
             }
             openNotification("Lobby settings have been updated");
           } else if (messageParsed.status === "started") {
-              const gameId = messageParsed.gameId;
-              navigate("/game/" + gameId);
+            const gameId = messageParsed.gameId;
+            navigate("/game/" + gameId);
           }
         });
       },
-    })
+    });
     client.activate();
 
     return () => {
       client && client.deactivate();
     };
-  }, [])
+  }, []);
 
   const InputQuests: React.FC<InputQuestsProps> = ({ disabled }) => {
     const [localQuests, setLocalQuests] = useState(quests);
@@ -186,28 +187,28 @@ const Lobby = () => {
     useEffect(() => {
       setLocalQuests([...quests]);
     }, [quests]);
-  
+
     const handleQuestChange = (index, value) => {
       const updatedQuests = [...localQuests];
       updatedQuests[index] = value;
-  
+
       if (index === updatedQuests.length - 1 && value.trim() !== "") {
         updatedQuests.push("");
       }
-  
+
       setLocalQuests(updatedQuests);
     };
-    
+
 
     const deleteQuest = (index) => {
-    const updatedQuests = [...localQuests];
-    updatedQuests.splice(index, 1);
-    setLocalQuests(updatedQuests);
-    }
+      const updatedQuests = [...localQuests];
+      updatedQuests.splice(index, 1);
+      setLocalQuests(updatedQuests);
+    };
 
     const saveQuestsToGlobal = () => {
       setQuests(localQuests.filter(quest => quest.trim() !== ""));
-    }
+    };
 
     return (
       <ScrollableContentWrapper>
@@ -228,15 +229,15 @@ const Lobby = () => {
               style={{ boxSizing: "border-box" }}
               disabled={disabled}
             />
-        ))}
+          ))}
         </div>
-        <Button 
+        <Button
           radius="md"
           size="sm"
           style={{ marginTop: "10px" }}
-          disabled={disabled} 
+          disabled={disabled}
           onClick={saveQuestsToGlobal}>
-            Save Quests
+          Save Quests
         </Button>
       </ScrollableContentWrapper>
     );
@@ -250,7 +251,7 @@ const Lobby = () => {
     }, [cityName]);
 
     const handleCityNameChange = (event) => {
-    setLocalCityName(event.target.value);
+      setLocalCityName(event.target.value);
     };
 
     const saveCityNameToGlobal = () => {
@@ -269,7 +270,7 @@ const Lobby = () => {
           style={{ width: "300px" }}
           disabled={!admin}
         />
-        <Button 
+        <Button
           radius="md"
           size="sm"
           style={{ paddingLeft: "20px", paddingRight: "20px" }}
@@ -282,15 +283,19 @@ const Lobby = () => {
   const SaveButton: React.FC = () => {
     async function save() {
       const headers = {
-        "Authorization": localStorage.getItem("token")
+        "Authorization": localStorage.getItem("token"),
       };
-      const body = JSON.stringify({quests: filterNonEmptyQuests(), gameLocation: cityName || "Zürich", roundDurationSeconds});
+      const body = JSON.stringify({
+        quests: filterNonEmptyQuests(),
+        gameLocation: cityName || "Zürich",
+        roundDurationSeconds,
+      });
       try {
         await api.put("/lobbies/" + lobbyId, body, { headers });
         setSettingsConfirmed(true);
-      } catch(error) {
+      } catch (error) {
         alert(
-          `Something went wrong while saving lobby settings: \n${handleError(error)}`
+          `Something went wrong while saving lobby settings: \n${handleError(error)}`,
         );
       }
     }
@@ -299,8 +304,8 @@ const Lobby = () => {
       <Button
         disabled={!admin}
         radius="full"
-        size = "lg"
-        color = "default"
+        size="lg"
+        color="default"
         className="shadow-lg"
         onClick={() => {
           console.log("Saving settings");
@@ -317,15 +322,15 @@ const Lobby = () => {
 
     async function leave() {
       const headers = {
-        "Authorization": localStorage.getItem("token")
+        "Authorization": localStorage.getItem("token"),
       };
       try {
         const response = await api.delete("/lobbies/" + lobbyId + "/leave/", { headers });
         localStorage.removeItem("token");
         navigate("/landing");
-      } catch(error) {
+      } catch (error) {
         alert(
-          `Something went wrong when leaving the lobby: \n${handleError(error)}`
+          `Something went wrong when leaving the lobby: \n${handleError(error)}`,
         );
       }
     }
@@ -333,8 +338,8 @@ const Lobby = () => {
     return (
       <Button
         radius="full"
-        size = "lg"
-        color = "default"
+        size="lg"
+        color="default"
         className="shadow-lg"
         onClick={() => {
           console.log("Leaving lobby");
@@ -376,18 +381,18 @@ const Lobby = () => {
       <h1 className="text-3xl font-bold text-gray-700 my-4 text-center">{lobbyName}</h1>
       <div className="flex w-full">
         <div className="flex flex-col w-full items-start gap-4 ml-6">
-          <TimeButtons 
-            selectedDuration={roundDurationSeconds} 
-            setRoundDurationSeconds={setRoundDurationSeconds} 
-            disabled={!admin || settingsConfirmed}/>
-          <PlayerTable 
+          <TimeButtons
+            selectedDuration={roundDurationSeconds}
+            setRoundDurationSeconds={setRoundDurationSeconds}
+            disabled={!admin || settingsConfirmed} />
+          <PlayerTable
             players={players} />
         </div>
         <div className="flex-1 items-center justify-center px-16">
-        <ContentWrapper>
-          <CityInputField
-            disabled={!admin || settingsConfirmed} />
-        </ContentWrapper>
+          <ContentWrapper>
+            <CityInputField
+              disabled={!admin || settingsConfirmed} />
+          </ContentWrapper>
           <GoogleMapStaticImage />
         </div>
         <div className="flex flex-col w-full items-end mr-8">
@@ -396,7 +401,7 @@ const Lobby = () => {
         </div>
         <div className="w-full flex justify-between px-12 absolute bottom-8">
           <LeaveButton />
-          <StartButton 
+          <StartButton
             disabled={!settingsConfirmed}
             lobbyId={lobbyId}
           />
