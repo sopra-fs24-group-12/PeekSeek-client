@@ -33,24 +33,6 @@ const JoinLobby = () => {
     console.log("Button clicked!");
     navigate("/joinlobby");
   };
-  const handleClick = () => {
-    console.log("Button clicked!");
-    doLogin();
-  };
-
-  const doLogin = async () => {
-    try {
-      const requestBody = JSON.stringify({ username, password }); //
-      const response = await api.post("/lobbies/" + id + "/join", localStorage.getItem("token"));
-
-
-      navigate("/game");
-    } catch (error) {
-      alert(
-        `Something went wrong during the login: \n${handleError(error)}`,
-      );
-    }
-  };
 
 
   const handleSelectionChange = (selectedKeys) => {
@@ -103,60 +85,6 @@ const JoinLobby = () => {
   const [selectedLobbyId, setSelectedLobbyId] = useState();
   const [selectionBehavior, setSelectionBehavior] = React.useState("replace");
 
-  const LobbyTable = () => {
-
-    return (
-      <div className="flex flex-col gap-3">
-        <Table
-          color={"default"}
-          selectionMode="single"
-          //defaultSelectedKeys={["2"]}
-          aria-label="Example static collection table"
-          onSelectionChange={handleSelectionChange}
-        >
-          <TableHeader>
-            <TableColumn>ID</TableColumn>
-            <TableColumn>LOBBY NAME</TableColumn>
-            <TableColumn>PARTICIPANTS</TableColumn>
-          </TableHeader>
-          {lobbies && (
-            <TableBody>
-              {lobbies.map((lobby: Lobby) =>
-                <TableRow key={lobby.id}>
-                  <TableCell>{lobby.id}</TableCell>
-                  <TableCell>{lobby.name}</TableCell>
-                  <TableCell>{lobby.joinedParticipants}</TableCell>
-                </TableRow>,
-              )}
-            </TableBody>
-          )}
-        </Table>
-        <div className="w-full flex justify-center mt-24 mb-4">
-          <JoinButton
-            onClick={handleClickList} />
-        </div>
-      </div>
-
-    );
-  };
-  const columns = [
-    {
-      key: "id",
-      label: "ID",
-    },
-    {
-      key: "name",
-      label: "LOBBY NAME",
-    },
-    {
-      key: "maxParticipants",
-      label: "MAX PARTICIPANTS",
-    },
-    {
-      key: "joinedParticipants",
-      label: "JOINED PARTICIPANTS",
-    },
-  ];
 
   return (
     <div className="relative min-h-screen w-screen">
@@ -182,8 +110,8 @@ const JoinLobby = () => {
               <TableHeader>
                 <TableColumn>ID</TableColumn>
                 <TableColumn>LOBBY NAME</TableColumn>
-                <TableColumn>NR OF JOINED PARTICIPANTS</TableColumn>
-                <TableColumn>MAX NR OF PARTICIPANTS</TableColumn>
+                <TableColumn>PARTICIPANTS</TableColumn>
+                <TableColumn>PASSWORD</TableColumn>
               </TableHeader>
               {lobbies && (
                 <TableBody>
@@ -191,8 +119,8 @@ const JoinLobby = () => {
                     <TableRow key={lobby.id}>
                       <TableCell>{lobby.id}</TableCell>
                       <TableCell>{lobby.name}</TableCell>
-                      <TableCell>{lobby.joinedParticipants}</TableCell>
-                      <TableCell>{lobby.maxParticipants}</TableCell>
+                      <TableCell>{lobby.joinedParticipants + " / " + lobby.maxParticipants}</TableCell>
+                      <TableCell>{lobby.passwordProtected?"🔒" : ""}</TableCell>
                     </TableRow>,
                   )}
                 </TableBody>
