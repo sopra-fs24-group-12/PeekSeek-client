@@ -1,5 +1,7 @@
 # https://cloud.google.com/appengine/docs/flexible/reference/app-yaml?tab=node.js#top
 runtime: nodejs20
+env_variables:
+  REACT_APP_GOOGLE_MAPS_API_KEY: $MAPS_API_KEY
 
 handlers:
   - url: /static/js/(.*)
