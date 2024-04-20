@@ -17,7 +17,7 @@ const Lobby = () => {
   const {lobbyId} =  useParams();
   const navigate = useNavigate();
   const [lobbyName, setLobbyName] = useState("");
-  const [admin, setAdmin] = useState(true);
+  const [admin, setAdmin] = useState(false);
   const [roundDurationSeconds, setRoundDurationSeconds] = useState(120);   // Default to 2mins
   const [lat, setLat] = useState("");
   const [lng, setLng] = useState("");
@@ -59,7 +59,7 @@ const Lobby = () => {
 
 
   useEffect(() => {
-    localStorage.setItem("token", "75f3475c-881c-4f1e-9429-9746a6cd1645");
+    localStorage.setItem("token", "13a9cbc3-e29c-4fa2-ab92-e02c898b0406");
     localStorage.setItem("username", "admin");
 
     async function fetchData() {
@@ -80,8 +80,13 @@ const Lobby = () => {
         }
         setRoundDurationSeconds(response.data.roundDurationSeconds || 120);
         setCityName(response.data.gameLocation);
-        setLat(response.data.gameLocationCoordinates.lat);
-        setLng(response.data.gameLocationCoordinates.lng);
+        if (response.data.gameLocationCoordinates) {
+          setLat(response.data.gameLocationCoordinates.lat);
+          setLng(response.data.gameLocationCoordinates.lng);
+        } else {
+          setLat("0");
+          setLng("0");
+        }
       } catch(error) {
         alert(
           `Something went wrong while fetching lobby information: \n${handleError(error)}`
@@ -142,8 +147,14 @@ const Lobby = () => {
               setQuests([...messageParsed.quests, ""]);
             }
             setRoundDurationSeconds(messageParsed.roundDurationSeconds);
-            setLat(messageParsed.gameLocationCoordinates.lat);
-            setLng(messageParsed.gameLocationCoordinates.lng);
+            if (messageParsed.gameLocationCoordinates !== null) {
+              setLat(messageParsed.gameLocationCoordinates.lat);
+              setLng(messageParsed.gameLocationCoordinates.lng);
+            } else {
+              setLat("0");
+              setLng("0");
+            }
+
             openNotification("Lobby settings have been updated");
           }
 
@@ -343,7 +354,7 @@ const Lobby = () => {
 
   const InteractionDisabledOverlay = () => (
     <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
-      <p className="text-white text-xl">Waiting for the admin to configure the game settings...</p>
+      <p className="text-white text-xl">Waiting for the admin to configure and start the game...</p>
     </div>
   );
 
