@@ -12,6 +12,7 @@ const BackDashboardButton: React.FC = () => {
       color = "default"
       onClick={() => {
         console.log("Back to Dashboard Button clicked!");
+        localStorage.clear();
         navigate("/landing");
       }}
     >
