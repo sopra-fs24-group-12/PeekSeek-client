@@ -18,8 +18,6 @@ const JoinLobby = () => {
   const staticMapImageUrl = "URL_STATIC_MAP";
   const [username, setUsername] = useState<string>(null);
   const [password, setPassword] = useState<string> (null);
-  //const [id, setID] = useState<string>(null);
-  //setID(selectedLobbyID);
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
   const {id} = useParams();
   const handleBackClick = () => {
@@ -47,19 +45,15 @@ const JoinLobby = () => {
 
 
   const handleSelectionChange = (selectedKeys) => {
-    // Assuming single selection mode, get the first selected key
-    //alert(selectedKeys);
+   
     const selectedKey = selectedKeys[0];
-    //setSelectedLobbyId(selectedKey);
-    console.log("selected id " + selectedKeys[0])    //alert(selectedKey);
+    
+    console.log("selected id " + selectedKeys[0])    
   };
 
   const handleClickList = () => {
     console.log('Button clicked!');
-    //localStorage.setItem("token");
-    //const response = await api.post("/lobbies/" + selectedLobbyId + "/join", localStorage.getItem("token"));
-    //alert(selectedLobbyId);
-    //navigate("/lobbies/" + selectedLobbyId + "/join");
+    
     navigate("/joinuser/" + selectedLobbyId);
   };
 
@@ -106,10 +100,6 @@ const JoinLobby = () => {
 
   const LobbyTable = () => {
 
-    //console.log(lobbies);
-   // console.log(lobbies[0].id)
-//code umschreiben um daten vom api call hier sichtbar zu machen
-//api call im join.tsx, daten vom api call in Lobby table eingeben, und routing auch
     return (
       <div className="flex flex-col gap-3">
         <Table
@@ -187,8 +177,8 @@ const JoinLobby = () => {
           <TableHeader>
             <TableColumn>ID</TableColumn>
             <TableColumn>LOBBY NAME</TableColumn>
+            <TableColumn>NR OF JOINED PARTICIPANTS</TableColumn>
             <TableColumn>MAX NR OF PARTICIPANTS</TableColumn>
-            <TableColumn>NR OF Joined PARTICIPANTS</TableColumn>
           </TableHeader>
 {lobbies && (
             <TableBody>
@@ -220,8 +210,6 @@ const JoinLobby = () => {
 };
 
 export default JoinLobby;
-
-//make a useEffect hook call und dadrin die response vom backend holen im backend im Lobbycontroller
 
 /*
 const columns = [

@@ -6,28 +6,28 @@ import {Input} from "@nextui-org/react";
 import { api, handleError } from "helpers/api";
 import { useNavigate } from "react-router-dom";
 import Lobby from "models/Lobby";
-//daten vom user als post request 
+
 const CreateLobby = () => {
   const navigate = useNavigate();
   const [name, setLobbyname] = useState<string>(null);
   const [username, setUsername] = useState<string>(null);
-  const [password, setLobbypassword] = useState<string>(null);
+  const [password, setLobbypassword] = useState<string>("");
   const handleLobbyPasswordChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    // Extract the value from the event object
+    
     const newPassword = event.target.value;
-    // Update the state with the new value
+    
     setLobbypassword(newPassword);
   };
   const handleLobbyAdminChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    // Extract the value from the event object
+    
     const newUsername = event.target.value;
-    // Update the state with the new value
+    
     setUsername(newUsername);
   };
   const handleLobbyNameChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    // Extract the value from the event object
+    
     const newLobbyname = event.target.value;
-    // Update the state with the new value
+    
     setLobbyname(newLobbyname);
   };
   const handleClick = () => {
@@ -44,17 +44,15 @@ const CreateLobby = () => {
       const requestBody = JSON.stringify({ username, name, password });
       const response = await api.post("/lobbies", requestBody);
      
-      //if (response.data.token){}
-      // Get the returned user and update a new object.
       const lobby = new Lobby(response.data);
 
 
-      // Store the token into the local storage.
+      //const token = response.headers["Access-Control-Expose-Headers"];
       
-      //localStorage.setItem("token", lobby.token);
-      // Login successfully worked --> navigate to the route /game in the GameRouter
-      //alert("api request works")
-      navigate("/joinuser");
+      localStorage.setItem("token", response.headers);
+      console.log("This should be the token" + response.headers);
+      
+      navigate("/lobby/" + lobby.id);
     } catch (error) {
       alert(
         `Something went wrong during the registration, choose another username: \n${handleError(error)}`

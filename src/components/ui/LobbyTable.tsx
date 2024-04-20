@@ -31,7 +31,7 @@ export default function App() {
     //alert(selectedKeys);
     const selectedKey = selectedKeys[0];
     setSelectedLobbyId(selectedKeys);
-    console.log(selectedKey);
+    console.log("selected key" + selectedKeys.values);
     //alert(selectedKey);
   };
 
@@ -48,7 +48,7 @@ export default function App() {
       try {
         const response = await api.get("/lobbies");
 
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        //await new Promise((resolve) => setTimeout(resolve, 1000));
 
         setLobbies(response.data);
         //alert(lobbies);
@@ -137,3 +137,11 @@ return (
     </div>
   );
 }*/
+
+// Lobby table: alles was im response returned wird
+//when you create a lobby, set localstorage token of api response
+//same with join
+//you need id when joinuser/id in url
+//look at other way of mapping and try it, maybe you can then extract the id 
+
+
