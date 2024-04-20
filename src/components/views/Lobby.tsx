@@ -17,7 +17,7 @@ const Lobby = () => {
   const {lobbyId} =  useParams();
   const navigate = useNavigate();
   const [lobbyName, setLobbyName] = useState("");
-  const [admin, setAdmin] = useState(false);
+  const [admin, setAdmin] = useState(true);
   const [roundDurationSeconds, setRoundDurationSeconds] = useState(120);   // Default to 2mins
   const [lat, setLat] = useState("");
   const [lng, setLng] = useState("");
@@ -59,7 +59,7 @@ const Lobby = () => {
 
 
   useEffect(() => {
-    localStorage.setItem("token", "13a9cbc3-e29c-4fa2-ab92-e02c898b0406");
+    localStorage.setItem("token", "14c1548c-07d5-4f9f-ab9a-ea0599b55fc0");
     localStorage.setItem("username", "admin");
 
     async function fetchData() {
@@ -154,10 +154,11 @@ const Lobby = () => {
               setLat("0");
               setLng("0");
             }
-
             openNotification("Lobby settings have been updated");
+          } else if (messageParsed.status === "started") {
+              const gameId = messageParsed.gameId;
+              navigate("/game/" + gameId);
           }
-
         });
       },
     })
@@ -385,7 +386,9 @@ const Lobby = () => {
         <div className="w-full flex justify-between px-12 absolute bottom-8">
           <LeaveButton />
           <StartButton 
-            disabled={!settingsConfirmed} />
+            disabled={!settingsConfirmed}
+            lobbyId={lobbyId}
+          />
           <SaveButton />
         </div>
       </div>

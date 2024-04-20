@@ -1,11 +1,27 @@
 import React from "react";
 import { Button } from "@nextui-org/react";
+import { api, handleError } from "helpers/api";
 
 interface StartButtonProps {
   disabled?: boolean;
+  lobbyId: string;
 }
 
-const StartButton: React.FC<StartButtonProps> = ({ disabled }) => {
+const StartButton: React.FC<StartButtonProps> = ({ disabled , lobbyId}) => {
+  async function doStart() {
+    const headers = {
+      "Authorization": localStorage.getItem("token")
+    };
+    try {
+      const response = await api.post("/lobbies/" + lobbyId + "/start", { headers });
+      console.log("Game start requested");
+    } catch (error) {
+      alert(
+        `Something went wrong while starting the game: \n${handleError(error)}`
+      );
+    }
+  }
+
   return (
     <Button
       radius="full"
@@ -22,10 +38,7 @@ const StartButton: React.FC<StartButtonProps> = ({ disabled }) => {
         alignItems: 'center',
         justifyContent: 'center',
       }}
-      onClick={() => {
-        console.log("Starting game");
-        // Place your logic here
-      }}
+      onClick={doStart}
     >
       Start!
     </Button>
