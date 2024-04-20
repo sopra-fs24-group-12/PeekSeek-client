@@ -22,8 +22,17 @@ const Lobby = () => {
   const [lat, setLat] = useState("");
   const [lng, setLng] = useState("");
   const [cityName, setCityName] = useState("");
+  const [settingsConfirmed, setSettingsConfirmed] = useState(false);
   const [notificationApi, contextHolder] = notification.useNotification();
 
+  interface InputQuestsProps {
+    disabled: boolean;
+  }
+  
+  interface CityInputFieldProps {
+    disabled: boolean;
+  }
+  
   function filterNonEmptyQuests(): string[] {
     return quests.filter((str) => {
       if (typeof str === "string") {
@@ -39,7 +48,6 @@ const Lobby = () => {
       duration: 2,
     });
   };
-
 
   const addPlayer = (newPlayer: String) => {
     setPlayers(prevPlayers => [...prevPlayers, newPlayer]);
@@ -149,8 +157,7 @@ const Lobby = () => {
     };
   }, [])
 
-
-  const InputQuests = () => {
+  const InputQuests: React.FC<InputQuestsProps> = ({ disabled }) => {
     const [localQuests, setLocalQuests] = useState(quests);
 
     useEffect(() => {
@@ -194,9 +201,9 @@ const Lobby = () => {
               onChange={(e) => handleQuestChange(index, e.target.value)}
               className="mb-2"
               onClear={() => deleteQuest(index)}
-              disabled={!admin}
               fullWidth
               style={{ boxSizing: "border-box" }}
+              disabled={disabled}
             />
         ))}
         </div>
@@ -204,13 +211,15 @@ const Lobby = () => {
           radius="md"
           size="sm"
           style={{ marginTop: "10px" }}
-          onClick={saveQuestsToGlobal}>Save Quests
+          disabled={disabled} 
+          onClick={saveQuestsToGlobal}>
+            Save Quests
         </Button>
       </ScrollableContentWrapper>
     );
   };
 
-  const CityInputField = () => {
+  const CityInputField: React.FC<CityInputFieldProps> = ({ disabled }) => {
     const [localCityName, setLocalCityName] = useState(cityName);
 
     useEffect(() => {
@@ -255,6 +264,7 @@ const Lobby = () => {
       const body = JSON.stringify({quests: filterNonEmptyQuests(), gameLocation: cityName || "Zürich", roundDurationSeconds});
       try {
         await api.put("/lobbies/" + lobbyId, body, { headers });
+        setSettingsConfirmed(true);
       } catch(error) {
         alert(
           `Something went wrong while saving lobby settings: \n${handleError(error)}`
@@ -264,6 +274,7 @@ const Lobby = () => {
 
     return (
       <Button
+        disabled={!admin}
         radius="full"
         size = "lg"
         color = "default"
@@ -330,30 +341,44 @@ const Lobby = () => {
     );
   };
 
+  const InteractionDisabledOverlay = () => (
+    <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
+      <p className="text-white text-xl">Waiting for the admin to configure the game settings...</p>
+    </div>
+  );
+
   return (
     <BaseContainer size="large" className="flex flex-col items-center p-4">
       {contextHolder}
       <h1 className="text-3xl font-bold text-gray-700 my-4 text-center">{lobbyName}</h1>
       <div className="flex w-full">
         <div className="flex flex-col w-full items-start gap-4 ml-6">
-          <TimeButtons selectedDuration={roundDurationSeconds} setRoundDurationSeconds={setRoundDurationSeconds} />
-          <PlayerTable players={players} />
+          <TimeButtons 
+            selectedDuration={roundDurationSeconds} 
+            setRoundDurationSeconds={setRoundDurationSeconds} 
+            disabled={!admin || settingsConfirmed}/>
+          <PlayerTable 
+            players={players} />
         </div>
         <div className="flex-1 items-center justify-center px-16">
         <ContentWrapper>
-          <CityInputField />
+          <CityInputField
+            disabled={!admin || settingsConfirmed} />
         </ContentWrapper>
           <GoogleMapStaticImage />
         </div>
         <div className="flex flex-col w-full items-end mr-8">
-          <InputQuests />
+          <InputQuests
+            disabled={!admin || settingsConfirmed} />
         </div>
         <div className="w-full flex justify-between px-12 absolute bottom-8">
           <LeaveButton />
-          <StartButton />
+          <StartButton 
+            disabled={!settingsConfirmed} />
           <SaveButton />
         </div>
       </div>
+      {!admin && !settingsConfirmed && <InteractionDisabledOverlay />}
     </BaseContainer>
   );
 };

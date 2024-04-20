@@ -31,7 +31,8 @@ const TimeButtons = ({ selectedDuration, setRoundDurationSeconds }) => {
 
 TimeButtons.propTypes = {
   selectedDuration: PropTypes.number.isRequired,
-  setRoundDurationSeconds: PropTypes.func.isRequired
+  setRoundDurationSeconds: PropTypes.func.isRequired,
+  disabled: PropTypes.bool
 };
 
 export default TimeButtons;
