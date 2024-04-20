@@ -50,7 +50,11 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({voteData, gameId}) => {
     try {
 
       const body = voteData.toJSON();
-      const response = await api.post("/games/" + gameId + "/voting", body);
+      const formattedBody = {
+        votes: body
+      };
+      console.log(formattedBody);
+      const response = await api.post("/games/" + gameId + "/voting", formattedBody);
       console.log("Submitted votes");
       navigate("/voting/" + gameId); // TODO: navigate to loading screen
 
