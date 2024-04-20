@@ -17,7 +17,7 @@ const Lobby = () => {
   const {lobbyId} =  useParams();
   const navigate = useNavigate();
   const [lobbyName, setLobbyName] = useState("");
-  const [admin, setAdmin] = useState(true);
+  const [admin, setAdmin] = useState(false);
   const [roundDurationSeconds, setRoundDurationSeconds] = useState(120);   // Default to 2mins
   const [lat, setLat] = useState("");
   const [lng, setLng] = useState("");
@@ -59,7 +59,7 @@ const Lobby = () => {
 
 
   useEffect(() => {
-    localStorage.setItem("token", "14c1548c-07d5-4f9f-ab9a-ea0599b55fc0");
+    localStorage.setItem("token", "3053a482-6e4f-4076-9246-2d9a0e4beb78");
     localStorage.setItem("username", "admin");
 
     async function fetchData() {
@@ -80,6 +80,7 @@ const Lobby = () => {
         }
         setRoundDurationSeconds(response.data.roundDurationSeconds || 120);
         setCityName(response.data.gameLocation);
+        setAdmin(response.data.adminUsername === localStorage.getItem("username"))
         if (response.data.gameLocationCoordinates) {
           setLat(response.data.gameLocationCoordinates.lat);
           setLng(response.data.gameLocationCoordinates.lng);
@@ -87,6 +88,7 @@ const Lobby = () => {
           setLat("0");
           setLng("0");
         }
+        setSettingsConfirmed(response.data.quests && response.data.quests.length > 0 && response.data.gameLocation);
       } catch(error) {
         alert(
           `Something went wrong while fetching lobby information: \n${handleError(error)}`
@@ -108,7 +110,9 @@ const Lobby = () => {
       try {
         await api.delete(`/lobbies/${lobbyId}/leave`, {headers});
       } catch (error) {
-        console.error('Error:', error);
+        alert(
+          `Something went wrong while leaving the lobby: \n${handleError(error)}`
+        );
       }
     };
 
@@ -139,6 +143,12 @@ const Lobby = () => {
           } else if (messageParsed.status === "left") {
             removePlayer(messageParsed.username);
             openNotification(messageParsed.username + " left");
+            if (messageParsed.newAdmin) {
+              if (messageParsed.newAdmin === localStorage.getItem("username")) {
+                setAdmin(true);
+                openNotification("You are the new admin!")
+              }
+            }
           } else if (messageParsed.status === "update") {
             setCityName(messageParsed.gameLocation);
             if (messageParsed.quests === null || messageParsed.quests.length === 0) {
