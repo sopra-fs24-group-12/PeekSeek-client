@@ -37,16 +37,16 @@ const AppRouter = () => {
 
         <Route path="/joinlobby" element={<JoinLobby />} />
 
-        <Route path="/joinuser" element={<LoginGuard />}>
-          <Route path="/joinuser" element={<JoinUser />} />
+        <Route path="/joinuser/:id" element={<LoginGuard />}>
+          <Route path="/joinuser/:id" element={<JoinUser />} />
         </Route>
 
         <Route path="/create" element={<LoginGuard />}>
           <Route path="/create" element={<CreateLobby />} />
         </Route>
 
-        <Route path="/lobby" element={<LoginGuard />}>
-          <Route path="/lobby" element={<Lobby />} />
+        <Route path="/lobby/:id" element={<LoginGuard />}>
+          <Route path="/lobby/:id" element={<Lobby />} />
         </Route>
 
         <Route path="/gamesub" element={<LoginGuard />}>
