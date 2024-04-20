@@ -48,8 +48,10 @@ const CreateLobby = () => {
 
       
       localStorage.setItem("token", response.headers);
+      localStorage.setItem("username", username);
       console.log("This should be the token" + response.headers);
-      
+
+
       navigate("/lobby/" + lobby.id);
     } catch (error) {
       alert(

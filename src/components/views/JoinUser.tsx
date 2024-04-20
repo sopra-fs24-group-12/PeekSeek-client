@@ -29,6 +29,7 @@ const JoinUser = () => {
         const requestBody = JSON.stringify({username, lobbyPassword});
         const response = await api.put("/lobbies/" + id + "/join", requestBody);
         localStorage.setItem("token", response.headers);
+        localStorage.setItem("username", username);
         if (response.status >= 300){
             navigate("/joinlobby");
         }
