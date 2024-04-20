@@ -14,6 +14,7 @@ import GameSubmitButton from "components/ui/GameSubmitButton";
 //imports for Google Maps API
 import { GoogleMap as ReactGoogleMap, LoadScript, StreetViewPanorama , Marker } from "@react-google-maps/api";
 import { GoogleMapStyle as googleMapsStyling} from "../../assets/GoogleMapStyle";
+import Timer from "../ui/Timer";
 
 const containerStyle = {
   width: "100%",
@@ -49,6 +50,7 @@ function MyGoogleMap() {
   const [map, setMap] = useState(null);
   const [streetView, setStreetView] = useState(null);
   const [noSubmission, setNoSubmission] = useState<boolean>(false);
+  const [remainingTime, setRemainingTime] = useState(10)
 
   useEffect(() => {
     //only for dev purposes
@@ -82,6 +84,38 @@ function MyGoogleMap() {
     fetchData();
   }, [])
 
+  useEffect(() => {
+    let client = new Client();
+    const websocketUrl = getWebsocketDomain();
+    client.configure({
+      brokerURL: websocketUrl,
+      debug: function(str) {
+        console.log(str);
+      },
+      onConnect: () => {
+        const destination = `/topic/games/` + gameId;
+        const timerDestination = `/topic/games/` + gameId + "/timer";
+        client && client.subscribe(destination, (message) => {
+          let messageParsed = JSON.parse(message.body);
+          console.log('Received message:', messageParsed);
+          if (messageParsed.status === "voting") {
+            navigate(`/gamesub/${gameId}/`);
+          }
+        });
+        client && client.subscribe(timerDestination, (message) => {
+          let messageParsed = JSON.parse(message.body);
+          console.log('Received message from topic 2:', messageParsed);
+          setRemainingTime(messageParsed.secondsRemaining);
+        });
+      },
+
+    })
+    client.activate();
+
+    return () => {
+      client && client.deactivate();
+    };
+  }, [])
   
   const handleCenterChanged = (map) => {
     if(map){
@@ -135,9 +169,10 @@ function MyGoogleMap() {
 
   return (
     <div className="relative min-h-screen w-screen flex flex-col items-center">
-      <div className="absolute top-4 left-4">
-        <BackButton/>
-      </div>
+      {/*<div className="absolute top-4 left-4">
+        <BackButton />
+      </div>*/}
+      <div className="font-bold text-lg mt-16">{`TIME REMAINING: ` + remainingTime}</div>
       <div className="w-3/4 flex flex-col items-center">
         <BaseContainer size="medium" className="flex flex-col items-center mb-20">
           <h3 className="text-xl font-bold my-4">Find a {quest} in {cityName}!</h3>
