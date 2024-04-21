@@ -62,7 +62,7 @@ const GameSubmission = () => {
     const updatedBanned = new ExtendedDictionary();
     updatedBanned.data = { ...banned.data };
     if (pickedCardId) {
-      updatedBanned.set(pickedCardId, "winning");
+      updatedBanned.set(pickedCardId, "winner");
     }
 
     return updatedBanned;
