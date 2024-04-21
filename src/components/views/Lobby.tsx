@@ -100,27 +100,29 @@ const Lobby = () => {
   }, []);
 
   useEffect(() => {
-    const handleUnload = async (event) => {
+    const sendRequest = async () => {
       const headers = {
         "Authorization": localStorage.getItem("token"),
       };
 
-      event.preventDefault();
-
       try {
-        await api.delete(`/lobbies/${lobbyId}/leave`, { headers });
-        localStorage.clear();
+        await api.put(`/lobbies/${lobbyId}/active`, null, { headers });
+        console.log("sent active message")
       } catch (error) {
         alert(
-          `Something went wrong while leaving the lobby: \n${handleError(error)}`,
+          `Something went wrong while sending active ping: \n${handleError(error)}`,
         );
       }
     };
 
-    window.addEventListener("beforeunload", handleUnload);
+    sendRequest();
+
+    const intervalId = setInterval(() => {
+      sendRequest();
+    }, 2000);
 
     return () => {
-      window.removeEventListener("beforeunload", handleUnload);
+      clearInterval(intervalId);
     };
   }, []);
 
