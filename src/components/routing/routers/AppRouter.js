@@ -27,45 +27,25 @@ const AppRouter = () => {
     <BrowserRouter>
       <Routes>
 
-        <Route path="/game/*" element={<GameGuard />}>
           <Route path="/game/*" element={<GameRouter base="/game"/>} />
-        </Route>
 
-        <Route path="/landing" element={<LoginGuard />}>
           <Route path="/landing" element={<Landing />} />
-        </Route>
 
-        <Route path="/joinlobby" element={<LoginGuard />}>
-          <Route path="/joinlobby" element={<JoinLobby />} />
-        </Route>
+        <Route path="/joinlobby" element={<JoinLobby />} />
 
-        <Route path="/joinuser" element={<LoginGuard />}>
-          <Route path="/joinuser" element={<JoinUser />} />
-        </Route>
+          <Route path="/joinuser/:id" element={<JoinUser />} />
 
-        <Route path="/create" element={<LoginGuard />}>
           <Route path="/create" element={<CreateLobby />} />
-        </Route>
 
-        <Route path="/lobby" element={<LoginGuard />}>
-          <Route path="/lobby" element={<Lobby />} />
-        </Route>
+          <Route path="/lobby/:id" element={<Lobby />} />
 
-        <Route path="/gamesub" element={<LoginGuard />}>
           <Route path="/gamesub" element={<GameSubmission />} />
-        </Route>
 
-        <Route path="/gamesummary" element={<LoginGuard />}>
           <Route path="/gamesummary" element={<GameSummary />} />
-        </Route>
 
-        <Route path="/game" element={<LoginGuard />}>
           <Route path="/game" element={<Game />} />
-        </Route>
 
-        <Route path="/voting" element={<LoginGuard />}>
           <Route path="/voting" element={<VotingResults />} />
-        </Route>
 
         <Route path="/" element={
           <Navigate to="/game" replace />
