@@ -182,7 +182,7 @@ function MyGoogleMap() {
     const body = JSON.stringify({ lat, lng, heading, pitch, noSubmission });
     const response = await api.post("games/" + gameId + "/submission", body, { headers });
     console.log("API Response:", response.data);
-    //navigate(`/games/${lobbyId}/round`);
+    navigate("/waiting/" + gameId);
   }
 
   const submitNow = () => {

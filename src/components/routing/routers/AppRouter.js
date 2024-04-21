@@ -12,6 +12,7 @@ import Lobby from "../../views/Lobby";
 import Game from "../../views/Game";
 import VotingResults from "../../views/VotingResults";
 import GameSummary from "../../views/GameSummary";
+import Waiting from "../../views/Waiting";
 
 /**
  * Main router of your application.
@@ -46,6 +47,8 @@ const AppRouter = () => {
         <Route path="/game/:gameId" element={<Game />} />
 
         <Route path="/voting/:gameId" element={<VotingResults />} />
+
+        <Route path="/waiting/:gameId" element={<Waiting />} />
 
         <Route path="/" element={
           <Navigate to="/landing" replace />
