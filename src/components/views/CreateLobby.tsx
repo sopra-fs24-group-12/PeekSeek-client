@@ -55,9 +55,8 @@ const CreateLobby = () => {
       navigate("/lobby/" + lobby.id);
     } catch (error) {
       alert(
-        `Something went wrong during the registration, choose another username: \n${handleError(error)}`,
+        `Something went wrong during the registration: \n${handleError(error)}`,
       );
-      navigate("/joinlobby");
     }
 
   };
@@ -65,7 +64,7 @@ const CreateLobby = () => {
   return (
     <div className="relative min-h-screen w-screen">
       <div className="absolute top-4 left-4">
-        <BackButton onClick={handleBackClick} />
+        <BackButton />
       </div>
       <div className="flex justify-center items-center h-full">
         <BaseContainer

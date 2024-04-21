@@ -398,7 +398,7 @@ const Lobby = () => {
         </div>
         <div className="flex flex-col w-full items-end mr-8">
           <InputQuests
-            disabled={!admin || settingsConfirmed} />
+            disabled={!admin} />
         </div>
         <div className="w-full flex justify-between px-12 absolute bottom-8">
           <LeaveButton />
