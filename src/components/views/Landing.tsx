@@ -2,11 +2,14 @@ import React from "react";
 import BaseContainer from "../ui/BaseContainer";
 import JoinButton from "components/ui/JoinButton";
 import CreateButton from "components/ui/CreateButton";
+import { useNavigate } from "react-router-dom";
 
 const LandingPage = () => {
+  const navigate = useNavigate();
+
   const handleClick = () => {
-    console.log('Button clicked!');
-    
+    console.log('Join Button clicked!');
+    navigate("/joinlobby/")
   };
   return (
     <BaseContainer size="landing" className="flex flex-col items-center">

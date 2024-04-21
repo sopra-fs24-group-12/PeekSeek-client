@@ -35,7 +35,7 @@ const CreateLobby = () => {
     doCreate();
   };
   const handleBackClick = () => {
-    console.log("Button clicked!");
+    console.log("Back button clicked!");
     navigate("/joinlobby");
   };
   const doCreate = async () => {
@@ -77,10 +77,10 @@ const CreateLobby = () => {
             <text>Lobby Name</text>
             <Input className="mb-8 shadow-lg" isRequired onChange={handleLobbyNameChange} type="name" label="required " placeholder="..." />
             <text>Lobby Password</text>
-            <Input className="mb-8 shadow-lg" onChange={handleLobbyPasswordChange} type="pwd" label="(optional)" placeholder="..." />
+            <Input className="mb-8 shadow-lg" onChange={handleLobbyPasswordChange} type="password" label="(optional)" placeholder="..." />
           </div>
           <div className="w-full flex justify-center mt-36 mb-4">
-            <CreateLo onClick={handleClick} />
+            <CreateLo onClick={handleClick} disabled={!username || !name} />
           </div>
         </BaseContainer>
       </div>

@@ -29,6 +29,7 @@ const JoinLobby = () => {
   const [password, setPassword] = useState<string>(null);
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
   const { id } = useParams();
+
   const handleBackClick = () => {
     console.log("Button clicked!");
     navigate("/joinlobby");
@@ -43,7 +44,7 @@ const JoinLobby = () => {
   };
 
   const handleClickList = () => {
-    console.log("Button clicked!");
+    console.log("Join button clicked!");
 
     navigate("/joinuser/" + selectedLobbyId);
   };
@@ -92,47 +93,45 @@ const JoinLobby = () => {
         <BackButton onClick={handleBackClick} />
       </div>
       <div className="flex justify-center items-center h-full">
-        <BaseContainer
-          size="small"
-          className="flex flex-col items-center">
-          <div className="flex flex-col gap-3">
-            <Table
-              color={"default"}
-              selectionMode="single"
-              //defaultSelectedKeys={["2"]}
-              //selectedKeys={selectedKeys}
-              aria-label="Example static collection table"
-              //onSelectionChange={handleSelectionChange}
-              //onSelectionChange={setSelectedKeys}
-              //selectionBehavior={selectionBehavior}
-              onRowAction={(key) => setSelectedLobbyId(key)}
-            >
-              <TableHeader>
-                <TableColumn>ID</TableColumn>
-                <TableColumn>LOBBY NAME</TableColumn>
-                <TableColumn>PARTICIPANTS</TableColumn>
-                <TableColumn>PASSWORD</TableColumn>
-              </TableHeader>
-              {lobbies && (
-                <TableBody>
-                  {lobbies.map((lobby: Lobby) =>
-                    <TableRow key={lobby.id}>
-                      <TableCell>{lobby.id}</TableCell>
-                      <TableCell>{lobby.name}</TableCell>
-                      <TableCell>{lobby.joinedParticipants + " / " + lobby.maxParticipants}</TableCell>
-                      <TableCell>{lobby.passwordProtected?"🔒" : ""}</TableCell>
-                    </TableRow>,
-                  )}
-                </TableBody>
-              )}
-            </Table>
-            <div className="w-full flex justify-center mt-24 mb-4">
-              <JoinButton
-                onClick={handleClickList}
-                isDisabled={!selectedLobbyId} />
-            </div>
+        <BaseContainer size="small" className="flex flex-col items-center">
+          <Table
+            color={"default"}
+            selectionMode="single"
+            aria-label="Example static collection table"
+          >
+            <TableHeader>
+              <TableColumn>ID</TableColumn>
+              <TableColumn>LOBBY NAME</TableColumn>
+              <TableColumn>PARTICIPANTS</TableColumn>
+              <TableColumn>PASSWORD</TableColumn>
+            </TableHeader>
+            <TableBody>
+              {lobbies.map((lobby: Lobby) => (
+                <TableRow
+                  key={lobby.id}
+                  onClick={() => setSelectedLobbyId(lobby.id)}
+                  className={
+                    selectedLobbyId === lobby.id ? "selected-row" : ""
+                  }
+                >
+                  <TableCell>{lobby.id}</TableCell>
+                  <TableCell>{lobby.name}</TableCell>
+                  <TableCell>
+                    {lobby.joinedParticipants} / {lobby.maxParticipants}
+                  </TableCell>
+                  <TableCell>
+                    {lobby.passwordProtected ? "🔒" : ""}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <div className="w-full flex justify-center mt-24 mb-4">
+            <JoinButton
+              onClick={handleClickList}
+              isDisabled={!selectedLobbyId}
+            />
           </div>
-
           <div className="w-full flex justify-center mb-4">
             <CreateButton />
           </div>
@@ -141,6 +140,7 @@ const JoinLobby = () => {
     </div>
   );
 };
+
 
 export default JoinLobby;
 
