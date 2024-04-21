@@ -1,16 +1,17 @@
 import React from "react";
 import { Button } from "@nextui-org/react";
 
-const GameSubmitButton: React.FC = () => {
+interface GameSubmitButtonProps {
+  onClick: () => void; // Define the onClick prop type
+}
+
+const GameSubmitButton: React.FC<GameSubmitButtonProps> = ({ onClick }) => {
   return (
     <Button
       radius="full"
       size = "lg"
       className="bg-gradient-to-tr from-brown-500 to-brown-200 text-black shadow-lg"
-      onClick={() => {
-        console.log("Looking to create a lobby");
-        // Place your logic here
-      }}
+      onClick={onClick}
     >
       Submit
     </Button>

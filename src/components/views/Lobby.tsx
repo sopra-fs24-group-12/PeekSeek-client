@@ -61,8 +61,6 @@ const Lobby = () => {
 
 
   useEffect(() => {
-    localStorage.setItem("token", "46a03a2f-ab07-4845-803c-7055b4d86b7b");
-    localStorage.setItem("username", "admin");
 
     async function fetchData() {
       const headers = {
@@ -111,6 +109,7 @@ const Lobby = () => {
 
       try {
         await api.delete(`/lobbies/${lobbyId}/leave`, { headers });
+        localStorage.clear();
       } catch (error) {
         alert(
           `Something went wrong while leaving the lobby: \n${handleError(error)}`,
@@ -326,7 +325,7 @@ const Lobby = () => {
       };
       try {
         const response = await api.delete("/lobbies/" + lobbyId + "/leave/", { headers });
-        localStorage.removeItem("token");
+        localStorage.clear();
         navigate("/landing");
       } catch (error) {
         alert(

@@ -3,52 +3,52 @@ import BaseContainer from "../ui/BaseContainer";
 import CreateButton from "components/ui/CreateButton";
 import BackButton from "components/ui/BackButton";
 import { Input } from "@nextui-org/react";
-import { useNavigate } from "react-router-dom";
 import JoinButton from "components/ui/JoinButton";
+import { useNavigate, useParams } from "react-router-dom";
+import { api, handleError } from "helpers/api";
 
 
 const JoinUser = () => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [lobbyPassword, setLobbyPassword] = useState("");
   const [error, setError] = useState("");
   const [lobbyRequiresPassword, setLobbyRequiresPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const { id } = useParams();
+  const isJoinDisabled = !username || (lobbyRequiresPassword && !lobbyPassword);
 
-  const isJoinDisabled = !username || (lobbyRequiresPassword && !password);
+  const handleBackClick = () => {
+    console.log("Button clicked!");
+    navigate("/joinlobby");
+  };
 
-  useEffect(() => {
-    const fetchLobbyData = async () => {
-      try {
-        const response = await fetch("backend");    // will change
-        const data = await response.json();
-        // if requiresPassword is returned as boolean
-        setLobbyRequiresPassword(data.requiresPassword);
-      } catch (error) {
-        console.error("Failed to fetch lobby data:", error);
-      } finally {
-        setIsLoading(false);
+
+  const handleJoinClick = async () => {
+    try {
+      const requestBody = JSON.stringify({ username, lobbyPassword });
+      const response = await api.put("/lobbies/" + id + "/join", requestBody);
+      localStorage.setItem("token", response.headers["authorization"]);
+      localStorage.setItem("username", username);
+      console.log(localStorage.getItem("token"));
+      if (response.status >= 300) {
+        navigate("/joinlobby");
+      } else {
+        navigate("/lobby/" + id);
       }
-    };
 
-    fetchLobbyData();
-  }, []);
-
-
-  const handleJoinClick = () => {
-    if (!username) {
-      setError("Username cannot be empty");
-      alert("Username cannot be empty");
-    } else {
-      console.log("Joining lobby");
-      setError(""); // Clear any errors if successful
+    } catch (error) {
+      alert("Please provide the correct password for the lobby you are joining");
+      //navigate("/joinlobby");
     }
+
   };
 
 
   return (
     <div className="relative min-h-screen w-screen">
       <div className="absolute top-4 left-4">
-        <BackButton />
+        <BackButton onClick={handleBackClick} />
       </div>
       <div className="flex justify-center items-center h-full">
         <BaseContainer
@@ -68,13 +68,13 @@ const JoinUser = () => {
             <text>Lobby Password</text>
             <Input
               className="mb-8 shadow-lg"
-              isDisabled={!lobbyRequiresPassword}
+              //isDisabled= {!username}   //{!lobbyRequiresPassword}
               isClearable
-              value={password}
-              type="pwd"
+              value={lobbyPassword}
+              type="password"
               label="  "
               placeholder="..."
-              onChange={(e) => setPassword(e.target.value)} />
+              onChange={(e) => setLobbyPassword(e.target.value)} />
           </div>
           <div className="w-full flex justify-center mt-36 mb-4">
             <JoinButton

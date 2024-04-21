@@ -12,9 +12,9 @@ const StartButton: React.FC<StartButtonProps> = ({ disabled, lobbyId }) => {
     const headers = {
       "Authorization": localStorage.getItem("token"),
     };
+
     try {
-      const response = await api.post("/lobbies/" + lobbyId + "/start", { headers });
-      console.log("Game start requested");
+      const response = await api.post("/lobbies/" + lobbyId + "/start", null, { headers });
     } catch (error) {
       alert(
         `Something went wrong while starting the game: \n${handleError(error)}`,
