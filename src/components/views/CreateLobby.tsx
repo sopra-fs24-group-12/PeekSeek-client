@@ -47,7 +47,7 @@ const CreateLobby = () => {
       const lobby = new Lobby(response.data);
 
 
-      localStorage.setItem("token", response.headers);
+      localStorage.setItem("token", response.headers["authorization"]);
       localStorage.setItem("username", username);
       console.log("This should be the token" + response.headers);
 

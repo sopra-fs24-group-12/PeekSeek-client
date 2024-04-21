@@ -28,8 +28,9 @@ const JoinUser = () => {
     try {
       const requestBody = JSON.stringify({ username, lobbyPassword });
       const response = await api.put("/lobbies/" + id + "/join", requestBody);
-      localStorage.setItem("token", response.headers);
+      localStorage.setItem("token", response.headers["authorization"]);
       localStorage.setItem("username", username);
+      console.log(localStorage.getItem("token"));
       if (response.status >= 300) {
         navigate("/joinlobby");
       } else {
@@ -38,7 +39,7 @@ const JoinUser = () => {
 
     } catch (error) {
       alert("Please provide the correct password for the lobby you are joining");
-      navigate("/joinlobby");
+      //navigate("/joinlobby");
     }
 
   };

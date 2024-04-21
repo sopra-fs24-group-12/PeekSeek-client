@@ -61,8 +61,6 @@ const Lobby = () => {
 
 
   useEffect(() => {
-    localStorage.setItem("token", "46a03a2f-ab07-4845-803c-7055b4d86b7b");
-    localStorage.setItem("username", "admin");
 
     async function fetchData() {
       const headers = {
