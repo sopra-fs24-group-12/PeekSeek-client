@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { api, handleError } from "helpers/api";
-import { getWebsocketDomain } from 'helpers/getDomain';
+import { getWebsocketDomain } from "helpers/getDomain";
 
 //import UI Elements
 import BaseContainer from "../ui/BaseContainer";
@@ -36,7 +36,8 @@ const VotingResults = () => {
   const [formattedLeaderboard, setFormattedLeaderboard] = useState([]);
   const [timeRemaining, setTimeRemaining] = useState(0);
   const navigate = useNavigate();
-  const [winningSubmission, setWinningSubmission] = useState({id: "1",
+  const [winningSubmission, setWinningSubmission] = useState({
+    id: "1",
     cityName: "",
     quest: "",
     anonymousName: "",
@@ -63,7 +64,7 @@ const VotingResults = () => {
             rank: index + 1,
             name: user.username,
             basePoints: user.score,
-            bonusPoints: user.streak
+            bonusPoints: user.streak,
           }));
 
           setFormattedLeaderboard(formattedLeaderboard);
@@ -73,7 +74,7 @@ const VotingResults = () => {
         }
       } catch (error) {
         alert(
-          `Something went wrong while fetching information: \n${handleError(error)}`
+          `Something went wrong while fetching information: \n${handleError(error)}`,
         );
       }
 
@@ -81,7 +82,7 @@ const VotingResults = () => {
         const response1 = await api.get("/games/" + gameId + "/winningSubmission", { headers });
         console.log("API Response:", response1.data);
 
-        const response2 = await api.get("/games/" + gameId + "/round", {headers});
+        const response2 = await api.get("/games/" + gameId + "/round", { headers });
         console.log("API Response:", response2.data);
 
         const noSubmission = response1.data.noSubmission;
@@ -89,23 +90,24 @@ const VotingResults = () => {
         setWinningSubmission(
           {
             id: response1.data.id.toString(),
-            cityName: !noSubmission?response2.data.geoCodingData.formAddress:"",
-            quest: !noSubmission?response2.data.quest: "",
+            cityName: !noSubmission ? response2.data.geoCodingData.formAddress : "",
+            quest: !noSubmission ? response2.data.quest : "",
             anonymousName: "Anonymous Tiger",
-            imageUrl: !noSubmission?generateStreetViewImageLink(response1.data.submittedLocation.lat, response1.data.submittedLocation.lng, response1.data.submittedLocation.heading, response1.data.submittedLocation.pitch):"",
+            imageUrl: !noSubmission ? generateStreetViewImageLink(response1.data.submittedLocation.lat, response1.data.submittedLocation.lng, response1.data.submittedLocation.heading, response1.data.submittedLocation.pitch) : "",
             noSubmission: noSubmission,
-          }
-        )
+          },
+        );
 
       } catch (error) {
         alert(
-          `Something went wrong while fetching information: \n${handleError(error)}`
+          `Something went wrong while fetching information: \n${handleError(error)}`,
         );
       }
 
     }
+
     fetchData();
-  }, [])
+  }, []);
 
   useEffect(() => {
     let client = new Client();
@@ -116,11 +118,11 @@ const VotingResults = () => {
         console.log(str);
       },
       onConnect: () => {
-        const destination = `/topic/games/` + gameId;
-        const timerDestination = `/topic/games/` + gameId + "/timer";
+        const destination = "/topic/games/" + gameId;
+        const timerDestination = "/topic/games/" + gameId + "/timer";
         client && client.subscribe(destination, (message) => {
           let messageParsed = JSON.parse(message.body);
-          console.log('Received message:', messageParsed);
+          console.log("Received message:", messageParsed);
           if (messageParsed.status === "round") {
             navigate(`/game/${gameId}/`);
           } else if (messageParsed.status === "game_over") {
@@ -130,18 +132,18 @@ const VotingResults = () => {
         });
         client && client.subscribe(timerDestination, (message) => {
           let messageParsed = JSON.parse(message.body);
-          console.log('Received message from topic 2:', messageParsed);
+          console.log("Received message from topic 2:", messageParsed);
           setTimeRemaining(messageParsed.secondsRemaining);
         });
       },
 
-    })
+    });
     client.activate();
 
     return () => {
       client && client.deactivate();
     };
-  }, [])
+  }, []);
 
   function generateStreetViewImageLink(lat: string, long: string, heading: string, pitch: string): string {
     const apiKey = "";
@@ -159,7 +161,7 @@ const VotingResults = () => {
     return `${baseUrl}?${params}`;
   }
 
-  return ( 
+  return (
     <BaseContainer
       size="large">
       <div className="flex flex-col items-center justify-center w-full">
@@ -179,7 +181,7 @@ const VotingResults = () => {
             <Timer
               initialTimeInSeconds={initialTime}
               timeInSeconds={timeRemaining}
-              title = "NEXT ROUND:"
+              title="NEXT ROUND:"
             />
           </div>
         </div>

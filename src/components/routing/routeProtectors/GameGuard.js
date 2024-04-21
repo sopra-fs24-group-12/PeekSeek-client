@@ -17,6 +17,7 @@ export const GameGuard = () => {
     return <Outlet />;
   }
   //TODO: Change to game for testing
+
   return <Navigate to="/landing" replace />;
 };
 

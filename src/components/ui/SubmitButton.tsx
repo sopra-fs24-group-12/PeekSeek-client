@@ -32,8 +32,6 @@ class ExtendedDictionary {
   }
 }
 
-
-
 interface SubmitButtonProps {
   voteData: ExtendedDictionary,
   gameId: string

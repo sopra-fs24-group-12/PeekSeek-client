@@ -8,9 +8,10 @@ const LandingPage = () => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    console.log('Join Button clicked!');
-    navigate("/joinlobby/")
+    console.log("Join Button clicked!");
+    navigate("/joinlobby/");
   };
+
   return (
     <BaseContainer size="landing" className="flex flex-col items-center">
       <h1 className="text-4xl font-bold text-center mt-8 mb-12">
@@ -20,13 +21,13 @@ const LandingPage = () => {
         <img
           src="/images/PeekSeeklogo.jpg"
           alt="PeekSeek Logo"
-          style={{ width: "350px", height: "350px" }}/>
+          style={{ width: "350px", height: "350px" }} />
       </div>
       <div className="w-full flex justify-center mb-4">
-        <JoinButton onClick = {handleClick}/>
+        <JoinButton onClick={handleClick} />
       </div>
       <div className="w-full flex justify-center mb-12">
-        <CreateButton/>
+        <CreateButton />
       </div>
     </BaseContainer>
   );

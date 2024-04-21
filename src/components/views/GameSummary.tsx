@@ -19,17 +19,32 @@ const mockLeaderboardData = [
 ];
 
 const externalLinks = [
-  { url: "https://www.google.com/maps/@47.371779,8.5366792,3a,75y,264.91h,90.77t/data=!3m6!1e1!3m4!1spvbPYFSzTaFhKV-uabCaZw!2e0!7i16384!8i8192?entry=ttu", label: "Winning Submission 1" },
-  { url: "https://www.google.com/maps/@47.371779,8.5366792,3a,75y,264.91h,90.77t/data=!3m6!1e1!3m4!1spvbPYFSzTaFhKV-uabCaZw!2e0!7i16384!8i8192?entry=ttu", label: "Winning Submission 2" },
-  { url: "https://www.google.com/maps/@47.371779,8.5366792,3a,75y,264.91h,90.77t/data=!3m6!1e1!3m4!1spvbPYFSzTaFhKV-uabCaZw!2e0!7i16384!8i8192?entry=ttu", label: "Winning Submission 3" },
-  { url: "https://www.google.com/maps/@47.371779,8.5366792,3a,75y,264.91h,90.77t/data=!3m6!1e1!3m4!1spvbPYFSzTaFhKV-uabCaZw!2e0!7i16384!8i8192?entry=ttu", label: "Winning Submission 4" },
-  { url: "https://www.google.com/maps/@47.371779,8.5366792,3a,75y,264.91h,90.77t/data=!3m6!1e1!3m4!1spvbPYFSzTaFhKV-uabCaZw!2e0!7i16384!8i8192?entry=ttu", label: "Winning Submission 5" }
+  {
+    url: "https://www.google.com/maps/@47.371779,8.5366792,3a,75y,264.91h,90.77t/data=!3m6!1e1!3m4!1spvbPYFSzTaFhKV-uabCaZw!2e0!7i16384!8i8192?entry=ttu",
+    label: "Winning Submission 1",
+  },
+  {
+    url: "https://www.google.com/maps/@47.371779,8.5366792,3a,75y,264.91h,90.77t/data=!3m6!1e1!3m4!1spvbPYFSzTaFhKV-uabCaZw!2e0!7i16384!8i8192?entry=ttu",
+    label: "Winning Submission 2",
+  },
+  {
+    url: "https://www.google.com/maps/@47.371779,8.5366792,3a,75y,264.91h,90.77t/data=!3m6!1e1!3m4!1spvbPYFSzTaFhKV-uabCaZw!2e0!7i16384!8i8192?entry=ttu",
+    label: "Winning Submission 3",
+  },
+  {
+    url: "https://www.google.com/maps/@47.371779,8.5366792,3a,75y,264.91h,90.77t/data=!3m6!1e1!3m4!1spvbPYFSzTaFhKV-uabCaZw!2e0!7i16384!8i8192?entry=ttu",
+    label: "Winning Submission 4",
+  },
+  {
+    url: "https://www.google.com/maps/@47.371779,8.5366792,3a,75y,264.91h,90.77t/data=!3m6!1e1!3m4!1spvbPYFSzTaFhKV-uabCaZw!2e0!7i16384!8i8192?entry=ttu",
+    label: "Winning Submission 5",
+  },
 ];
 const GameSummary = () => {
   // Mock data for city and number of quests
   const [city, setCity] = useState("Rome");
   const [nrOfQuests, setNrOfQuests] = useState(5);
-  const {summaryId} = useParams();
+  const { summaryId } = useParams();
   const [externalLinks, setExternalLinks] = useState([]);
   const [successfulRounds, setSuccessfulRounds] = useState(0);
   const [staticMap, setStaticMap] = useState("");
@@ -38,7 +53,7 @@ const GameSummary = () => {
 
   async function generateStaticMapUrl(latitudes: string[], longitudes: string[]): Promise<string> {
     const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
-    const baseUrl = 'https://maps.googleapis.com/maps/api/staticmap';
+    const baseUrl = "https://maps.googleapis.com/maps/api/staticmap";
 
     // Parse latitudes and longitudes to numbers
     const latitudesNumeric = latitudes.map(lat => parseFloat(lat));
@@ -63,7 +78,7 @@ const GameSummary = () => {
     }
 
     // Construct the markers string
-    const markers = latitudesNumeric.map((lat, index) => `markers=color:red%7Clabel:${index + 1}%7C${lat},${longitudesNumeric[index]}`).join('&');
+    const markers = latitudesNumeric.map((lat, index) => `markers=color:red%7Clabel:${index + 1}%7C${lat},${longitudesNumeric[index]}`).join("&");
 
     // Construct and return the static map URL
     return `${baseUrl}?size=600x400&${markers}&zoom=${zoom}&center=${centerLat},${centerLng}&key=${apiKey}`;
@@ -91,12 +106,12 @@ const GameSummary = () => {
         const response = await api.get("/summaries/" + summaryId);
 
         const linkList = response.data.quests.map((quest, index) => {
-          return { url: quest.link, label: index+1 + ": " + quest.description + " found by " + quest.name};
+          return { url: quest.link, label: index + 1 + ": " + quest.description + " found by " + quest.name };
         });
 
-        console.log(linkList)
+        console.log(linkList);
 
-        console.log("response: ", response)
+        console.log("response: ", response);
 
         setExternalLinks(linkList);
         setSuccessfulRounds(linkList.length);
@@ -108,16 +123,17 @@ const GameSummary = () => {
           lngs.push(quest.lng);
         });
 
-        setStaticMap(await generateStaticMapUrl(lats, lngs))
+        setStaticMap(await generateStaticMapUrl(lats, lngs));
 
       } catch (error) {
         alert(
-          `Something went wrong while fetching information: \n${handleError(error)}`
+          `Something went wrong while fetching information: \n${handleError(error)}`,
         );
       }
     }
+
     fetchData();
-  }, [])
+  }, []);
 
   return (
     <BaseContainer size="large" className="flex flex-col items-center">
@@ -126,7 +142,8 @@ const GameSummary = () => {
           <BackDashboardButton />
         </div>
         <div className="w-2/3 text-center">
-          <h1 className="text-3xl font-bold text-gray-700">You&apos;ve just explored {city} in {nrOfQuests} round(s) of which {successfulRounds} had a winning submission!</h1>
+          <h1 className="text-3xl font-bold text-gray-700">You&apos;ve just explored {city} in {nrOfQuests} round(s) of
+            which {successfulRounds} had a winning submission!</h1>
         </div>
         <div className="w-1/6">
         </div>
@@ -137,14 +154,14 @@ const GameSummary = () => {
             <ExternalLinkButton key={link.url} url={link.url} label={link.label} />
           ))}
         </div>
-        <div className='w-2/3 flex flex-col p-4'> {/* Right part for Leaderboard and Google Maps */}
+        <div className="w-2/3 flex flex-col p-4"> {/* Right part for Leaderboard and Google Maps */}
           {/*<Leaderboard data={mockLeaderboardData} />*/}
 
-          <img src={staticMap} alt="NO MAP IMAGE AVAILABLE" style={{ borderRadius: '10px 20px 30px 40px' }} />
+          <img src={staticMap} alt="NO MAP IMAGE AVAILABLE" style={{ borderRadius: "10px 20px 30px 40px" }} />
         </div>
       </div>
     </BaseContainer>
   );
-}
+};
 
 export default GameSummary;
