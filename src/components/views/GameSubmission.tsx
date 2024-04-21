@@ -68,7 +68,7 @@ const GameSubmission = () => {
   };
 
   function generateStreetViewImageLink(lat: string, long: string, heading: string, pitch: string): string {
-    const apiKey = "";
+    const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
     const baseUrl = "https://maps.googleapis.com/maps/api/streetview";
 
@@ -120,8 +120,8 @@ const GameSubmission = () => {
   }, [])
 
   useEffect(() => {
-    localStorage.setItem("token", "aeeafad9-60c5-4662-8ea7-6909a7d8b9e5");
-    localStorage.setItem("username", "a");
+    //localStorage.setItem("token", "aeeafad9-60c5-4662-8ea7-6909a7d8b9e5");
+    //localStorage.setItem("username", "a");
 
     async function fetchData() {
       const headers = {
@@ -301,7 +301,7 @@ const GameSubmission = () => {
 
         {/* Chat Component */}
         <div className="md:w-1/4 w-full p-4 lg:order-none flex justify-center items-center mt-[-120px]">
-          <Timer initialTimeInSeconds={10} timeInSeconds={remainingSeconds} title={"ROUND SUMMARY IN:"} />
+          <Timer initialTimeInSeconds={10} timeInSeconds={remainingSeconds} title={"RESULTS IN:"} />
         </div>
       </div>
     </BaseContainer>

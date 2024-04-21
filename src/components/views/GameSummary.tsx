@@ -37,7 +37,7 @@ const GameSummary = () => {
   const lngs = [];
 
   async function generateStaticMapUrl(latitudes: string[], longitudes: string[]): Promise<string> {
-    const apiKey = "";
+    const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
     const baseUrl = 'https://maps.googleapis.com/maps/api/staticmap';
 
     // Parse latitudes and longitudes to numbers
@@ -83,8 +83,8 @@ const GameSummary = () => {
   }
 
   useEffect(() => {
-    localStorage.setItem("token", "eb47db3a-d291-4a93-8dc3-d71d5742031d");
-    localStorage.setItem("username", "a");
+    //localStorage.setItem("token", "eb47db3a-d291-4a93-8dc3-d71d5742031d");
+    //localStorage.setItem("username", "a");
 
     async function fetchData() {
       try {

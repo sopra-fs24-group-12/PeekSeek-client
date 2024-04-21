@@ -71,7 +71,7 @@ const JoinUser = () => {
               //isDisabled= {!username}   //{!lobbyRequiresPassword}
               isClearable
               value={lobbyPassword}
-              type="pwd"
+              type="password"
               label="  "
               placeholder="..."
               onChange={(e) => setLobbyPassword(e.target.value)} />

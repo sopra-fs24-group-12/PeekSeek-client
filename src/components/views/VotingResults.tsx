@@ -45,8 +45,8 @@ const VotingResults = () => {
   });
 
   useEffect(() => {
-    localStorage.setItem("token", "eb47db3a-d291-4a93-8dc3-d71d5742031d");
-    localStorage.setItem("username", "a");
+    //localStorage.setItem("token", "eb47db3a-d291-4a93-8dc3-d71d5742031d");
+    //localStorage.setItem("username", "a");
 
     async function fetchData() {
       const headers = {
@@ -123,6 +123,9 @@ const VotingResults = () => {
           console.log('Received message:', messageParsed);
           if (messageParsed.status === "round") {
             navigate(`/game/${gameId}/`);
+          } else if (messageParsed.status === "game_over") {
+            localStorage.clear();
+            navigate(`/gamesummary/${messageParsed.summaryId}/`);
           }
         });
         client && client.subscribe(timerDestination, (message) => {
