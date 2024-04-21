@@ -111,6 +111,7 @@ const Lobby = () => {
 
       try {
         await api.delete(`/lobbies/${lobbyId}/leave`, { headers });
+        localStorage.clear();
       } catch (error) {
         alert(
           `Something went wrong while leaving the lobby: \n${handleError(error)}`,
@@ -326,7 +327,7 @@ const Lobby = () => {
       };
       try {
         const response = await api.delete("/lobbies/" + lobbyId + "/leave/", { headers });
-        localStorage.removeItem("token");
+        localStorage.clear();
         navigate("/landing");
       } catch (error) {
         alert(
