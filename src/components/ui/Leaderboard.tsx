@@ -49,7 +49,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ data }) => {
                 if (columnKey === "totalPoints") {
                   return (
                     <TableCell>
-                      {item.basePoints} <span style={{ color: "green" }}>{/*+{ item.bonusPoints }*/}</span>
+                      {item.basePoints} <span style={{ color: "green" }}>+{ item.bonusPoints }</span>
                     </TableCell>
                   );
                 }
