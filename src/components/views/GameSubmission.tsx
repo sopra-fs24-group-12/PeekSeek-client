@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { api, handleError } from "helpers/api";
 import { useNavigate, useParams } from "react-router-dom";
 import { Client } from "@stomp/stompjs";
-import { getWebsocketDomain } from 'helpers/getDomain';
+import { getWebsocketDomain } from "helpers/getDomain";
 
 //import UI elements
 import BaseContainer from "../ui/BaseContainer";
@@ -64,6 +64,7 @@ const GameSubmission = () => {
     if (pickedCardId) {
       updatedBanned.set(pickedCardId, "winning");
     }
+
     return updatedBanned;
   };
 
@@ -95,29 +96,29 @@ const GameSubmission = () => {
         console.log(str);
       },
       onConnect: () => {
-        const destination = `/topic/games/` + gameId;
-        const timerDestination = `/topic/games/` + gameId + "/timer";
+        const destination = "/topic/games/" + gameId;
+        const timerDestination = "/topic/games/" + gameId + "/timer";
         client && client.subscribe(destination, (message) => {
           let messageParsed = JSON.parse(message.body);
-          console.log('Received message:', messageParsed);
+          console.log("Received message:", messageParsed);
           if (messageParsed.status === "summary") {
             navigate(`/voting/${gameId}/`);
           }
         });
         client && client.subscribe(timerDestination, (message) => {
           let messageParsed = JSON.parse(message.body);
-          console.log('Received message from topic 2:', messageParsed);
+          console.log("Received message from topic 2:", messageParsed);
           setRemainingSeconds(messageParsed.secondsRemaining);
         });
       },
 
-    })
+    });
     client.activate();
 
     return () => {
       client && client.deactivate();
     };
-  }, [])
+  }, []);
 
   useEffect(() => {
     //localStorage.setItem("token", "aeeafad9-60c5-4662-8ea7-6909a7d8b9e5");
@@ -137,11 +138,11 @@ const GameSubmission = () => {
 
         const transformedData: CardData[] = response.data.map((item: any, index: number) => ({
           id: item.id,
-          cityName: !item.noSubmission? response1.data.gameLocation: "",
-          quest: !item.noSubmission? response1.data.quest: "",
-          anonymousName: !item.noSubmission?`Anonymous ${shuffledAnimalNames[index]}`: "NOTHING FOUND",
+          cityName: !item.noSubmission ? response1.data.gameLocation : "",
+          quest: !item.noSubmission ? response1.data.quest : "",
+          anonymousName: !item.noSubmission ? `Anonymous ${shuffledAnimalNames[index]}` : "NOTHING FOUND",
           imageUrl: !item.noSubmission ? generateStreetViewImageLink(item.submittedLocation.lat, item.submittedLocation.lng, item.submittedLocation.heading, item.submittedLocation.pitch) : "", // Use item.image if available, otherwise empty string
-          noSubmission: item.noSubmission
+          noSubmission: item.noSubmission,
           //link: "https://example.com/link1"
         }));
 
@@ -158,13 +159,13 @@ const GameSubmission = () => {
         setCardsData(transformedData);
       } catch (error) {
         alert(
-            `Something went wrong while fetching submission information: \n${handleError(error)}`
+          `Something went wrong while fetching submission information: \n${handleError(error)}`,
         );
       }
     }
 
     fetchData();
-  }, [])
+  }, []);
 
   // const cardsData = [
   //   {

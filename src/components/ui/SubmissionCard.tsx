@@ -36,21 +36,22 @@ const noBorderStyle = {
 
 
 const SubmissionCard: React.FC<SubmissionCardProps> =
-  ({
-     cityName,
-     quest,
-     anonymousName,
-     imageUrl,
-     onImageClick,
-     onPickClick,
-     onBanClick,
-     onUnpickClick,
-     onUnbanClick,
-     isPicked,
-     isBanned,
-     noSubmission,
-   }) => {
-
+  (
+    {
+      cityName,
+      quest,
+      anonymousName,
+      imageUrl,
+      onImageClick,
+      onPickClick,
+      onBanClick,
+      onUnpickClick,
+      onUnbanClick,
+      isPicked,
+      isBanned,
+      noSubmission,
+    }
+  ) => {
 
     const determineBorderStyle = () => {
       if (isBanned) {
@@ -63,8 +64,7 @@ const SubmissionCard: React.FC<SubmissionCardProps> =
     };
 
     return (
-      <Card style={determineBorderStyle()}
-            className={`py-4 mx-auto max-w-xs ${noSubmission ? 'opacity-50 pointer-events-none' : ''}`}
+      <Card style={determineBorderStyle()} className={`py-4 mx-auto max-w-xs ${noSubmission ? "opacity-50 pointer-events-none" : ""}`}
       >
         <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
           <p className="text-tiny uppercase font-bold">{cityName}</p>
