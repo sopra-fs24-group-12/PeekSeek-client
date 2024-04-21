@@ -385,14 +385,14 @@ const Lobby = () => {
           <TimeButtons
             selectedDuration={roundDurationSeconds}
             setRoundDurationSeconds={setRoundDurationSeconds}
-            disabled={!admin || settingsConfirmed} />
+            disabled={!admin} />
           <PlayerTable
             players={players} />
         </div>
         <div className="flex-1 items-center justify-center px-16">
           <ContentWrapper>
             <CityInputField
-              disabled={!admin || settingsConfirmed} />
+              disabled={!admin} />
           </ContentWrapper>
           <GoogleMapStaticImage />
         </div>
@@ -409,7 +409,7 @@ const Lobby = () => {
           <SaveButton />
         </div>
       </div>
-      {!admin && !settingsConfirmed && <InteractionDisabledOverlay />}
+      {!admin && <InteractionDisabledOverlay />}
     </BaseContainer>
   );
 };
