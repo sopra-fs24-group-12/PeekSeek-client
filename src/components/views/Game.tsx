@@ -4,6 +4,8 @@ import { api, handleError } from "helpers/api";
 import { Client } from "@stomp/stompjs";
 import { Library } from "@googlemaps/js-api-loader";
 import { getWebsocketDomain } from "helpers/getDomain";
+import { notification } from "antd";
+
 
 //imports for UI
 import BaseContainer from "../ui/BaseContainer";
@@ -36,6 +38,7 @@ function MyGoogleMap() {
   const [roundDurationSeconds, setRoundDurationSeconds] = useState();
   const [currentRound, setCurrentRound] = useState();
   const [nrOfRounds, setNrOfRounds] = useState();
+  const [notificationApi, contextHolder] = notification.useNotification();
 
   const [lat, setLat] = useState<number | null>(null);
   const [lng, setLng] = useState<number | null>(null);
@@ -51,6 +54,13 @@ function MyGoogleMap() {
   const [streetView, setStreetView] = useState(null);
   const [noSubmission, setNoSubmission] = useState<boolean>(false);
   const [remainingTime, setRemainingTime] = useState(10);
+
+  const openNotification = (message: string) => {
+    notificationApi.open({
+      message: message,
+      duration: 2,
+    });
+  };
 
   useEffect(() => {
     //only for dev purposes
@@ -86,6 +96,33 @@ function MyGoogleMap() {
   }, []);
 
   useEffect(() => {
+    const sendRequest = async () => {
+      const headers = {
+        "Authorization": localStorage.getItem("token"),
+      };
+
+      try {
+        await api.put(`/games/${gameId}/active`, null, { headers });
+        console.log("sent active message")
+      } catch (error) {
+        alert(
+          `Something went wrong while sending active ping: \n${handleError(error)}`,
+        );
+      }
+    };
+
+    sendRequest();
+
+    const intervalId = setInterval(() => {
+      sendRequest();
+    }, 2000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
+
+  useEffect(() => {
     let client = new Client();
     const websocketUrl = getWebsocketDomain();
     client.configure({
@@ -101,6 +138,8 @@ function MyGoogleMap() {
           console.log("Received message:", messageParsed);
           if (messageParsed.status === "voting") {
             navigate(`/gamesub/${gameId}/`);
+          } else if (messageParsed.status === "left") {
+            openNotification(messageParsed.username + " left");
           }
         });
         client && client.subscribe(timerDestination, (message) => {
@@ -170,6 +209,7 @@ function MyGoogleMap() {
 
   return (
     <div className="relative min-h-screen w-screen flex flex-col items-center">
+      {contextHolder}
       {/*<div className="absolute top-4 left-4">
         <BackButton />
       </div>*/}

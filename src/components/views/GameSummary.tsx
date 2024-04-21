@@ -9,37 +9,6 @@ import BackDashboardButton from "../ui/BackDashboardButton";
 import { useParams } from "react-router-dom";
 
 
-const mockLeaderboardData = [
-  { rank: 1, name: "Nils", basePoints: 100, bonusPoints: 50 },
-  { rank: 2, name: "Ece", basePoints: 90, bonusPoints: 45 },
-  { rank: 3, name: "Youssef", basePoints: 85, bonusPoints: 40 },
-  { rank: 4, name: "Georg", basePoints: 80, bonusPoints: 35 },
-  { rank: 5, name: "Silvan", basePoints: 70, bonusPoints: 5 },
-  { rank: 6, name: "Böhlen", basePoints: 60, bonusPoints: 0 },
-];
-
-const externalLinks = [
-  {
-    url: "https://www.google.com/maps/@47.371779,8.5366792,3a,75y,264.91h,90.77t/data=!3m6!1e1!3m4!1spvbPYFSzTaFhKV-uabCaZw!2e0!7i16384!8i8192?entry=ttu",
-    label: "Winning Submission 1",
-  },
-  {
-    url: "https://www.google.com/maps/@47.371779,8.5366792,3a,75y,264.91h,90.77t/data=!3m6!1e1!3m4!1spvbPYFSzTaFhKV-uabCaZw!2e0!7i16384!8i8192?entry=ttu",
-    label: "Winning Submission 2",
-  },
-  {
-    url: "https://www.google.com/maps/@47.371779,8.5366792,3a,75y,264.91h,90.77t/data=!3m6!1e1!3m4!1spvbPYFSzTaFhKV-uabCaZw!2e0!7i16384!8i8192?entry=ttu",
-    label: "Winning Submission 3",
-  },
-  {
-    url: "https://www.google.com/maps/@47.371779,8.5366792,3a,75y,264.91h,90.77t/data=!3m6!1e1!3m4!1spvbPYFSzTaFhKV-uabCaZw!2e0!7i16384!8i8192?entry=ttu",
-    label: "Winning Submission 4",
-  },
-  {
-    url: "https://www.google.com/maps/@47.371779,8.5366792,3a,75y,264.91h,90.77t/data=!3m6!1e1!3m4!1spvbPYFSzTaFhKV-uabCaZw!2e0!7i16384!8i8192?entry=ttu",
-    label: "Winning Submission 5",
-  },
-];
 const GameSummary = () => {
   // Mock data for city and number of quests
   const [city, setCity] = useState("Rome");
@@ -51,47 +20,14 @@ const GameSummary = () => {
   const lats = [];
   const lngs = [];
 
+
   async function generateStaticMapUrl(latitudes: string[], longitudes: string[]): Promise<string> {
     const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
     const baseUrl = "https://maps.googleapis.com/maps/api/staticmap";
 
-    const latitudesNumeric = latitudes.map(lat => parseFloat(lat));
-    const longitudesNumeric = longitudes.map(lng => parseFloat(lng));
+    const markers = latitudes.map((lat, index) => `markers=color:red%7Clabel:${index + 1}%7C${lat},${longitudes[index]}`).join("&");
 
-    // Calculate the center and bounds of the markers
-    let centerLat, centerLng, zoom;
-    if (latitudesNumeric.length === 1 && longitudesNumeric.length === 1) {
-      centerLat = latitudesNumeric[0];
-      centerLng = longitudesNumeric[0];
-      zoom = 12;
-    } else {
-      centerLat = (Math.min(...latitudesNumeric) + Math.max(...latitudesNumeric)) / 2;
-      centerLng = (Math.min(...longitudesNumeric) + Math.max(...longitudesNumeric)) / 2;
-      const maxLat = Math.max(...latitudesNumeric);
-      const minLat = Math.min(...latitudesNumeric);
-      const maxLng = Math.max(...longitudesNumeric);
-      const minLng = Math.min(...longitudesNumeric);
-      zoom = calculateZoom(maxLat, minLat, maxLng, minLng);
-    }
-
-    // Construct the markers string
-    const markers = latitudesNumeric.map((lat, index) => `markers=color:red%7Clabel:${index + 1}%7C${lat},${longitudesNumeric[index]}`).join("&");
-
-    // Construct and return the static map URL
-    return `${baseUrl}?size=600x400&${markers}&zoom=${zoom}&center=${centerLat},${centerLng}&key=${apiKey}`;
-  }
-
-  function calculateZoom(maxLat: number, minLat: number, maxLng: number, minLng: number): number {
-    const WORLD_DIM = { height: 256, width: 256 };
-    const ZOOM_MAX = 21;
-
-    const latFraction = (Math.PI * (maxLat - minLat)) / 180;
-    const lngFraction = (Math.PI * (maxLng - minLng)) / 180;
-
-    const latZoom = Math.log(WORLD_DIM.height / latFraction) / Math.LN2;
-    const lngZoom = Math.log(WORLD_DIM.width / lngFraction) / Math.LN2;
-
-    return Math.min(Math.floor(Math.min(latZoom, lngZoom)), ZOOM_MAX);
+    return `${baseUrl}?size=600x400&${markers}&key=${apiKey}`;
   }
 
   useEffect(() => {

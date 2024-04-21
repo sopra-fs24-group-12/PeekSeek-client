@@ -3,6 +3,7 @@ import { api, handleError } from "helpers/api";
 import { useNavigate, useParams } from "react-router-dom";
 import { Client } from "@stomp/stompjs";
 import { getWebsocketDomain } from "helpers/getDomain";
+import { notification } from "antd";
 
 //import UI elements
 import BaseContainer from "../ui/BaseContainer";
@@ -56,6 +57,7 @@ const GameSubmission = () => {
   const [remainingSeconds, setRemainingSeconds] = useState(0);
   const navigate = useNavigate();
   const [cardsData, setCardsData] = useState<CardData[]>([]);
+  const [notificationApi, contextHolder] = notification.useNotification();
 
 
   const mergeDataForSubmission = (): ExtendedDictionary => {
@@ -67,6 +69,40 @@ const GameSubmission = () => {
 
     return updatedBanned;
   };
+
+  const openNotification = (message: string) => {
+    notificationApi.open({
+      message: message,
+      duration: 2,
+    });
+  };
+
+  useEffect(() => {
+    const sendRequest = async () => {
+      const headers = {
+        "Authorization": localStorage.getItem("token"),
+      };
+
+      try {
+        await api.put(`/games/${gameId}/active`, null, { headers });
+        console.log("sent active message")
+      } catch (error) {
+        alert(
+          `Something went wrong while sending active ping: \n${handleError(error)}`,
+        );
+      }
+    };
+
+    sendRequest();
+
+    const intervalId = setInterval(() => {
+      sendRequest();
+    }, 2000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
 
   function generateStreetViewImageLink(lat: string, long: string, heading: string, pitch: string): string {
     const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
@@ -103,6 +139,8 @@ const GameSubmission = () => {
           console.log("Received message:", messageParsed);
           if (messageParsed.status === "summary") {
             navigate(`/voting/${gameId}/`);
+          } else if (messageParsed.status === "left") {
+            openNotification(messageParsed.username + " left");
           }
         });
         client && client.subscribe(timerDestination, (message) => {
@@ -269,6 +307,7 @@ const GameSubmission = () => {
       size="large"
       className="flex flex-col items-center"
     >
+      {contextHolder}
       <div className="order-first text-center p-4">
         <h1 className="text-3xl font-bold text-gray-700">Choose your Favourite Pick</h1>
       </div>

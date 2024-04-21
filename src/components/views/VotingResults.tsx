@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { api, handleError } from "helpers/api";
 import { getWebsocketDomain } from "helpers/getDomain";
+import { notification } from "antd";
+
 
 //import UI Elements
 import BaseContainer from "../ui/BaseContainer";
@@ -36,6 +38,8 @@ const VotingResults = () => {
   const [formattedLeaderboard, setFormattedLeaderboard] = useState([]);
   const [timeRemaining, setTimeRemaining] = useState(0);
   const navigate = useNavigate();
+  const [notificationApi, contextHolder] = notification.useNotification();
+
   const [winningSubmission, setWinningSubmission] = useState({
     id: "1",
     cityName: "",
@@ -44,6 +48,40 @@ const VotingResults = () => {
     imageUrl: "",
     noSubmission: false,
   });
+
+  const openNotification = (message: string) => {
+    notificationApi.open({
+      message: message,
+      duration: 2,
+    });
+  };
+
+  useEffect(() => {
+    const sendRequest = async () => {
+      const headers = {
+        "Authorization": localStorage.getItem("token"),
+      };
+
+      try {
+        await api.put(`/games/${gameId}/active`, null, { headers });
+        console.log("sent active message")
+      } catch (error) {
+        alert(
+          `Something went wrong while sending active ping: \n${handleError(error)}`,
+        );
+      }
+    };
+
+    sendRequest();
+
+    const intervalId = setInterval(() => {
+      sendRequest();
+    }, 2000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
 
   useEffect(() => {
     //localStorage.setItem("token", "eb47db3a-d291-4a93-8dc3-d71d5742031d");
@@ -128,6 +166,8 @@ const VotingResults = () => {
           } else if (messageParsed.status === "game_over") {
             localStorage.clear();
             navigate(`/gamesummary/${messageParsed.summaryId}/`);
+          } else if (messageParsed.status === "left") {
+            openNotification(messageParsed.username + " left");
           }
         });
         client && client.subscribe(timerDestination, (message) => {
@@ -165,6 +205,7 @@ const VotingResults = () => {
     <BaseContainer
       size="large">
       <div className="flex flex-col items-center justify-center w-full">
+        {contextHolder}
         <WinningCard
           key={winningSubmission.id}
           cityName={winningSubmission.cityName}
