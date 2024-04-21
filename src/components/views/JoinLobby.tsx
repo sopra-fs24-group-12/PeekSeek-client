@@ -90,7 +90,7 @@ const JoinLobby = () => {
   return (
     <div className="relative min-h-screen w-screen">
       <div className="absolute top-4 left-4">
-        <BackButton onClick={handleBackClick} />
+        <BackButton />
       </div>
       <div className="flex justify-center items-center h-full">
         <BaseContainer size="small" className="flex flex-col items-center">

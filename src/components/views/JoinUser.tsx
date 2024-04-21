@@ -38,8 +38,9 @@ const JoinUser = () => {
       }
 
     } catch (error) {
-      alert("Please provide the correct password for the lobby you are joining");
-      //navigate("/joinlobby");
+      alert(
+        `Something went wrong during joining: \n${handleError(error)}`,
+      );
     }
 
   };
@@ -48,7 +49,7 @@ const JoinUser = () => {
   return (
     <div className="relative min-h-screen w-screen">
       <div className="absolute top-4 left-4">
-        <BackButton onClick={handleBackClick} />
+        <BackButton />
       </div>
       <div className="flex justify-center items-center h-full">
         <BaseContainer
