@@ -12,7 +12,7 @@ export const GoogleMapStyle = [
     "elementType": "geometry",
     "stylers": [
       {
-        "visibility": "off"
+        "visibility": "on"
       }
     ]
   },
@@ -20,7 +20,7 @@ export const GoogleMapStyle = [
     "featureType": "administrative.neighborhood",
     "stylers": [
       {
-        "visibility": "off"
+        "visibility": "on"
       }
     ]
   },
@@ -28,7 +28,7 @@ export const GoogleMapStyle = [
     "featureType": "poi",
     "stylers": [
       {
-        "visibility": "off"
+        "visibility": "on"
       }
     ]
   },
@@ -37,7 +37,7 @@ export const GoogleMapStyle = [
     "elementType": "labels.icon",
     "stylers": [
       {
-        "visibility": "off"
+        "visibility": "on"
       }
     ]
   },
@@ -45,7 +45,7 @@ export const GoogleMapStyle = [
     "featureType": "transit",
     "stylers": [
       {
-        "visibility": "off"
+        "visibility": "on"
       }
     ]
   }

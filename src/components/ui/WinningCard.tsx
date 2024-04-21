@@ -24,14 +24,14 @@ const WinningCard: React.FC<SubmissionCardProps> =
         <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
           <h4 className="font-bold text-large text-center">{!noSubmission?"WINNING SUBMISSION":"NO SUBMISSION WON"}</h4>
           <small className="text-default-500">{!noSubmission ? quest : ""}</small>
-          <h5 className="font-bold text-large">{!noSubmission? "Found by" + anonymousName: ""}</h5>
+          <h5 className="font-bold text-large">{!noSubmission? "Found by " + anonymousName: ""}</h5>
         </CardHeader>
         <CardBody className="overflow-visible py-2">
           <Image
             alt="Card image"
             className="object-cover rounded-xl"
             src={!noSubmission?imageUrl: placeholder}
-            width={270} // You might adjust this depending on your layout needs
+            width={270}
           />
         </CardBody>
       </Card>

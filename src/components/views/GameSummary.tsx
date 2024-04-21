@@ -55,19 +55,16 @@ const GameSummary = () => {
     const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
     const baseUrl = "https://maps.googleapis.com/maps/api/staticmap";
 
-    // Parse latitudes and longitudes to numbers
     const latitudesNumeric = latitudes.map(lat => parseFloat(lat));
     const longitudesNumeric = longitudes.map(lng => parseFloat(lng));
 
     // Calculate the center and bounds of the markers
     let centerLat, centerLng, zoom;
     if (latitudesNumeric.length === 1 && longitudesNumeric.length === 1) {
-      // If only one marker, set zoom level appropriately
       centerLat = latitudesNumeric[0];
       centerLng = longitudesNumeric[0];
-      zoom = 12; // Adjust this value as needed for the desired zoom level
+      zoom = 12;
     } else {
-      // If multiple markers, calculate zoom level based on bounds
       centerLat = (Math.min(...latitudesNumeric) + Math.max(...latitudesNumeric)) / 2;
       centerLng = (Math.min(...longitudesNumeric) + Math.max(...longitudesNumeric)) / 2;
       const maxLat = Math.max(...latitudesNumeric);
