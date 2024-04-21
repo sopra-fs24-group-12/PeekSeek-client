@@ -13,6 +13,7 @@ import Game from "../../views/Game";
 import VotingResults from "../../views/VotingResults";
 import GameSummary from "../../views/GameSummary";
 
+
 /**
  * Main router of your application.
  * In the following class, different routes are rendered. In our case, there is a Login Route with matches the path "/login"
@@ -37,9 +38,8 @@ const AppRouter = () => {
 
           <Route path="/create" element={<CreateLobby />} />
 
-          <Route path="/lobby/:id" element={<Lobby />} />
-
           <Route path="/gamesub" element={<GameSubmission />} />
+        <Route path="/lobby/:lobbyId" element={<Lobby />} />
 
           <Route path="/gamesummary" element={<GameSummary />} />
 
@@ -48,7 +48,7 @@ const AppRouter = () => {
           <Route path="/voting" element={<VotingResults />} />
 
         <Route path="/" element={
-          <Navigate to="/game" replace />
+          <Navigate to="/landing" replace />
         }/>
 
       </Routes>

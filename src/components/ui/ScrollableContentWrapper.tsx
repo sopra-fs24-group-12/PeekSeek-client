@@ -3,12 +3,13 @@ import { Card, CardBody } from "@nextui-org/react";
 
 interface ContentWrapperProps {
   children: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
 }
 
-const ContentWrapper: React.FC<ContentWrapperProps> = ({ children }) => {
+const ScrollableContentWrapper: React.FC<ContentWrapperProps> = ({ children }) => {
   return (
     <Card
-      // css={{ mw: "100%", p: "$6", boxShadow: "$lg" }} // Adjust maxWidth, padding, and boxShadow as needed
       isBlurred
     >
       <CardBody style={{
@@ -16,9 +17,9 @@ const ContentWrapper: React.FC<ContentWrapperProps> = ({ children }) => {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        maxHeight: "450px",
-        overflowY: "auto",
-        width: "100%"
+        maxHeight: "500px",
+        overflowY: "visible",
+        width: "100%",
       }}
       >
         {children}
@@ -27,4 +28,4 @@ const ContentWrapper: React.FC<ContentWrapperProps> = ({ children }) => {
   );
 };
 
-export default ContentWrapper;
+export default ScrollableContentWrapper;
