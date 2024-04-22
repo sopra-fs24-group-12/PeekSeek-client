@@ -53,7 +53,7 @@ function MyGoogleMap() {
   const [map, setMap] = useState(null);
   const [streetView, setStreetView] = useState(null);
   const [noSubmission, setNoSubmission] = useState<boolean>(false);
-  const [remainingTime, setRemainingTime] = useState(10);
+  const [remainingTime, setRemainingTime] = useState(0);
 
   const openNotification = (message: string) => {
     notificationApi.open({
@@ -89,6 +89,8 @@ function MyGoogleMap() {
         alert(
           `Something went wrong while fetching round information: \n${handleError(error)}`,
         );
+        localStorage.clear();
+        navigate("/landing");
       }
     }
 
@@ -103,11 +105,12 @@ function MyGoogleMap() {
 
       try {
         await api.put(`/games/${gameId}/active`, null, { headers });
-        console.log("sent active message")
       } catch (error) {
         alert(
-          `Something went wrong while sending active ping: \n${handleError(error)}`,
+          `You were kicked due to inactivity. \n${handleError(error)}`,
         );
+        localStorage.clear();
+        navigate("/landing");
       }
     };
 
@@ -115,7 +118,7 @@ function MyGoogleMap() {
 
     const intervalId = setInterval(() => {
       sendRequest();
-    }, 2000);
+    }, 1000);
 
     return () => {
       clearInterval(intervalId);
@@ -135,7 +138,6 @@ function MyGoogleMap() {
         const timerDestination = "/topic/games/" + gameId + "/timer";
         client && client.subscribe(destination, (message) => {
           let messageParsed = JSON.parse(message.body);
-          console.log("Received message:", messageParsed);
           if (messageParsed.status === "voting") {
             navigate(`/gamesub/${gameId}/`);
           } else if (messageParsed.status === "left") {
@@ -180,9 +182,15 @@ function MyGoogleMap() {
       "Authorization": localStorage.getItem("token"),
     };
     const body = JSON.stringify({ lat, lng, heading, pitch, noSubmission });
-    const response = await api.post("games/" + gameId + "/submission", body, { headers });
-    console.log("API Response:", response.data);
-    navigate("/waiting/" + gameId);
+    try {
+      const response = await api.post("games/" + gameId + "/submission", body, { headers });
+      console.log("API Response:", response.data);
+      navigate("/waiting/" + gameId);
+    } catch (error) {
+      alert(
+        `There was an error during the submission. \n${handleError(error)}`,
+      );
+    }
   }
 
   const submitNow = () => {

@@ -32,11 +32,12 @@ const Waiting = () => {
 
       try {
         await api.put(`/games/${gameId}/active`, null, { headers });
-        console.log("sent active message")
       } catch (error) {
         alert(
-          `Something went wrong while sending active ping: \n${handleError(error)}`,
+          `You were kicked due to inactivity. \n${handleError(error)}`,
         );
+        localStorage.clear();
+        navigate("/landing");
       }
     };
 
@@ -44,7 +45,7 @@ const Waiting = () => {
 
     const intervalId = setInterval(() => {
       sendRequest();
-    }, 2000);
+    }, 1000);
 
     return () => {
       clearInterval(intervalId);

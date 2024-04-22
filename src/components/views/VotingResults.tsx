@@ -64,11 +64,12 @@ const VotingResults = () => {
 
       try {
         await api.put(`/games/${gameId}/active`, null, { headers });
-        console.log("sent active message")
       } catch (error) {
         alert(
-          `Something went wrong while sending active ping: \n${handleError(error)}`,
+          `You were kicked due to inactivity. \n${handleError(error)}`,
         );
+        localStorage.clear();
+        navigate("/landing");
       }
     };
 
@@ -76,7 +77,7 @@ const VotingResults = () => {
 
     const intervalId = setInterval(() => {
       sendRequest();
-    }, 2000);
+    }, 1000);
 
     return () => {
       clearInterval(intervalId);
@@ -114,6 +115,8 @@ const VotingResults = () => {
         alert(
           `Something went wrong while fetching information: \n${handleError(error)}`,
         );
+        localStorage.clear();
+        navigate("/landing");
       }
 
       try {
@@ -140,6 +143,8 @@ const VotingResults = () => {
         alert(
           `Something went wrong while fetching information: \n${handleError(error)}`,
         );
+        localStorage.clear();
+        navigate("/landing");
       }
 
     }
@@ -172,7 +177,6 @@ const VotingResults = () => {
         });
         client && client.subscribe(timerDestination, (message) => {
           let messageParsed = JSON.parse(message.body);
-          console.log("Received message from topic 2:", messageParsed);
           setTimeRemaining(messageParsed.secondsRemaining);
         });
       },
