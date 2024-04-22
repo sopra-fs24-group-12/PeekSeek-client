@@ -670,6 +670,10 @@ video {
   bottom: 4rem;
 }
 
+.bottom-8 {
+  bottom: 2rem;
+}
+
 .bottom-\[10\%\] {
   bottom: 10%;
 }
@@ -947,6 +951,10 @@ video {
   margin-left: 1rem;
 }
 
+.ml-6 {
+  margin-left: 1.5rem;
+}
+
 .ml-8 {
   margin-left: 2rem;
 }
@@ -973,6 +981,10 @@ video {
 
 .mr-8 {
   margin-right: 2rem;
+}
+
+.mt-0 {
+  margin-top: 0px;
 }
 
 .mt-1 {
@@ -1005,6 +1017,10 @@ video {
 
 .mt-8 {
   margin-top: 2rem;
+}
+
+.mt-\[-120px\] {
+  margin-top: -120px;
 }
 
 .box-border {
@@ -1202,6 +1218,10 @@ video {
 
 .max-h-64 {
   max-height: 16rem;
+}
+
+.max-h-\[382px\] {
+  max-height: 382px;
 }
 
 .max-h-\[calc\(100\%_-_7\.5rem\)\] {
@@ -2027,10 +2047,6 @@ video {
   border-radius: var(--nextui-radius-large);
 }
 
-.rounded-lg {
-  border-radius: 0.5rem;
-}
-
 .rounded-md {
   border-radius: 0.375rem;
 }
@@ -2107,6 +2123,10 @@ video {
   border-width: 3px;
 }
 
+.border-4 {
+  border-width: 4px;
+}
+
 .border-medium {
   border-width: var(--nextui-border-width-medium);
 }
@@ -2173,6 +2193,11 @@ video {
 .border-foreground {
   --tw-border-opacity: 1;
   border-color: hsl(var(--nextui-foreground) / var(--nextui-foreground-opacity, var(--tw-border-opacity)));
+}
+
+.border-green-500 {
+  --tw-border-opacity: 1;
+  border-color: rgb(34 197 94 / var(--tw-border-opacity));
 }
 
 .border-primary {
@@ -2312,6 +2337,11 @@ video {
   background-color: hsl(var(--nextui-background) / 0.8);
 }
 
+.bg-black {
+  --tw-bg-opacity: 1;
+  background-color: rgb(0 0 0 / var(--tw-bg-opacity));
+}
+
 .bg-content1 {
   --tw-bg-opacity: 1;
   background-color: hsl(var(--nextui-content1) / var(--nextui-content1-opacity, var(--tw-bg-opacity)));
@@ -2396,9 +2426,9 @@ video {
   background-color: hsl(var(--nextui-foreground) / 0.1);
 }
 
-.bg-gray-200 {
+.bg-orange-700 {
   --tw-bg-opacity: 1;
-  background-color: rgb(229 231 235 / var(--tw-bg-opacity));
+  background-color: rgb(194 65 12 / var(--tw-bg-opacity));
 }
 
 .bg-overlay\/30 {
@@ -2472,6 +2502,10 @@ video {
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
+.bg-opacity-50 {
+  --tw-bg-opacity: 0.5;
 }
 
 .bg-background {
@@ -2605,6 +2639,11 @@ video {
 .px-12 {
   padding-left: 3rem;
   padding-right: 3rem;
+}
+
+.px-16 {
+  padding-left: 4rem;
+  padding-right: 4rem;
 }
 
 .px-2 {
@@ -2764,10 +2803,6 @@ video {
 
 .pt-2 {
   padding-top: 0.5rem;
-}
-
-.pt-20 {
-  padding-top: 5rem;
 }
 
 .text-left {
@@ -2964,11 +2999,6 @@ video {
 
 .text-foreground\/50 {
   color: hsl(var(--nextui-foreground) / 0.5);
-}
-
-.text-gray-500 {
-  --tw-text-opacity: 1;
-  color: rgb(107 114 128 / var(--tw-text-opacity));
 }
 
 .text-gray-700 {

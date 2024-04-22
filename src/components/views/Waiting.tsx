@@ -32,11 +32,12 @@ const Waiting = () => {
 
       try {
         await api.put(`/games/${gameId}/active`, null, { headers });
-        console.log("sent active message")
       } catch (error) {
         alert(
-          `Something went wrong while sending active ping: \n${handleError(error)}`,
+          `You were kicked due to inactivity. \n${handleError(error)}`,
         );
+        localStorage.clear();
+        navigate("/landing");
       }
     };
 
@@ -44,7 +45,7 @@ const Waiting = () => {
 
     const intervalId = setInterval(() => {
       sendRequest();
-    }, 2000);
+    }, 1000);
 
     return () => {
       clearInterval(intervalId);
@@ -86,19 +87,23 @@ const Waiting = () => {
   }, [gameId]);
 
   return (
-    <BaseContainer className="flex items-center justify-center h-full">
-      <div className="flex flex-col items-center justify-center h-full">
-        <LoadingSpinner />
+    <BaseContainer size="waiting" className="flex flex-col items-center">
+      <div className="relative flex-grow flex items-center justify-center mb-12">
+        <img
+          src="/images/waitingbackground.jpg"
+          alt="PeekSeek Logo"
+          width="100%"
+        />
+        <div className="absolute top-5 left-20 z-10 flex items-center">
+          <LoadingSpinner />
+          <h1 className="text-4xl font-bold text-center ml-4">
+            Waiting until everyone is done peeking ...
+          </h1>
+        </div>
       </div>
-      <p className="mt-4 text-center text-grey" style={textStyle}>Waiting for all participants to finish...</p>
-    </BaseContainer>
+    </ BaseContainer>
   );
 };
 
-// Inline styles for text
-const textStyle = {
-  fontWeight: "bold", // Very bold
-  fontSize: "2rem" // Larger font size
-};
 
 export default Waiting;

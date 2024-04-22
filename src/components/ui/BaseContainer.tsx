@@ -1,7 +1,7 @@
 import React from "react";
 import {Card, CardBody} from "@nextui-org/react";
 
-type ContainerSize = "landing" | "small" | "medium" | "large";
+type ContainerSize = "waiting" | "landing" | "small" | "medium" | "large";
 
 interface BaseContainerProps {
   className?: string;
@@ -11,6 +11,7 @@ interface BaseContainerProps {
 
 const BaseContainer: React.FC<BaseContainerProps> = ({ className, children, size = "large" }) => {
   const containerClasses = {
+    waiting: "w-[100%] h-[100%] overflow-auto shadow-lg",
     landing: "w-[25%] h-[85%] overflow-auto shadow-lg",
     large: "w-[90%] h-[90%] overflow-auto shadow-lg",
     medium: "w-3/4 h-3/4 overflow-auto shadow-lg",
