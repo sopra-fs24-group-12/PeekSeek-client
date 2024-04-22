@@ -93,6 +93,8 @@ const Lobby = () => {
         alert(
           `Something went wrong while fetching lobby information: \n${handleError(error)}`,
         );
+        localStorage.clear();
+        navigate("/landing");
       }
     }
 
@@ -119,7 +121,7 @@ const Lobby = () => {
 
     const intervalId = setInterval(() => {
       sendRequest();
-    }, 2000);
+    }, 1000);
 
     return () => {
       clearInterval(intervalId);
