@@ -5,7 +5,7 @@ import { Client } from "@stomp/stompjs";
 import { Library } from "@googlemaps/js-api-loader";
 import { getWebsocketDomain } from "helpers/getDomain";
 import { notification } from "antd";
-import { ThreeDots } from 'react-loader-spinner';
+import { ThreeDots } from "react-loader-spinner";
 
 
 //imports for UI
