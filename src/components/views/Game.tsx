@@ -5,6 +5,7 @@ import { Client } from "@stomp/stompjs";
 import { Library } from "@googlemaps/js-api-loader";
 import { getWebsocketDomain } from "helpers/getDomain";
 import { notification } from "antd";
+import { ThreeDots } from 'react-loader-spinner';
 
 
 //imports for UI
@@ -54,6 +55,7 @@ function MyGoogleMap() {
   const [streetView, setStreetView] = useState(null);
   const [noSubmission, setNoSubmission] = useState<boolean>(false);
   const [remainingTime, setRemainingTime] = useState(0);
+  const [submissionDone, setSubmissionDone] = useState(false);
 
   const openNotification = (message: string) => {
     notificationApi.open({
@@ -185,7 +187,8 @@ function MyGoogleMap() {
     try {
       const response = await api.post("games/" + gameId + "/submission", body, { headers });
       console.log("API Response:", response.data);
-      navigate("/waiting/" + gameId);
+      //navigate("/waiting/" + gameId);
+      setSubmissionDone(true);
     } catch (error) {
       alert(
         `There was an error during the submission. \n${handleError(error)}`,
@@ -218,71 +221,92 @@ function MyGoogleMap() {
   return (
     <div className="relative min-h-screen w-screen flex flex-col items-center">
       {contextHolder}
-      {/*<div className="absolute top-4 left-4">
+      {submissionDone ? (
+        <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50">
+          <div className="flex flex-col items-center">
+            <ThreeDots
+              visible={true}
+              height={80}
+              width={80}
+              color="white"
+              radius={9}
+              ariaLabel="three-dots-loading"
+              wrapperStyle={{}}
+              wrapperClass=""
+            />
+            <div className="text-white mt-4">Waiting for participants to submit...</div>
+          </div>
+        </div>
+      ) : (
+        <div className="relative min-h-screen w-screen flex flex-col items-center">
+          {contextHolder}
+          {/*<div className="absolute top-4 left-4">
         <BackButton />
       </div>*/}
-      <div className="font-bold text-lg mt-16">{"TIME REMAINING: " + remainingTime}</div>
-      <div className="w-3/4 flex flex-col items-center">
-        <BaseContainer size="medium" className="flex flex-col items-center mb-20">
-          <h3 className="text-xl font-bold my-4">Find a {quest} in {cityName}!</h3>
-          {lat && lng && (
-            <LoadScript googleMapsApiKey={API_Key} libraries={libs}>
-              <ReactGoogleMap
-                mapContainerStyle={containerStyle}
-                center={mapCenter}
-                zoom={15}
-                onLoad={(map) => {
-                  const bounds = new window.google.maps.LatLngBounds(
-                    new window.google.maps.LatLng(resLatSw, resLngSw),  // Southwest
-                    new window.google.maps.LatLng(resLatNe, resLngNe),   // Northeast
-                  );
-                  map.fitBounds(bounds);
-                  map.setOptions({ restriction: { latLngBounds: bounds, strictBounds: true } });
-                  setMap(map);
-                  map.set("styles", googleMapsStyling);
-                }}
-                onCenterChanged={() => handleCenterChanged(map)}
-              >
-                <StreetViewPanorama
-                  onLoad={(panorama) => {
-                    setStreetView(panorama);
-                    panorama.addListener("position_changed", () => {
-                      const newPosition = panorama.getPosition();
-                      const newLat = newPosition.lat();
-                      const newLng = newPosition.lng();
+          <div className="font-bold text-lg mt-16">{"TIME REMAINING: " + remainingTime}</div>
+          <div className="w-3/4 flex flex-col items-center">
+            <BaseContainer size="medium" className="flex flex-col items-center mb-20">
+              <h3 className="text-xl font-bold my-4">Find a {quest} in {cityName}!</h3>
+              {lat && lng && (
+                <LoadScript googleMapsApiKey={API_Key} libraries={libs}>
+                  <ReactGoogleMap
+                    mapContainerStyle={containerStyle}
+                    center={mapCenter}
+                    zoom={15}
+                    onLoad={(map) => {
+                      const bounds = new window.google.maps.LatLngBounds(
+                        new window.google.maps.LatLng(resLatSw, resLngSw),  // Southwest
+                        new window.google.maps.LatLng(resLatNe, resLngNe),   // Northeast
+                      );
+                      map.fitBounds(bounds);
+                      map.setOptions({ restriction: { latLngBounds: bounds, strictBounds: true } });
+                      setMap(map);
+                      map.set("styles", googleMapsStyling);
+                    }}
+                    onCenterChanged={() => handleCenterChanged(map)}
+                  >
+                    <StreetViewPanorama
+                      onLoad={(panorama) => {
+                        setStreetView(panorama);
+                        panorama.addListener("position_changed", () => {
+                          const newPosition = panorama.getPosition();
+                          const newLat = newPosition.lat();
+                          const newLng = newPosition.lng();
 
-                      // Update the lat and lng states
-                      setLat(newLat);
-                      setLng(newLng);
+                          // Update the lat and lng states
+                          setLat(newLat);
+                          setLng(newLng);
 
-                      // Now you can use newLat and newLng as needed
-                      console.log("New street view latitude: " + newLat);
-                      console.log("New street view longitude: " + newLng);
-                    });
-                    panorama.addListener("pov_changed", () => {
-                      const pov = panorama.getPov();
-                      const newPitch = pov.pitch;
-                      const newHeading = pov.heading;
+                          // Now you can use newLat and newLng as needed
+                          console.log("New street view latitude: " + newLat);
+                          console.log("New street view longitude: " + newLng);
+                        });
+                        panorama.addListener("pov_changed", () => {
+                          const pov = panorama.getPov();
+                          const newPitch = pov.pitch;
+                          const newHeading = pov.heading;
 
-                      // Update the pitch and heading states
-                      setPitch(newPitch);
-                      setHeading(newHeading);
+                          // Update the pitch and heading states
+                          setPitch(newPitch);
+                          setHeading(newHeading);
 
-                      // Now you can use newPitch and newHeading as needed
-                      console.log("New street view pitch: " + newPitch);
-                      console.log("New street view heading: " + newHeading);
-                    });
-                  }}
-                />
-              </ReactGoogleMap>
-            </LoadScript>
-          )}
-        </BaseContainer>
-        <div className="w-3/4 flex justify-between px-4 absolute bottom-16">
-          <GameButton onClick={submitEmptyNow} />
-          <GameSubmitButton onClick={submitNow} />
+                          // Now you can use newPitch and newHeading as needed
+                          console.log("New street view pitch: " + newPitch);
+                          console.log("New street view heading: " + newHeading);
+                        });
+                      }}
+                    />
+                  </ReactGoogleMap>
+                </LoadScript>
+              )}
+            </BaseContainer>
+            <div className="w-3/4 flex justify-between px-4 absolute bottom-16">
+              <GameButton onClick={submitEmptyNow} />
+              <GameSubmitButton onClick={submitNow} />
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
