@@ -30,6 +30,7 @@ const JoinUser = () => {
       if (!username.trim()){
         setUsernameError("Username is required.");
         alert("Username Required!");
+
         return;
       }
       const requestBody = JSON.stringify({ username, lobbyPassword });
@@ -80,7 +81,7 @@ const JoinUser = () => {
               label="required "
               placeholder="..."
               onChange={handleUsernameChange}
-              />
+            />
             <text>Lobby Password</text>
             <Input
               className="mb-8 shadow-lg"
