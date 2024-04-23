@@ -10,6 +10,7 @@ import BaseContainer from "../ui/BaseContainer";
 import SubmissionCard from "../ui/SubmissionCard";
 import SubmitButton from "../ui/SubmitButton";
 import Timer from "../ui/Timer";
+import { ThreeDots } from "react-loader-spinner";
 
 
 interface CardData {
@@ -58,6 +59,7 @@ const GameSubmission = () => {
   const navigate = useNavigate();
   const [cardsData, setCardsData] = useState<CardData[]>([]);
   const [notificationApi, contextHolder] = notification.useNotification();
+  const [submissionDone, setSubmissionDone] = useState(false);
 
 
   const mergeDataForSubmission = (): ExtendedDictionary => {
@@ -303,48 +305,68 @@ const GameSubmission = () => {
 
 
   return (
-    <BaseContainer
-      size="large"
-      className="flex flex-col items-center"
-    >
-      {contextHolder}
-      <div className="order-first text-center p-4">
-        <h1 className="text-3xl font-bold text-gray-700">Choose your Favourite Pick</h1>
-      </div>
-      <div className="flex flex-col md:flex-row w-full h-full">
-        {/* Container for the submission cards */}
-        <div className="md:w-3/4 w-full p-4 flex flex-col">
-          <div className="grid lg:grid-cols-3 grid-cols-1 gap-4">
-            {cardsData.map((card, index) => (
-              <SubmissionCard
-                key={card.id}
-                cityName={card.cityName}
-                quest={card.quest}
-                anonymousName={card.anonymousName}
-                imageUrl={card.imageUrl}
-                onImageClick={() => handleImageClick(card.link)}
-                onPickClick={() => handlePickClick(card.id)}
-                onBanClick={() => handleBanClick(card.id)}
-                onUnpickClick={() => handleUnpickClick(card.id)}
-                onUnbanClick={() => handleUnbanClick(card.id)}
-                isPicked={pickedCardId === card.id}
-                isBanned={banned.hasKey(card.id)}
-                noSubmission={card.noSubmission}
-              />
-            ))}
-          </div>
-
-          <div className="w-full flex justify-center p-4">
-            <SubmitButton voteData={mergeDataForSubmission()} gameId={gameId} />
+    <div className="relative min-h-screen w-screen flex flex-col items-center">
+      {submissionDone ? (
+        <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50">
+          <div className="flex flex-col items-center">
+            <ThreeDots
+              visible={true}
+              height={80}
+              width={80}
+              color="white"
+              radius={9}
+              ariaLabel="three-dots-loading"
+              wrapperStyle={{}}
+              wrapperClass=""
+            />
+            <div className="text-white mt-4">Waiting for participants to vote...</div>
           </div>
         </div>
+      ) : (
+        <BaseContainer
+          size="large"
+          className="flex flex-col items-center"
+        >
+          {contextHolder}
+          <div className="order-first text-center p-4">
+            <h1 className="text-3xl font-bold text-gray-700">Choose your Favourite Pick</h1>
+          </div>
+          <div className="flex flex-col md:flex-row w-full h-full">
+            {/* Container for the submission cards */}
+            <div className="md:w-3/4 w-full p-4 flex flex-col">
+              <div className="grid lg:grid-cols-3 grid-cols-1 gap-4">
+                {cardsData.map((card, index) => (
+                  <SubmissionCard
+                    key={card.id}
+                    cityName={card.cityName}
+                    quest={card.quest}
+                    anonymousName={card.anonymousName}
+                    imageUrl={card.imageUrl}
+                    onImageClick={() => handleImageClick(card.link)}
+                    onPickClick={() => handlePickClick(card.id)}
+                    onBanClick={() => handleBanClick(card.id)}
+                    onUnpickClick={() => handleUnpickClick(card.id)}
+                    onUnbanClick={() => handleUnbanClick(card.id)}
+                    isPicked={pickedCardId === card.id}
+                    isBanned={banned.hasKey(card.id)}
+                    noSubmission={card.noSubmission}
+                  />
+                ))}
+              </div>
 
-        {/* Chat Component */}
-        <div className="md:w-1/4 w-full p-4 lg:order-none flex justify-center items-center mt-[-120px]">
-          <Timer initialTimeInSeconds={10} timeInSeconds={remainingSeconds} title={"RESULTS IN:"} />
-        </div>
-      </div>
-    </BaseContainer>
+              <div className="w-full flex justify-center p-4">
+                <SubmitButton voteData={mergeDataForSubmission()} gameId={gameId} setSubmissionDone={setSubmissionDone} />
+              </div>
+            </div>
+
+            {/* Chat Component */}
+            <div className="md:w-1/4 w-full p-4 lg:order-none flex justify-center items-center mt-[-120px]">
+              <Timer initialTimeInSeconds={10} timeInSeconds={remainingSeconds} title={"RESULTS IN:"} />
+            </div>
+          </div>
+        </BaseContainer>
+      )}
+    </div>
   );
 };
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { Button } from "@nextui-org/react";
 import { twMerge } from "tailwind-merge"
 import { api, handleError } from "helpers/api";
@@ -34,10 +34,11 @@ class ExtendedDictionary {
 
 interface SubmitButtonProps {
   voteData: ExtendedDictionary,
-  gameId: string
+  gameId: string,
+  setSubmissionDone: Dispatch<SetStateAction<boolean>>;
 }
 
-const SubmitButton: React.FC<SubmitButtonProps> = ({voteData, gameId}) => {
+const SubmitButton: React.FC<SubmitButtonProps> = ({voteData, gameId, setSubmissionDone}) => {
   const navigate = useNavigate();
 
   const onClick = async () => {
@@ -55,8 +56,8 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({voteData, gameId}) => {
       console.log(body);
       const response = await api.post("/games/" + gameId + "/voting", body, {headers});
       console.log("Submitted votes");
-      navigate("/waiting/" + gameId);
-
+      //navigate("/waiting/" + gameId);
+      setSubmissionDone(true);
     } catch (error) {
       alert(
         `Something went wrong while submitting your votes: \n${handleError(error)}`
