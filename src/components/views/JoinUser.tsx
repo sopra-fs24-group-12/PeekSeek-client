@@ -17,6 +17,7 @@ const JoinUser = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { id } = useParams();
   const isJoinDisabled = !username || (lobbyRequiresPassword && !lobbyPassword);
+  const [usernameError, setUsernameError] = useState("");
 
   const handleBackClick = () => {
     console.log("Button clicked!");
@@ -26,6 +27,11 @@ const JoinUser = () => {
 
   const handleJoinClick = async () => {
     try {
+      if (!username.trim()){
+        setUsernameError("Username is required.");
+        alert("Username Required!");
+        return;
+      }
       const requestBody = JSON.stringify({ username, lobbyPassword });
       const response = await api.put("/lobbies/" + id + "/join", requestBody);
       localStorage.setItem("token", response.headers["authorization"]);
@@ -44,7 +50,15 @@ const JoinUser = () => {
     }
 
   };
-
+  const handleUsernameChange = (e) => {
+    const trimmedUsername = e.target.value.trim();
+    if (trimmedUsername) {
+      setUsername(trimmedUsername);
+      setUsernameError("");
+    } else {
+      setUsernameError("Username is required.");
+    }
+  };
 
   return (
     <div className="relative min-h-screen w-screen">
@@ -65,7 +79,8 @@ const JoinUser = () => {
               type="username"
               label="required "
               placeholder="..."
-              onChange={(e) => setUsername(e.target.value)} />
+              onChange={handleUsernameChange}
+              />
             <text>Lobby Password</text>
             <Input
               className="mb-8 shadow-lg"
