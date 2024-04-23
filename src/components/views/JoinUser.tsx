@@ -37,6 +37,7 @@ const JoinUser = () => {
       const response = await api.put("/lobbies/" + id + "/join", requestBody);
       localStorage.setItem("token", response.headers["authorization"]);
       localStorage.setItem("username", username);
+      localStorage.setItem("submissionDone", "false");
       console.log(localStorage.getItem("token"));
       if (response.status >= 300) {
         navigate("/joinlobby");

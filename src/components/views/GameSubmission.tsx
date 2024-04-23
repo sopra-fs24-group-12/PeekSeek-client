@@ -59,7 +59,7 @@ const GameSubmission = () => {
   const navigate = useNavigate();
   const [cardsData, setCardsData] = useState<CardData[]>([]);
   const [notificationApi, contextHolder] = notification.useNotification();
-  const [submissionDone, setSubmissionDone] = useState(false);
+  const [submissionDone, setSubmissionDone] = useState((localStorage.getItem("submissionDone") !== "false"));
 
 
   const mergeDataForSubmission = (): ExtendedDictionary => {
@@ -141,9 +141,13 @@ const GameSubmission = () => {
           let messageParsed = JSON.parse(message.body);
           console.log("Received message:", messageParsed);
           if (messageParsed.status === "summary") {
+            localStorage.setItem("submissionDone", "false");
             navigate(`/voting/${gameId}/`);
           } else if (messageParsed.status === "left") {
             openNotification(messageParsed.username + " left");
+          } else if (messageParsed.status === "game_over") {
+            localStorage.setItem("submissionDone", "false");
+            navigate("/gamesummary/" + messageParsed.summaryId);
           }
         });
         client && client.subscribe(timerDestination, (message) => {
