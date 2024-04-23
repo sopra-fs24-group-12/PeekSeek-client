@@ -13,11 +13,11 @@ import BaseContainer from "../ui/BaseContainer";
 import BackButton from "components/ui/BackButton";
 import GameButton from "components/ui/GameButton";
 import GameSubmitButton from "components/ui/GameSubmitButton";
+import Timer from "../ui/Timer";
 
 //imports for Google Maps API
 import { GoogleMap as ReactGoogleMap, LoadScript, StreetViewPanorama, Marker } from "@react-google-maps/api";
 import { GoogleMapStyle as googleMapsStyling } from "../../assets/GoogleMapStyle";
-import Timer from "../ui/Timer";
 
 const containerStyle = {
   width: "100%",
@@ -55,7 +55,7 @@ function MyGoogleMap() {
   const [streetView, setStreetView] = useState(null);
   const [noSubmission, setNoSubmission] = useState<boolean>(false);
   const [remainingTime, setRemainingTime] = useState(0);
-  const [submissionDone, setSubmissionDone] = useState(false);
+  const [submissionDone, setSubmissionDone] = useState((localStorage.getItem("submissionDone") !== "false"));
 
   const openNotification = (message: string) => {
     notificationApi.open({
@@ -141,9 +141,13 @@ function MyGoogleMap() {
         client && client.subscribe(destination, (message) => {
           let messageParsed = JSON.parse(message.body);
           if (messageParsed.status === "voting") {
+            localStorage.setItem("submissionDone", "false");
             navigate(`/gamesub/${gameId}/`);
           } else if (messageParsed.status === "left") {
             openNotification(messageParsed.username + " left");
+          } else if (messageParsed.status === "game_over") {
+            localStorage.setItem("submissionDone", "false");
+            navigate("/gamesummary/" + messageParsed.summaryId);
           }
         });
         client && client.subscribe(timerDestination, (message) => {
@@ -188,6 +192,7 @@ function MyGoogleMap() {
       const response = await api.post("games/" + gameId + "/submission", body, { headers });
       console.log("API Response:", response.data);
       //navigate("/waiting/" + gameId);
+      localStorage.setItem("submissionDone", "true");
       setSubmissionDone(true);
     } catch (error) {
       alert(
