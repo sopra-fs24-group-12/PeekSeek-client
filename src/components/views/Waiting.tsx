@@ -67,7 +67,7 @@ const Waiting = () => {
           console.log("Received message:", messageParsed);
 
           if (messageParsed.status === "voting") {
-            navigate("/gamesub/" + gameId);
+            navigate("/submissions/" + gameId);
           } else if (messageParsed.status === "summary") {
             navigate("/voting/" + gameId);
           } else if (messageParsed.status === "game_over") {
