@@ -123,8 +123,8 @@ const GameSubmission = () => {
     return `${baseUrl}?${params}`;
   }
 
-  const animalNames = ["Koala", "Bear", "Giraffe", "Zebra", "Gazelle", "Elephant"];
-  const shuffledAnimalNames = [...animalNames].sort(() => Math.random() - 0.5);
+  // const animalNames = ["Koala", "Bear", "Giraffe", "Zebra", "Gazelle", "Elephant"];
+  // const shuffledAnimalNames = [...animalNames].sort(() => Math.random() - 0.5);
 
   useEffect(() => {
     let client = new Client();
@@ -175,6 +175,7 @@ const GameSubmission = () => {
 
       try {
         const response = await api.get("/games/" + gameId + "/submissions", { headers });
+        const animalNames = ["Koala", "Bear", "Giraffe", "Zebra", "Gazelle", "Elephant"];
         console.log("API Response 1:", response.data);
 
         const response1 = await api.get("/games/" + gameId + "/round", { headers });
@@ -184,7 +185,7 @@ const GameSubmission = () => {
           id: item.id,
           cityName: !item.noSubmission ? response1.data.gameLocation : "",
           quest: !item.noSubmission ? response1.data.quest : "",
-          anonymousName: !item.noSubmission ? `Anonymous ${shuffledAnimalNames[index]}` : "NOTHING FOUND",
+          anonymousName: !item.noSubmission ? `Anonymous ${animalNames[index]}` : "NOTHING FOUND",
           imageUrl: !item.noSubmission ? generateStreetViewImageLink(item.submittedLocation.lat, item.submittedLocation.lng, item.submittedLocation.heading, item.submittedLocation.pitch) : "", // Use item.image if available, otherwise empty string
           noSubmission: item.noSubmission,
           //link: "https://example.com/link1"
