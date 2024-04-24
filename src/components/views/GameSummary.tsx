@@ -10,6 +10,7 @@ import { useParams } from "react-router-dom";
 
 
 const GameSummary = () => {
+  type ContainerSize = "waiting" | "landing" | "small" | "medium" | "large"; //new code
   // Mock data for city and number of quests
   const [city, setCity] = useState("Rome");
   const [nrOfQuests, setNrOfQuests] = useState(5);
@@ -19,8 +20,31 @@ const GameSummary = () => {
   const [staticMap, setStaticMap] = useState("");
   const lats = [];
   const lngs = [];
+  const [containerSize, setContainerSize] = useState<ContainerSize>("large");
+  //////new code --------
+  const determineContainerSize = () => { 
+    const windowWidth = window.innerWidth;
+    if (windowWidth < 768) {
+      setContainerSize("small");
+    } else if (windowWidth < 1024) {
+      setContainerSize("medium");
+    } else {
+      setContainerSize("large");
+    }
+  }; 
+  useEffect(() => {
+    // Call the function to determine the size initially
+    determineContainerSize();
+    // Add event listener to resize the container dynamically
+    window.addEventListener("resize", determineContainerSize);
 
-
+    // Cleanup function to remove event listener
+    return () => {
+      window.removeEventListener("resize", determineContainerSize);
+    };
+  }, []);
+  ////new code stops here-------
+  
   async function generateStaticMapUrl(latitudes: string[], longitudes: string[]): Promise<string> {
     const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
     const baseUrl = "https://maps.googleapis.com/maps/api/staticmap";
@@ -69,7 +93,7 @@ const GameSummary = () => {
   }, []);
 
   return (
-    <BaseContainer size="large" className="flex flex-col items-center">
+    <BaseContainer size={containerSize} className="flex flex-col items-center">
       <div className="p-4 flex w-full items-center">
         <div className="w-1/6">
           <BackDashboardButton />
