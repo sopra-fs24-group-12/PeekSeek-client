@@ -222,7 +222,6 @@ const Lobby = () => {
             <Input
               isClearable
               key={`quest-${index}`}  // Unique key for each input
-              //key={index}
               placeholder={`Quest #${index + 1}`}
               value={quest}
               onChange={(e) => handleQuestChange(index, e.target.value)}
@@ -365,7 +364,7 @@ const Lobby = () => {
     return (
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
         <div style={{ height: "25px" }}></div>
-        <div style={{ borderRadius: "50%", overflow: "hidden", width: "550px", height: "550px" }}>
+        <div style={{ borderRadius: "50%", overflow: "hidden", width: "500px", height: "500px", boxShadow: "0 4px 8px rgba(0,0,0,0.3)", border: "5px solid white", marginBottom: "130px" }}>
           <img src={imageUrl} alt="Google Map" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         </div>
       </div>
@@ -402,7 +401,7 @@ const Lobby = () => {
           <InputQuests
             disabled={!admin} />
         </div>
-        <div className="w-full flex justify-between px-12 absolute bottom-8">
+        <div className="w-full flex justify-between px-12 absolute bottom-8" style={{ position: "absolute", bottom: "16px" }}>
           <LeaveButton />
           <StartButton
             disabled={!settingsConfirmed}

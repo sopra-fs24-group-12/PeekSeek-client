@@ -9,14 +9,18 @@ const BackButton: React.FC = () => {
 
   return (
     <Button
-      className="items-center"
+      className="items-center bg-gradient-to-tr from-gray-400 to-gray-300 text-black shadow-lg"
       radius="full"
       size = "lg"
       color = "default"
       onClick={() => {
-        console.log("Back to Dashboard Button clicked!");
-        localStorage.clear();
-        navigate("/landing");
+        console.log("Back Button clicked!");
+        // Navigate to previous page, fallback to a landing if history is empty
+        if (window.history.length > 1) {
+          navigate(-1);
+        } else {
+          navigate("/landing");
+        }
       }}
     >
       Back

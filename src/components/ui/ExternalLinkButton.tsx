@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Link } from "@nextui-org/react"; // Import Link here
+import { Button, Link } from "@nextui-org/react";
 
 interface ExternalLinkButtonProps {
   url: string;
