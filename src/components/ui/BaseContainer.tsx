@@ -13,7 +13,7 @@ const BaseContainer: React.FC<BaseContainerProps> = ({ className, children, size
   const containerClasses = {
     waiting: "w-[100%] h-[100%] overflow-auto shadow-lg",
     landing: "w-auto h-auto overflow-auto shadow-lg",
-    large: "w-auto h-auto overflow-auto shadow-lg",
+    large: "w-auto h-[100%] overflow-auto shadow-lg",
     medium: "w-auto h-auto overflow-auto shadow-lg",
     small: "w-auto h-auto overflow-auto shadow-lg",
   };
