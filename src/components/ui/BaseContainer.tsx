@@ -11,13 +11,14 @@ interface BaseContainerProps {
 
 const BaseContainer: React.FC<BaseContainerProps> = ({ className, children, size = "large" }) => {
   const containerClasses = {
-    waiting: "w-[100%] h-[100%] overflow-auto shadow-lg",
-    landing: "w-[25%] h-[85%] overflow-auto shadow-lg",
-    large: "w-[90%] h-[90%] overflow-auto shadow-lg",
-    medium: "w-3/4 h-3/4 overflow-auto shadow-lg",
-    small: "w-[35%] h-[85%] overflow-auto shadow-lg",
+    waiting: "w-full h-full",
+    landing: "w-11/12 sm:w-2/3 md:w-1/2 lg:w-1/3",
+    large: "w-11/12 md:w-3/4 lg:w-2/3",
+    medium: "w-11/12 sm:w-3/4 lg:w-1/2",
+    small: "w-11/12 sm:w-2/3 md:w-1/2",
   };
 
+  // Adding 'min-h-screen' to ensure that the container takes at least the full height of the screen but grows with content
   const containerClass = containerClasses[size];
 
   return (

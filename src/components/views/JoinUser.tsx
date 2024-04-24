@@ -64,7 +64,7 @@ const JoinUser = () => {
 
   return (
     <div className="relative min-h-screen w-screen">
-      <div className="absolute top-4 left-4">
+      <div className="absolute top-4 left-4 z-50">
         <BackButton />
       </div>
       <div className="flex justify-center items-center h-full">
