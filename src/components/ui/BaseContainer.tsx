@@ -38,6 +38,7 @@ const BaseContainer: React.FC<BaseContainerProps> = ({ className, children, size
   useEffect(() => {
     setContainerSize(size || initialSize); // Set size on mount
     window.addEventListener("resize", determineContainerSize);
+    
     return () => {
       window.removeEventListener("resize", determineContainerSize); // Clean up on unmount
     };
