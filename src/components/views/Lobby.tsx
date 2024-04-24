@@ -401,7 +401,7 @@ const Lobby = () => {
           <InputQuests
             disabled={!admin} />
         </div>
-        <div className="w-full flex justify-between px-12 absolute bottom-8" style={{ position: 'absolute', bottom: '16px' }}>
+        <div className="w-full flex justify-between px-12 absolute bottom-8" style={{ position: "absolute", bottom: "16px" }}>
           <LeaveButton />
           <StartButton
             disabled={!settingsConfirmed}
