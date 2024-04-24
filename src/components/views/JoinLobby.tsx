@@ -44,9 +44,12 @@ const JoinLobby = () => {
   };
 
   const handleClickList = () => {
-    console.log("Join button clicked!");
-
-    navigate("/joinuser/" + selectedLobbyId);
+    if (!selectedLobbyId){
+      alert("No lobby has been selected!");
+    }
+    else{console.log("Join button clicked!");
+    //localStorage.setItem(id, );
+    navigate("/joinuser/" + selectedLobbyId);}
   };
 
   useEffect(() => {
@@ -129,7 +132,7 @@ const JoinLobby = () => {
           <div className="w-full flex justify-center mt-24 mb-4">
             <JoinButton
               onClick={handleClickList}
-              isDisabled={!selectedLobbyId}
+              //isDisabled={!selectedLobbyId}
             />
           </div>
           <div className="w-full flex justify-center mb-4">
