@@ -1019,6 +1019,10 @@ video {
   margin-top: 9rem;
 }
 
+.mt-4 {
+  margin-top: 1rem;
+}
+
 .mt-8 {
   margin-top: 2rem;
 }
@@ -2436,6 +2440,11 @@ video {
 
 .bg-foreground\/10 {
   background-color: hsl(var(--nextui-foreground) / 0.1);
+}
+
+.bg-gray-900 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(17 24 39 / var(--tw-bg-opacity));
 }
 
 .bg-orange-700 {
