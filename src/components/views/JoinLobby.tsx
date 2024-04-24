@@ -28,6 +28,7 @@ const JoinLobby = () => {
   const [username, setUsername] = useState<string>(null);
   const [password, setPassword] = useState<string>(null);
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
+  const [lobbyRequiresPassword, setLobbyRequiresPassword] = useState(false);
   const { id } = useParams();
 
   const handleBackClick = () => {
@@ -48,7 +49,8 @@ const JoinLobby = () => {
       alert("No lobby has been selected!");
     }
     else{console.log("Join button clicked!");
-    //localStorage.setItem(id, );
+    localStorage.setItem("undefined", String(lobbyRequiresPassword));
+    console.log(String(lobbyRequiresPassword));
     navigate("/joinuser/" + selectedLobbyId);}
   };
 
@@ -112,7 +114,7 @@ const JoinLobby = () => {
               {lobbies.map((lobby: Lobby) => (
                 <TableRow
                   key={lobby.id}
-                  onClick={() => setSelectedLobbyId(lobby.id)}
+                  onClick={() => {setSelectedLobbyId(lobby.id); setLobbyRequiresPassword(lobby.passwordProtected);}}
                   className={
                     selectedLobbyId === lobby.id ? "selected-row" : ""
                   }
@@ -132,7 +134,7 @@ const JoinLobby = () => {
           <div className="w-full flex justify-center mt-24 mb-4">
             <JoinButton
               onClick={handleClickList}
-              //isDisabled={!selectedLobbyId}
+              isDisabled={!selectedLobbyId|| !username}
             />
           </div>
           <div className="w-full flex justify-center mb-4">
