@@ -142,7 +142,7 @@ function MyGoogleMap() {
           let messageParsed = JSON.parse(message.body);
           if (messageParsed.status === "voting") {
             localStorage.setItem("submissionDone", "false");
-            navigate(`/submission/${gameId}/`);
+            navigate(`/gamesub/${gameId}/`);
           } else if (messageParsed.status === "left") {
             openNotification(messageParsed.username + " left");
           } else if (messageParsed.status === "game_over") {
