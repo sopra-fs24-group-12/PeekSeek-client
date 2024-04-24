@@ -364,7 +364,7 @@ const Lobby = () => {
     return (
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
         <div style={{ height: "25px" }}></div>
-        <div style={{ borderRadius: "50%", overflow: "hidden", width: "500px", height: "500px", boxShadow: "0 4px 8px rgba(0,0,0,0.3)", border: "5px solid white", marginBottom: "130px" }}>
+        <div style={{ borderRadius: "50%", overflow: "hidden", width: "480px", height: "480px", boxShadow: "0 4px 8px rgba(0,0,0,0.3)", border: "5px solid white", marginBottom: "130px" }}>
           <img src={imageUrl} alt="Google Map" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         </div>
       </div>
@@ -378,7 +378,7 @@ const Lobby = () => {
   );
 
   return (
-    <BaseContainer size="large" className="flex flex-col items-center p-4">
+    <BaseContainer size="large" className="flex flex-col items-center p-2">
       {contextHolder}
       <h1 className="text-3xl font-bold text-gray-700 my-4 text-center">{lobbyName}</h1>
       <div className="flex w-full">
