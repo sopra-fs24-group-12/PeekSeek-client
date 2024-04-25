@@ -28,6 +28,7 @@ const JoinLobby = () => {
   const [username, setUsername] = useState<string>(null);
   const [password, setPassword] = useState<string>(null);
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
+  const [lobbyRequiresPassword, setLobbyRequiresPassword] = useState(false);
   const { id } = useParams();
 
   const handleBackClick = () => {
@@ -44,9 +45,13 @@ const JoinLobby = () => {
   };
 
   const handleClickList = () => {
-    console.log("Join button clicked!");
-
-    navigate("/joinuser/" + selectedLobbyId);
+    if (!selectedLobbyId){
+      alert("No lobby has been selected!");
+    }
+    else{console.log("Join button clicked!");
+    localStorage.setItem("undefined", String(lobbyRequiresPassword));
+    console.log(String(lobbyRequiresPassword));
+    navigate("/joinuser/" + selectedLobbyId);}
   };
 
   useEffect(() => {
@@ -109,7 +114,7 @@ const JoinLobby = () => {
               {lobbies.map((lobby: Lobby) => (
                 <TableRow
                   key={lobby.id}
-                  onClick={() => setSelectedLobbyId(lobby.id)}
+                  onClick={() => {setSelectedLobbyId(lobby.id); setLobbyRequiresPassword(lobby.passwordProtected);}}
                   className={
                     selectedLobbyId === lobby.id ? "selected-row" : ""
                   }
