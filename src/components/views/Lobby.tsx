@@ -61,7 +61,6 @@ const Lobby = () => {
 
 
   useEffect(() => {
-
     async function fetchData() {
       const headers = {
         "Authorization": localStorage.getItem("token"),
@@ -371,12 +370,6 @@ const Lobby = () => {
     );
   };
 
-  const InteractionDisabledOverlay = () => (
-    <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
-      <p className="text-white text-xl">Waiting for the admin to configure and start the game...</p>
-    </div>
-  );
-
   return (
     <BaseContainer size="large" className="flex flex-col items-center p-2">
       {contextHolder}
@@ -403,14 +396,15 @@ const Lobby = () => {
         </div>
         <div className="w-full flex justify-between px-12 absolute bottom-8" style={{ position: "absolute", bottom: "16px" }}>
           <LeaveButton />
+          {admin ? (
           <StartButton
             disabled={!settingsConfirmed}
-            lobbyId={lobbyId}
-          />
+            lobbyId={lobbyId} /> ) : (
+              <p className="text-white text-lg">Waiting for the admin to configure and start the game...</p>
+            )}
           <SaveButton />
         </div>
       </div>
-      {!admin && <InteractionDisabledOverlay />}
     </BaseContainer>
   );
 };
