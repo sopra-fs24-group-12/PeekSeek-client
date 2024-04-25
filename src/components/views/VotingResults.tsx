@@ -84,6 +84,24 @@ const VotingResults = () => {
     };
   }, []);
 
+  const Emoji = (rank) => {
+    switch (rank) {
+      case 1:
+        return "🥇";
+      case 2:
+        return "🥈";
+      case 3:
+        return "🥉";
+      default:
+        return "";
+    }
+  };
+  /*
+  const Emoji = (index) => {
+    return index === 0; 
+  };
+  */ 
+
   useEffect(() => {
     //localStorage.setItem("token", "eb47db3a-d291-4a93-8dc3-d71d5742031d");
     //localStorage.setItem("username", "a");
@@ -101,7 +119,8 @@ const VotingResults = () => {
 
           const formattedLeaderboard = sortedLeaderboard.map((user, index) => ({
             rank: index + 1,
-            name: user.username,
+            name: user.index + 1 <= 3 ? `${Emoji(user.index + 1)} ${user.name}` : user.name,
+            //name: Emoji(index) ? `${user.name} 🔥👑 ` : user.name,
             basePoints: user.score,
             bonusPoints: user.pointsThisRound,
           }));
