@@ -133,7 +133,7 @@ const VotingResults = () => {
             id: response1.data.id.toString(),
             cityName: !noSubmission ? response2.data.geoCodingData.formAddress : "",
             quest: !noSubmission ? response2.data.quest : "",
-            anonymousName: "Anonymous Tiger",
+            anonymousName: response1.data.username,
             imageUrl: !noSubmission ? generateStreetViewImageLink(response1.data.submittedLocation.lat, response1.data.submittedLocation.lng, response1.data.submittedLocation.heading, response1.data.submittedLocation.pitch) : "",
             noSubmission: noSubmission,
           },
