@@ -34,10 +34,7 @@ const CreateLobby = () => {
     console.log("Button clicked!");
     doCreate();
   };
-  const handleBackClick = () => {
-    console.log("Back button clicked!");
-    navigate("/joinlobby");
-  };
+
   const doCreate = async () => {
     try {
 

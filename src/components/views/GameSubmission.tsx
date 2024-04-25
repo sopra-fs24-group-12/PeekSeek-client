@@ -191,16 +191,6 @@ const GameSubmission = () => {
           //link: "https://example.com/link1"
         }));
 
-        transformedData.sort((a, b) => {
-          if (a.noSubmission && !b.noSubmission) {
-            return 1;
-          } else if (!a.noSubmission && b.noSubmission) {
-            return -1;
-          } else {
-            return 0;
-          }
-        });
-
         setCardsData(transformedData);
       } catch (error) {
         alert(

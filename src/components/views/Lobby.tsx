@@ -61,7 +61,6 @@ const Lobby = () => {
 
 
   useEffect(() => {
-
     async function fetchData() {
       const headers = {
         "Authorization": localStorage.getItem("token"),
@@ -202,15 +201,23 @@ const Lobby = () => {
       setLocalQuests(updatedQuests);
     };
 
-
     const deleteQuest = (index) => {
-      const updatedQuests = [...localQuests];
-      updatedQuests.splice(index, 1);
-      setLocalQuests(updatedQuests);
+      if (!disabled) {
+        const updatedQuests = [...localQuests];
+        updatedQuests.splice(index, 1);
+        // Ensure there is always at least one input field
+        if (updatedQuests.length === 0) {
+          updatedQuests.push("");
+        }
+        setLocalQuests(updatedQuests);
+      }
     };
 
     const saveQuestsToGlobal = () => {
-      setQuests(localQuests.filter(quest => quest.trim() !== ""));
+      // Filter out empty quests but ensure one empty field at the end for new entries
+      const filteredQuests = localQuests.filter(quest => quest.trim() !== "");
+      filteredQuests.push("");
+      setQuests(filteredQuests);
     };
 
     return (
@@ -220,7 +227,7 @@ const Lobby = () => {
         <div style={{ overflowY: "auto", maxHeight: "500px", width: "100%" }}>
           {localQuests.map((quest, index) => (
             <Input
-              isClearable
+              isClearable={!disabled}
               key={`quest-${index}`}  // Unique key for each input
               placeholder={`Quest #${index + 1}`}
               value={quest}
@@ -263,6 +270,7 @@ const Lobby = () => {
     return (
       <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
         <Input
+          disabled={!admin}
           type="text"
           label="Your Destination"
           title="city name"
@@ -270,9 +278,9 @@ const Lobby = () => {
           value={localCityName}
           onChange={handleCityNameChange}
           style={{ width: "300px" }}
-          disabled={!admin}
         />
         <Button
+          disabled={!admin}
           radius="md"
           size="sm"
           style={{ paddingLeft: "20px", paddingRight: "20px" }}
@@ -364,29 +372,31 @@ const Lobby = () => {
     return (
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
         <div style={{ height: "25px" }}></div>
-        <div style={{ borderRadius: "50%", overflow: "hidden", width: "500px", height: "500px", boxShadow: "0 4px 8px rgba(0,0,0,0.3)", border: "5px solid white", marginBottom: "130px" }}>
+        <div style={{ borderRadius: "50%", overflow: "hidden", width: "480px", height: "480px", boxShadow: "0 4px 8px rgba(0,0,0,0.3)", border: "5px solid white", marginBottom: "130px" }}>
           <img src={imageUrl} alt="Google Map" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         </div>
       </div>
     );
   };
 
+  /*
   const InteractionDisabledOverlay = () => (
-    <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
-      <p className="text-white text-xl">Waiting for the admin to configure and start the game...</p>
+    <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-10 flex justify-center items-center">
     </div>
   );
+  */
 
   return (
-    <BaseContainer size="large" className="flex flex-col items-center p-4">
+    <BaseContainer size="large" className="flex flex-col items-center p-2">
       {contextHolder}
       <h1 className="text-3xl font-bold text-gray-700 my-4 text-center">{lobbyName}</h1>
       <div className="flex w-full">
         <div className="flex flex-col w-full items-start gap-4 ml-6">
           <TimeButtons
+            disabled={!admin}
             selectedDuration={roundDurationSeconds}
             setRoundDurationSeconds={setRoundDurationSeconds}
-            disabled={!admin} />
+          />
           <PlayerTable
             players={players} />
         </div>
@@ -403,14 +413,19 @@ const Lobby = () => {
         </div>
         <div className="w-full flex justify-between px-12 absolute bottom-8" style={{ position: "absolute", bottom: "16px" }}>
           <LeaveButton />
-          <StartButton
-            disabled={!settingsConfirmed}
-            lobbyId={lobbyId}
-          />
-          <SaveButton />
+          {!admin ? 
+            (<p className="text-xl font-bold">Waiting for the admin to configure and start the game...</p>) : (
+              <>
+                <StartButton
+                  disabled={!settingsConfirmed}
+                  lobbyId={lobbyId}
+                />
+                <SaveButton />
+              </>
+            )}
         </div>
       </div>
-      {!admin && <InteractionDisabledOverlay />}
+      {/* {!admin && <InteractionDisabledOverlay />} */}
     </BaseContainer>
   );
 };
