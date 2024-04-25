@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Button, ButtonGroup } from "@nextui-org/react";
 import ContentWrapper from "./ContentWrapper";
 
-const TimeButtons = ({ selectedDuration, setRoundDurationSeconds }) => {
+const TimeButtons = ({ selectedDuration, setRoundDurationSeconds, disabled }) => {
   const durations = [
     { label: "30s", value: 30 },
     { label: "1min", value: 60 },
@@ -18,8 +18,13 @@ const TimeButtons = ({ selectedDuration, setRoundDurationSeconds }) => {
         {durations.map(time => (
           <Button
             key={time.value}
+            disabled={disabled}
             className={`bg-gradient-to-tr from-orange-500 to-orange-200 text-black shadow-lg ${selectedDuration === time.value ? "border-4 border-green-500 bg-orange-700" : ""}`}
-            onClick={() => setRoundDurationSeconds(time.value)}
+            onClick={() => {
+              if (!disabled) {  // Prevent action if disabled
+                setRoundDurationSeconds(time.value);
+              }
+            }}
           >
             {time.label}
           </Button>
