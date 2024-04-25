@@ -7,6 +7,7 @@ import JoinButton from "components/ui/JoinButton";
 import { useNavigate, useParams } from "react-router-dom";
 import { api, handleError } from "helpers/api";
 
+
 const JoinUser = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
@@ -23,21 +24,7 @@ const JoinUser = () => {
     navigate("/joinlobby");
   };
 
-useEffect(() => {
-  const sendRequest = async () => {
-    try {
-    if (localStorage.getItem("undefined") === "true"){
-      setLobbyRequiresPassword(true);
-    }
-    } catch (error) {
-      alert(
-        `An error occured because you tried using the new method. \n${handleError(error)}`,
-      );
-      navigate("/landing");
-    }
-  };
-  sendRequest();
-}, []);
+
   const handleJoinClick = async () => {
     try {
       if (!username.trim()){
@@ -99,7 +86,7 @@ useEffect(() => {
             <text>Lobby Password</text>
             <Input
               className="mb-8 shadow-lg"
-              isDisabled= {!lobbyRequiresPassword}
+              //isDisabled= {!username}   //{!lobbyRequiresPassword}
               isClearable
               value={lobbyPassword}
               type="password"
