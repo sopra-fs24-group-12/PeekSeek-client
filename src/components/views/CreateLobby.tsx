@@ -9,7 +9,7 @@ import Lobby from "models/Lobby";
 
 const CreateLobby = () => {
   const navigate = useNavigate();
-  const [name, setLobbyname] = useState<string>(null);
+  const [name, setLobbyname] = useState<string>("");
   const [username, setUsername] = useState<string>(null);
   const [password, setLobbypassword] = useState<string>("");
   const handleLobbyPasswordChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -77,7 +77,7 @@ const CreateLobby = () => {
             <Input className="mb-8 shadow-lg" onChange={handleLobbyPasswordChange} type="password" label="(optional)" placeholder="..." />
           </div>
           <div className="w-full flex justify-center mt-36 mb-4">
-            <CreateLo onClick={handleClick} disabled={!username || !name} />
+            <CreateLo onClick={handleClick} disabled={!username } />
           </div>
         </BaseContainer>
       </div>
