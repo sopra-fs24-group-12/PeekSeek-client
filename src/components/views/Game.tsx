@@ -198,7 +198,6 @@ function MyGoogleMap() {
       alert(
         `There was an error during the submission. \n${handleError(error)}`,
       );
-      navigate("/waiting/" + gameId);
     }
   }
 

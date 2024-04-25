@@ -114,6 +114,7 @@ const Lobby = () => {
         alert(
           `Something went wrong while sending active ping: \n${handleError(error)}`,
         );
+        navigate("/landing");
       }
     };
 
