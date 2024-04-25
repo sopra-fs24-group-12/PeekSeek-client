@@ -119,7 +119,7 @@ const VotingResults = () => {
 
           const formattedLeaderboard = sortedLeaderboard.map((user, index) => ({
             rank: index + 1,
-            name: user.index + 1 <= 3 ? `${Emoji(user.index + 1)} ${user.name}` : user.name,
+            name: index + 1 <= 3 ? `${Emoji(index + 1)} ${user.username}` : user.username,
             //name: Emoji(index) ? `${user.name} 🔥👑 ` : user.name,
             basePoints: user.score,
             bonusPoints: user.pointsThisRound,
