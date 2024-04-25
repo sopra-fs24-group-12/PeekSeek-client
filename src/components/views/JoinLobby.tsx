@@ -134,7 +134,7 @@ const JoinLobby = () => {
           <div className="w-full flex justify-center mt-24 mb-4">
             <JoinButton
               onClick={handleClickList}
-              isDisabled={!selectedLobbyId|| !username}
+              isDisabled={!selectedLobbyId}
             />
           </div>
           <div className="w-full flex justify-center mb-4">
