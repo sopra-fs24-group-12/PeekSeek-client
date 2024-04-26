@@ -14,6 +14,7 @@ interface SubmissionCardProps {
   onBanClick: () => void;
   onUnpickClick: () => void;
   onUnbanClick: () => void;
+  isOwnSubmission: boolean;
   isPicked: boolean;
   isBanned: boolean;
   noSubmission: boolean;
@@ -47,6 +48,7 @@ const SubmissionCard: React.FC<SubmissionCardProps> =
       onBanClick,
       onUnpickClick,
       onUnbanClick,
+      isOwnSubmission,
       isPicked,
       isBanned,
       noSubmission,
@@ -85,12 +87,14 @@ const SubmissionCard: React.FC<SubmissionCardProps> =
         <CardFooter className="flex justify-center space-x-4">
           <Button
             onClick={!isPicked ? onPickClick : onUnpickClick}
+            isDisabled = {isOwnSubmission}
             radius="full"
             size="sm"
             className="items-center bg-gradient-to-tr from-yellow-500 to-yellow-200 text-black shadow-sm"
           >{!isPicked ? "Pick" : "Unpick"}</Button>
           <Button
             onClick={!isBanned ? onBanClick : onUnbanClick}
+            isDisabled = {isOwnSubmission}
             radius="full"
             size="sm"
             className="items-center bg-gradient-to-tr from-red-600 to-red-500 text-white shadow-sm"

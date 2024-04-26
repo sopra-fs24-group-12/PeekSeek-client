@@ -21,6 +21,7 @@ interface CardData {
   imageUrl?: string;
   link: string;
   noSubmission: boolean;
+  username: string
 }
 
 class ExtendedDictionary {
@@ -188,6 +189,7 @@ const GameSubmission = () => {
           anonymousName: !item.noSubmission ? `Anonymous ${animalNames[index]}` : "NOTHING FOUND",
           imageUrl: !item.noSubmission ? generateStreetViewImageLink(item.submittedLocation.lat, item.submittedLocation.lng, item.submittedLocation.heading, item.submittedLocation.pitch) : "", // Use item.image if available, otherwise empty string
           noSubmission: item.noSubmission,
+          username: item.username
           //link: "https://example.com/link1"
         }));
 
@@ -344,6 +346,7 @@ const GameSubmission = () => {
                     onUnbanClick={() => handleUnbanClick(card.id)}
                     isPicked={pickedCardId === card.id}
                     isBanned={banned.hasKey(card.id)}
+                    isOwnSubmission = {card.username === localStorage.getItem("token")}
                     noSubmission={card.noSubmission}
                   />
                 ))}
