@@ -51,6 +51,15 @@ class ExtendedDictionary {
     return this.data.hasOwnProperty(key);
   }
 }
+const funFacts = [
+  "Did you know? The Great Wall of China is over 13,000 miles long!",
+  "Fun fact: The Eiffel Tower was supposed to be a temporary installation.",
+  "Travel trivia: The Colosseum in Rome could hold 50,000 to 80,000 spectators.",
+  "Interesting fact: The Statue of Liberty was a gift from France to the United States.",
+  "Fun travel fact: Venice, Italy, is built on more than 100 small islands.",
+  "Did you know? Dubai's Burj Khalifa is the tallest building in the world, standing at 828 meters (2,717 feet)."
+];
+
 
 const GameSubmission = () => {
   const { gameId, setGameId } = useParams();
@@ -61,6 +70,7 @@ const GameSubmission = () => {
   const [cardsData, setCardsData] = useState<CardData[]>([]);
   const [notificationApi, contextHolder] = notification.useNotification();
   const [submissionDone, setSubmissionDone] = useState((localStorage.getItem("submissionDone") !== "false"));
+  const [randomFact, setRandomFact] = useState("");
 
 
   const mergeDataForSubmission = (): ExtendedDictionary => {
@@ -163,6 +173,12 @@ const GameSubmission = () => {
     return () => {
       client && client.deactivate();
     };
+  }, []);
+
+  useEffect(() => {
+  
+    const randomIndex = Math.floor(Math.random() * funFacts.length);
+    setRandomFact(funFacts[randomIndex]);
   }, []);
 
   useEffect(() => {
@@ -316,7 +332,11 @@ const GameSubmission = () => {
               wrapperStyle={{}}
               wrapperClass=""
             />
-            <div className="text-white mt-4">Waiting for participants to vote...</div>
+            <div className="mt-4"> 
+              <div style={{ color: "blue" }}>Waiting for participants to vote...</div>
+              <div style={{ color: "green" }}>Here's a fun fact!</div>
+              <div style={{ color: "red" }}>{randomFact}</div>
+            </div>
           </div>
         </div>
       ) : (

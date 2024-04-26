@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { getWebsocketDomain } from "helpers/getDomain";
 import { useNavigate, useParams } from "react-router-dom";
 import { Client } from "@stomp/stompjs";
@@ -19,10 +19,19 @@ const spinnerStyle = {
   color: "grey",
   animation: "spin 3s linear infinite"
 };
+const funFacts = [
+  "Did you know? The Great Wall of China is over 13,000 miles long!",
+  "Fun fact: The Eiffel Tower was supposed to be a temporary installation.",
+  "Travel trivia: The Colosseum in Rome could hold 50,000 to 80,000 spectators.",
+  "Interesting fact: The Statue of Liberty was a gift from France to the United States.",
+  "Fun travel fact: Venice, Italy, is built on more than 100 small islands.",
+  "Did you know? Dubai's Burj Khalifa is the tallest building in the world, standing at 828 meters (2,717 feet)."
+];
 
 const Waiting = () => {
   const { gameId } = useParams();
   const navigate = useNavigate();
+  const [randomFact, setRandomFact] = useState("");
 
   useEffect(() => {
     const sendRequest = async () => {
@@ -86,6 +95,12 @@ const Waiting = () => {
     };
   }, [gameId]);
 
+  useEffect(() => {
+  
+    const randomIndex = Math.floor(Math.random() * funFacts.length);
+    setRandomFact(funFacts[randomIndex]);
+  }, []);
+
   return (
     <BaseContainer size="waiting" className="flex flex-col items-center">
       <div className="relative flex-grow flex items-center justify-center mb-12">
@@ -98,6 +113,8 @@ const Waiting = () => {
           <LoadingSpinner />
           <h1 className="text-4xl font-bold text-center ml-4">
             Waiting until everyone is done peeking ...
+            Here's a fun fact!
+            {randomFact}
           </h1>
         </div>
       </div>
