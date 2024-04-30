@@ -60,6 +60,8 @@ const GameSubmission = () => {
   const [cardsData, setCardsData] = useState<CardData[]>([]);
   const [notificationApi, contextHolder] = notification.useNotification();
   const [submissionDone, setSubmissionDone] = useState((localStorage.getItem("submissionDone") !== "false"));
+  const [showImages, setShowImages] = useState(false);
+  let loadedImages = 0;
 
 
   const mergeDataForSubmission = (): ExtendedDictionary => {
@@ -202,63 +204,6 @@ const GameSubmission = () => {
     fetchData();
   }, []);
 
-  // const cardsData = [
-  //   {
-  //     id: 1,
-  //     cityName: "Rome",
-  //     quest: "Locate the best sunrise spot",
-  //     anonymousName: "Anonymous Koala",
-  //     imageUrl: generateStreetViewImageLink("10", "10", "10", "10"),
-  //     link: "https://example.com/link1",
-  //     noSubmission: true,
-  //   },
-  //   {
-  //     id: 2,
-  //     cityName: "Rome",
-  //     quest: "Locate the best sunrise spot",
-  //     anonymousName: "Anonymous Bear",
-  //     imageUrl: generateStreetViewImageLink("10", "10", "10", "10"),
-  //     link: "https://example.com/link1",
-  //     noSubmission: false,
-  //   },
-  //   {
-  //     id: 3,
-  //     cityName: "Rome",
-  //     quest: "Locate the best sunrise spot",
-  //     anonymousName: "Anonymous Giraffe",
-  //     imageUrl: generateStreetViewImageLink("10", "10", "10", "10"),
-  //     link: "https://example.com/link1",
-  //     noSubmission: false,
-  //   },
-  //   {
-  //     id: 4,
-  //     cityName: "Rome",
-  //     quest: "Locate the best sunrise spot",
-  //     anonymousName: "Anonymous Zebra",
-  //     imageUrl: generateStreetViewImageLink("10", "10", "10", "10"),
-  //     link: "https://example.com/link1",
-  //     noSubmission: false,
-  //   },
-  //   {
-  //     id: 5,
-  //     cityName: "Rome",
-  //     quest: "Locate the best sunrise spot",
-  //     anonymousName: "Anonymous Gazelle",
-  //     imageUrl: generateStreetViewImageLink("11", "11", "11", "11"),
-  //     link: "https://example.com/link1",
-  //     noSubmission: false,
-  //   },
-  //   {
-  //     id: 6,
-  //     cityName: "Rome",
-  //     quest: "Locate the best sunrise spot",
-  //     anonymousName: "Anonymous Elephant",
-  //     imageUrl: generateStreetViewImageLink("10", "10", "10", "10"),
-  //     link: "https://example.com/link1",
-  //     noSubmission: false,
-  //   },
-  // ];
-
 
   const handleImageClick = (url: string) => {
     window.open(url, "_blank");
@@ -297,6 +242,13 @@ const GameSubmission = () => {
     console.log(banned);
 
   };
+
+  const imageLoaded = () => {
+    loadedImages += 1;
+    if (loadedImages === cardsData.length) {
+      setShowImages(true);
+    }
+  }
 
 
   return (
@@ -345,6 +297,8 @@ const GameSubmission = () => {
                     isPicked={pickedCardId === card.id}
                     isBanned={banned.hasKey(card.id)}
                     noSubmission={card.noSubmission}
+                    imageLoaded={imageLoaded}
+                    showImage={showImages}
                   />
                 ))}
               </div>

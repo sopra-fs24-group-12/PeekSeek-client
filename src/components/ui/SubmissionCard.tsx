@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Card, CardHeader, CardBody, Image, CardFooter, Button } from "@nextui-org/react";
+import { Card, CardHeader, CardBody, Image, CardFooter, Button, Skeleton } from "@nextui-org/react";
 
 // @ts-ignore
 import placeholder from "../../assets/modelSubmission.png";
@@ -17,6 +17,8 @@ interface SubmissionCardProps {
   isPicked: boolean;
   isBanned: boolean;
   noSubmission: boolean;
+  imageLoaded: () => void;
+  showImage: boolean;
 }
 
 const greenBorderStyle = {
@@ -50,6 +52,8 @@ const SubmissionCard: React.FC<SubmissionCardProps> =
       isPicked,
       isBanned,
       noSubmission,
+      imageLoaded,
+      showImage,
     }
   ) => {
 
@@ -72,15 +76,18 @@ const SubmissionCard: React.FC<SubmissionCardProps> =
           <h4 className="font-bold text-large">{anonymousName}</h4>
         </CardHeader>
         <CardBody className="overflow-visible py-2">
-          <Image
-            alt="Card image"
-            className="object-cover rounded-xl"
-            src={imageUrl || placeholder}
-            width={270}
-            isZoomed
-            isBlurred
-            onClick={onImageClick}
-          />
+          <Skeleton isLoaded={showImage} className="object-cover rounded-xl">
+            <Image
+              alt="Card image"
+              className="object-cover rounded-xl"
+              src={imageUrl || placeholder}
+              width={270}
+              isZoomed
+              isBlurred
+              onClick={onImageClick}
+              onLoad={imageLoaded}
+            />
+          </Skeleton>
         </CardBody>
         <CardFooter className="flex justify-center space-x-4">
           <Button
