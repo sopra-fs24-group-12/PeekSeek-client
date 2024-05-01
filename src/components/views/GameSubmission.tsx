@@ -185,9 +185,9 @@ const GameSubmission = () => {
 
         const transformedData: CardData[] = response.data.map((item: any, index: number) => ({
           id: item.id,
-          cityName: !item.noSubmission ? response1.data.gameLocation : "",
-          quest: !item.noSubmission ? response1.data.quest : "",
-          anonymousName: !item.noSubmission ? `Anonymous ${animalNames[index]}` : "NOTHING FOUND",
+          cityName: response1.data.geoCodingData.location,
+          quest: response1.data.quest,
+          anonymousName:`Anonymous ${animalNames[index]}`,
           imageUrl: !item.noSubmission ? generateStreetViewImageLink(item.submittedLocation.lat, item.submittedLocation.lng, item.submittedLocation.heading, item.submittedLocation.pitch) : "", // Use item.image if available, otherwise empty string
           noSubmission: item.noSubmission,
           //link: "https://example.com/link1"
@@ -246,7 +246,9 @@ const GameSubmission = () => {
   const imageLoaded = () => {
     loadedImages += 1;
     if (loadedImages === cardsData.length) {
-      setShowImages(true);
+      setTimeout(() => {
+        setShowImages(true);
+      }, 1000);
     }
   }
 
