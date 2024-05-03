@@ -11,6 +11,8 @@ import ScrollableContentWrapper from "components/ui/ScrollableContentWrapper";
 import TimeButtons from "../ui/TimeButtons";
 import { notification } from "antd";
 import { getWebsocketDomain } from "helpers/getDomain";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Lobby = () => {
   const [quests, setQuests] = React.useState(["", "", "", ""]);
@@ -24,8 +26,7 @@ const Lobby = () => {
   const [lng, setLng] = useState("");
   const [cityName, setCityName] = useState("");
   const [settingsConfirmed, setSettingsConfirmed] = useState(false);
-  const [notificationApi, contextHolder] = notification.useNotification();
-
+  
   interface InputQuestsProps {
     disabled: boolean;
   }
@@ -45,10 +46,7 @@ const Lobby = () => {
   }
 
   const openNotification = (message: string) => {
-    notificationApi.open({
-      message: message,
-      duration: 2,
-    });
+    toast.info(message, {autoClose: 3000});
   };
 
   const addPlayer = (newPlayer: String) => {
@@ -388,7 +386,10 @@ const Lobby = () => {
 
   return (
     <BaseContainer size="large" className="flex flex-col items-center p-2">
-      {contextHolder}
+      <ToastContainer
+        pauseOnFocusLoss={false}
+        pauseOnHover={false}
+      />
       <h1 className="text-3xl font-bold text-gray-700 my-4 text-center">{lobbyName}</h1>
       <div className="flex w-full">
         <div className="flex flex-col w-full items-start gap-4 ml-6">
@@ -413,7 +414,7 @@ const Lobby = () => {
         </div>
         <div className="w-full flex justify-between px-12 absolute bottom-8" style={{ position: "absolute", bottom: "16px" }}>
           <LeaveButton />
-          {!admin ? 
+          {!admin ?
             (<p className="text-xl font-bold">Waiting for the admin to configure and start the game...</p>) : (
               <>
                 <StartButton
