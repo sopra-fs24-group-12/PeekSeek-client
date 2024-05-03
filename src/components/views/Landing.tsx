@@ -44,7 +44,8 @@ const LandingPage = () => {
             </Button>
             <HowToPlayModal 
               isOpen={isOpen} 
-              onOpenChange={onOpenChange} />
+              onOpenChange={onOpenChange}
+              context="lobby"  />
         </BaseContainer>
   );
 };

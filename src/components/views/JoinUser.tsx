@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import BaseContainer from "../ui/BaseContainer";
 import CreateButton from "components/ui/CreateButton";
 import BackButton from "components/ui/BackButton";
-import { Input } from "@nextui-org/react";
+import { Input, Button, useDisclosure } from "@nextui-org/react";
 import JoinButton from "components/ui/JoinButton";
 import { useNavigate, useParams } from "react-router-dom";
 import { api, handleError } from "helpers/api";
+import HowToPlayModal from 'components/ui/HowToPlayModal';
+import { InfoCircleTwoTone } from "@ant-design/icons";
 
 const JoinUser = () => {
   const navigate = useNavigate();
@@ -17,6 +19,7 @@ const JoinUser = () => {
   const { id } = useParams();
   const isJoinDisabled = !username || (lobbyRequiresPassword && !lobbyPassword);
   const [usernameError, setUsernameError] = useState("");
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const handleBackClick = () => {
     console.log("Button clicked!");
@@ -112,6 +115,17 @@ useEffect(() => {
               isDisabled={isJoinDisabled}
               onClick={handleJoinClick} />
           </div>
+          <Button
+                onPress={onOpen}
+                className="absolute bottom-2 right-2 p-2 sm rounded-full bg-transparent"
+                isIconOnly
+            >
+                <InfoCircleTwoTone style={{ fontSize: '20px'}}/>
+            </Button>
+            <HowToPlayModal 
+              isOpen={isOpen} 
+              onOpenChange={onOpenChange}
+              context="joinUser"  />
         </BaseContainer>
       </div>
     </div>
