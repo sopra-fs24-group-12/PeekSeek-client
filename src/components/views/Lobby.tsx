@@ -12,7 +12,7 @@ import TimeButtons from "../ui/TimeButtons";
 import { notification } from "antd";
 import { getWebsocketDomain } from "helpers/getDomain";
 import { ToastContainer, toast } from "react-toastify";
-import "./react-toastify/dist/ReactToastify.css";
+import "react-toastify/dist/ReactToastify.css";
 
 const Lobby = () => {
   const [quests, setQuests] = React.useState(["", "", "", ""]);
