@@ -91,6 +91,13 @@ const JoinLobby = () => {
   const [selectedLobbyId, setSelectedLobbyId] = useState();
   const [selectionBehavior, setSelectionBehavior] = React.useState("replace");
 
+  function selectLobby(id) {
+    if (selectedLobbyId !== id) {
+      setSelectedLobbyId(id)
+    } else {
+      setSelectedLobbyId(null)
+    }
+  }
 
   return (
     <div className="relative min-h-screen w-screen">
@@ -114,7 +121,7 @@ const JoinLobby = () => {
               {lobbies.map((lobby: Lobby) => (
                 <TableRow
                   key={lobby.id}
-                  onClick={() => {setSelectedLobbyId(lobby.id); setLobbyRequiresPassword(lobby.passwordProtected);}}
+                  onClick={() => {selectLobby(lobby.id); setLobbyRequiresPassword(lobby.passwordProtected);}}
                   className={
                     selectedLobbyId === lobby.id ? "selected-row" : ""
                   }
