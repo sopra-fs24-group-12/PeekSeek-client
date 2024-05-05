@@ -1031,6 +1031,10 @@ video {
   margin-top: -120px;
 }
 
+.mt-auto {
+  margin-top: auto;
+}
+
 .box-border {
   box-sizing: border-box;
 }
@@ -1262,6 +1266,10 @@ video {
 
 .min-h-7 {
   min-height: 1.75rem;
+}
+
+.min-h-\[530px\] {
+  min-height: 530px;
 }
 
 .min-h-screen {
@@ -2065,6 +2073,10 @@ video {
 
 .rounded-large {
   border-radius: var(--nextui-radius-large);
+}
+
+.rounded-lg {
+  border-radius: 0.5rem;
 }
 
 .rounded-md {
