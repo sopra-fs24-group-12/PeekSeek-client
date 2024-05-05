@@ -1240,6 +1240,18 @@ video {
   max-height: 16rem;
 }
 
+.max-h-\[75\%\] {
+  max-height: 75%;
+}
+
+.max-h-\[80\%\] {
+  max-height: 80%;
+}
+
+.max-h-\[90\%\] {
+  max-height: 90%;
+}
+
 .max-h-\[calc\(100\%_-_7\.5rem\)\] {
   max-height: calc(100% - 7.5rem);
 }
@@ -1266,10 +1278,6 @@ video {
 
 .min-h-7 {
   min-height: 1.75rem;
-}
-
-.min-h-\[530px\] {
-  min-height: 530px;
 }
 
 .min-h-screen {

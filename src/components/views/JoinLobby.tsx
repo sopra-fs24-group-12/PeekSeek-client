@@ -73,7 +73,7 @@ const JoinLobby = () => {
       </div>
       <div className="flex justify-center items-center h-full">
         <BaseContainer size="small" className="flex flex-col items-center">
-          <div className="overflow-y-auto w-full rounded-lg" style={{ maxHeight: "530px" }}>
+          <div className="flex-grow w-full overflow-hidden rounded-lg mb-4" style={{ maxHeight: "85%" }}>
             <Table
               isHeaderSticky
               color={"primary"}
@@ -85,9 +85,9 @@ const JoinLobby = () => {
             >
               <TableHeader>
                 <TableColumn>ID</TableColumn>
-                <TableColumn>LOBBY NAME</TableColumn>
-                <TableColumn>PARTICIPANTS</TableColumn>
-                <TableColumn>PASSWORD</TableColumn>
+                <TableColumn>LOBBY</TableColumn>
+                <TableColumn>PLAYERS</TableColumn>
+                <TableColumn>🔒</TableColumn>
               </TableHeader>
               <TableBody
                 isLoading={isLoading}

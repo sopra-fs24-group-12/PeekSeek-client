@@ -11,6 +11,9 @@ import ScrollableContentWrapper from "components/ui/ScrollableContentWrapper";
 import TimeButtons from "../ui/TimeButtons";
 import { notification } from "antd";
 import { getWebsocketDomain } from "helpers/getDomain";
+import BackIcon from "../ui/BackIcon";
+import UpdateSettingsIcon from "../ui/UpdateSettingsIcon";
+import BackDashboardButton from "../ui/BackDashboardButton";
 
 const Lobby = () => {
   const [quests, setQuests] = React.useState(["", "", "", ""]);
@@ -317,13 +320,14 @@ const Lobby = () => {
         radius="full"
         size="lg"
         color="default"
-        className="shadow-lg"
+        className="items-center bg-gradient-to-tr from-gray-400 to-gray-300 text-black shadow-lg"
+        startContent={<UpdateSettingsIcon size={40}/>}
         onClick={() => {
           console.log("Saving settings");
           save();
         }}
       >
-        Save Settings
+        Update
       </Button>
     );
   };
@@ -351,13 +355,14 @@ const Lobby = () => {
         radius="full"
         size="lg"
         color="default"
-        className="shadow-lg"
+        className="items-center bg-gradient-to-tr from-gray-400 to-gray-300 text-black shadow-lg"
+        startContent={<BackIcon />}
         onClick={() => {
           console.log("Leaving lobby");
           leave();
         }}
       >
-        Leave Lobby
+        Leave
       </Button>
     );
   };
@@ -413,7 +418,7 @@ const Lobby = () => {
             disabled={!admin} />
         </div>
         <div className="w-full flex justify-between px-12 absolute bottom-8" style={{ position: "absolute", bottom: "16px" }}>
-          <LeaveButton />
+          <LeaveButton/>
           {!admin ? 
             (<p className="text-xl font-bold">Waiting for the admin to configure and start the game...</p>) : (
               <>
