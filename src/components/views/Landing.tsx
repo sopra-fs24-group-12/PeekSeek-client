@@ -24,7 +24,7 @@ const LandingPage = () => {
           style={{ width: "350px", height: "350px" }} />
       </div>
       <div className="w-full flex justify-center mb-4">
-        <JoinButton onClick={handleClick} />
+        <JoinButton onClick={handleClick}/>
       </div>
       <div className="w-full flex justify-center mb-12">
         <CreateButton />
