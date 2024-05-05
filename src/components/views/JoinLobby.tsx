@@ -27,7 +27,7 @@ const JoinLobby = () => {
     console.log("Join button clicked!");
     localStorage.setItem("undefined", String(lobbyRequiresPassword));
     console.log(String(lobbyRequiresPassword));
-    navigate("/joinuser/" + selectedLobbyId);
+    navigate("/join/" + selectedLobbyId);
   };
 
   useEffect(() => {

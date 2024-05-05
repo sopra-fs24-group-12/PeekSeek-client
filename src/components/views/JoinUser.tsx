@@ -23,7 +23,7 @@ const JoinUser = () => {
 
   const handleBackClick = () => {
     console.log("Button clicked!");
-    navigate("/joinlobby");
+    navigate("/join");
   };
 
   useEffect(() => {
@@ -57,7 +57,7 @@ const JoinUser = () => {
       localStorage.setItem("submissionDone", "false");
       console.log(localStorage.getItem("token"));
       if (response.status >= 300) {
-        navigate("/joinlobby");
+        navigate("/join");
       } else {
         navigate("/lobby/" + id);
       }

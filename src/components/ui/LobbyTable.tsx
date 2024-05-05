@@ -41,7 +41,7 @@ export default function App() {
     //const response = await api.post("/lobbies/" + id + "/join", localStorage.getItem("token"));
     //alert(selectedLobbyId);
     //navigate("/joinuser/" + selectedLobbyId);
-    navigate("/joinuser");
+    navigate("/join");
   };
   useEffect(() => {
     async function fetchData() {

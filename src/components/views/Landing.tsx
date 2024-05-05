@@ -9,7 +9,7 @@ const LandingPage = () => {
 
   const handleClick = () => {
     console.log("Join Button clicked!");
-    navigate("/joinlobby/");
+    navigate("/join/");
   };
 
   return (
