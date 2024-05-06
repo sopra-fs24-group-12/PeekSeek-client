@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { api, handleError } from "helpers/api";
 import HowToPlayModal from "components/ui/HowToPlayModal";
 import { InfoCircleTwoTone } from "@ant-design/icons";
-import { Input, Button, useDisclosure } from "@nextui-org/react";
+import { Input, Button, useDisclosure, Progress } from "@nextui-org/react";
 
 //import UI elements
 import BaseContainer from "../ui/BaseContainer";
@@ -11,7 +11,6 @@ import ExternalLinkButton from "../ui/ExternalLinkButton";
 import BackDashboardButton from "../ui/BackDashboardButton";
 import { useParams } from "react-router-dom";
 import StartButton from "../ui/StartButton";
-import { Progress } from "@nextui-org/react";
 
 
 const GameSummary = () => {
