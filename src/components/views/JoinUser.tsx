@@ -6,7 +6,7 @@ import { Input, Button, useDisclosure } from "@nextui-org/react";
 import JoinButton from "components/ui/JoinButton";
 import { useNavigate, useParams } from "react-router-dom";
 import { api, handleError } from "helpers/api";
-import HowToPlayModal from 'components/ui/HowToPlayModal';
+import HowToPlayModal from "components/ui/HowToPlayModal";
 import { InfoCircleTwoTone } from "@ant-design/icons";
 import { notification } from "antd";
 
@@ -128,16 +128,16 @@ const JoinUser = () => {
               onClick={handleJoinClick} />
           </div>
           <Button
-                onPress={onOpen}
-                className="absolute bottom-2 right-2 p-2 sm rounded-full bg-transparent"
-                isIconOnly
-            >
-                <InfoCircleTwoTone style={{ fontSize: '20px'}}/>
-            </Button>
-            <HowToPlayModal 
-              isOpen={isOpen} 
-              onOpenChange={onOpenChange}
-              context="joinUser"  />
+            onPress={onOpen}
+            className="absolute bottom-2 right-2 p-2 sm rounded-full bg-transparent"
+            isIconOnly
+          >
+            <InfoCircleTwoTone style={{ fontSize: "20px"}}/>
+          </Button>
+          <HowToPlayModal 
+            isOpen={isOpen} 
+            onOpenChange={onOpenChange}
+            context="joinUser"  />
         </BaseContainer>
       </div>
     </div>
