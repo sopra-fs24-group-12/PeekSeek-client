@@ -4,10 +4,10 @@ import { useNavigate } from "react-router-dom";
 
 interface CreateLoProps {
   onClick: () => void;
-  disabled: boolean;
+  isDisabled?: boolean;
 }
 
-const CreateLo: React.FC<CreateLoProps> = ({ onClick, disabled }) => {
+const CreateLo: React.FC<CreateLoProps> = ({ onClick, isDisabled }) => {
   const navigate = useNavigate();
   const create = (): void => {
     navigate("/join");
@@ -17,9 +17,15 @@ const CreateLo: React.FC<CreateLoProps> = ({ onClick, disabled }) => {
     <Button
       radius="full"
       size="lg"
-      className={`w-[120px] bg-gradient-to-tr from-yellow-500 to-yellow-200 text-black shadow-lg ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
+      style={{
+        filter: isDisabled ? "blur(0.1px)" : "",
+        color: isDisabled ? "gray" : "black",
+        fontFamily: "'Lato'",
+        fontWeight: 400
+      }}
+      className={`w-[120px] bg-gradient-to-tr from-yellow-500 to-yellow-200 text-black shadow-lg ${isDisabled ? "opacity-50 cursor-not-allowed" : ""}`}
       onClick={onClick}
-      disabled={disabled}
+      disabled={isDisabled}
     >
       Create
     </Button>

@@ -97,10 +97,10 @@ const CreateLobby = () => {
             <Input className="mb-8 shadow-lg" onChange={handleLobbyPasswordChange} type="password" label="(optional)" placeholder="..." 
             />
           </div>
-          <div className="w-full flex justify-center mt-36 mb-4">
+          <div className="w-full flex justify-center mt-auto mb-4">
             <CreateLo 
               onClick={handleClick} 
-              disabled={!username || !name}
+              isDisabled={!username || !name}
             />
           </div>
         </BaseContainer>

@@ -15,7 +15,7 @@ const BaseContainer: React.FC<BaseContainerProps> = ({ className, children, size
 
   const containerClasses = {
     waiting: "w-[100%] h-[100%] overflow-auto shadow-lg",
-    landing: "w-[25%] h-[90%] overflow-auto shadow-lg",
+    landing: "w-[25%] h-[73%] overflow-auto shadow-lg",
     large: "w-[95%] h-[95%] overflow-auto shadow-lg",
     medium: "w-3/4 h-3/4 overflow-auto shadow-lg",
     small: "w-[35%] h-[85%] overflow-auto shadow-lg",

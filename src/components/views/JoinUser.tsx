@@ -119,7 +119,7 @@ const JoinUser = () => {
               placeholder="..."
               onChange={(e) => setLobbyPassword(e.target.value)} />
           </div>
-          <div className="w-full flex justify-center mt-36 mb-4">
+          <div className="w-full flex justify-center mt-auto mb-4">
             <JoinButton
               isDisabled={!username || (lobbyRequiresPassword && !lobbyPassword)}
               onClick={handleJoinClick} />
