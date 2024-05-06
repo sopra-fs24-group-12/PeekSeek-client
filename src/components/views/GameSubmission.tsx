@@ -6,7 +6,7 @@ import { getWebsocketDomain } from "helpers/getDomain";
 import { notification } from "antd";
 import HowToPlayModal from "components/ui/HowToPlayModal";
 import { InfoCircleTwoTone } from "@ant-design/icons";
-import { Input, Button, useDisclosure } from "@nextui-org/react";
+import { Input, Button, useDisclosure, Progress } from "@nextui-org/react";
 
 //import UI elements
 import BaseContainer from "../ui/BaseContainer";
@@ -14,7 +14,6 @@ import SubmissionCard from "../ui/SubmissionCard";
 import SubmitButton from "../ui/SubmitButton";
 import Timer from "../ui/Timer";
 import { ThreeDots } from "react-loader-spinner";
-import { Progress } from "@nextui-org/react";
 
 
 interface CardData {
