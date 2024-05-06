@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Client } from "@stomp/stompjs";
 import { getWebsocketDomain } from "helpers/getDomain";
 import { notification } from "antd";
-import HowToPlayModal from 'components/ui/HowToPlayModal';
+import HowToPlayModal from "components/ui/HowToPlayModal";
 import { InfoCircleTwoTone } from "@ant-design/icons";
 import { Input, Button, useDisclosure } from "@nextui-org/react";
 
@@ -363,16 +363,16 @@ const GameSubmission = () => {
             </div>
           </div>
           <Button
-                onPress={onOpen}
-                className="absolute bottom-2 right-2 p-2 sm rounded-full bg-transparent"
-                isIconOnly
-            >
-                <InfoCircleTwoTone style={{ fontSize: '20px'}}/>
-            </Button>
-            <HowToPlayModal 
-              isOpen={isOpen} 
-              onOpenChange={onOpenChange}
-              context="gamesubmission"  />
+            onPress={onOpen}
+            className="absolute bottom-2 right-2 p-2 sm rounded-full bg-transparent"
+            isIconOnly
+          >
+            <InfoCircleTwoTone style={{ fontSize: "20px"}}/>
+          </Button>
+          <HowToPlayModal 
+            isOpen={isOpen} 
+            onOpenChange={onOpenChange}
+            context="gamesubmission"  />
         </BaseContainer>
       )}
     </div>

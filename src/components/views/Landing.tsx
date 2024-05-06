@@ -3,9 +3,9 @@ import BaseContainer from "../ui/BaseContainer";
 import JoinButton from "components/ui/JoinButton";
 import CreateButton from "components/ui/CreateButton";
 import { useNavigate } from "react-router-dom";
-import HowToPlayModal from 'components/ui/HowToPlayModal';
+import HowToPlayModal from "components/ui/HowToPlayModal";
 import { InfoCircleTwoTone } from "@ant-design/icons";
-import { Button, useDisclosure } from '@nextui-org/react';
+import { Button, useDisclosure } from "@nextui-org/react";
 
 
 const LandingPage = () => {
@@ -34,19 +34,19 @@ const LandingPage = () => {
       </div>
       <div className="w-full flex justify-center mb-12">
         <CreateButton />
-        </div>
-        <Button
-                onPress={onOpen}
-                className="absolute bottom-2 right-2 p-2 sm rounded-full bg-transparent"
-                isIconOnly
-            >
-                <InfoCircleTwoTone style={{ fontSize: '20px'}}/>
-            </Button>
-            <HowToPlayModal 
-              isOpen={isOpen} 
-              onOpenChange={onOpenChange}
-              context="landing"  />
-        </BaseContainer>
+      </div>
+      <Button
+        onPress={onOpen}
+        className="absolute bottom-2 right-2 p-2 sm rounded-full bg-transparent"
+        isIconOnly
+      >
+        <InfoCircleTwoTone style={{ fontSize: "20px"}}/>
+      </Button>
+      <HowToPlayModal 
+        isOpen={isOpen} 
+        onOpenChange={onOpenChange}
+        context="landing"  />
+    </BaseContainer>
   );
 };
 

@@ -9,7 +9,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { api, handleError } from "helpers/api";
 import Lobby from "models/Lobby";
 import PropTypes from "prop-types";
-import HowToPlayModal from 'components/ui/HowToPlayModal';
+import HowToPlayModal from "components/ui/HowToPlayModal";
 import { InfoCircleTwoTone } from "@ant-design/icons";
 import {
   Table,
@@ -51,9 +51,9 @@ const JoinLobby = () => {
       alert("No lobby has been selected!");
     }
     else{console.log("Join button clicked!");
-    localStorage.setItem("undefined", String(lobbyRequiresPassword));
-    console.log(String(lobbyRequiresPassword));
-    navigate("/joinuser/" + selectedLobbyId);}
+      localStorage.setItem("undefined", String(lobbyRequiresPassword));
+      console.log(String(lobbyRequiresPassword));
+      navigate("/joinuser/" + selectedLobbyId);}
   };
 
   useEffect(() => {
@@ -143,16 +143,16 @@ const JoinLobby = () => {
             <CreateButton />
           </div>
           <Button
-                onPress={onOpen}
-                className="absolute bottom-2 right-2 p-2 sm rounded-full bg-transparent"
-                isIconOnly
-            >
-                <InfoCircleTwoTone style={{ fontSize: '20px'}}/>
-            </Button>
-            <HowToPlayModal 
-              isOpen={isOpen} 
-              onOpenChange={onOpenChange}
-              context="joinLobby"  />
+            onPress={onOpen}
+            className="absolute bottom-2 right-2 p-2 sm rounded-full bg-transparent"
+            isIconOnly
+          >
+            <InfoCircleTwoTone style={{ fontSize: "20px"}}/>
+          </Button>
+          <HowToPlayModal 
+            isOpen={isOpen} 
+            onOpenChange={onOpenChange}
+            context="joinLobby"  />
         </BaseContainer>
       </div>
     </div>

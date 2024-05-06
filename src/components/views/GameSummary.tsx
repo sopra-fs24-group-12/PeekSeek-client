@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { api, handleError } from "helpers/api";
-import HowToPlayModal from 'components/ui/HowToPlayModal';
+import HowToPlayModal from "components/ui/HowToPlayModal";
 import { InfoCircleTwoTone } from "@ant-design/icons";
 import { Input, Button, useDisclosure } from "@nextui-org/react";
 
@@ -98,16 +98,16 @@ const GameSummary = () => {
         </div>
       </div>
       <Button
-                onPress={onOpen}
-                className="absolute bottom-2 right-2 p-2 sm rounded-full bg-transparent"
-                isIconOnly
-            >
-                <InfoCircleTwoTone style={{ fontSize: '20px'}}/>
-            </Button>
-            <HowToPlayModal 
-              isOpen={isOpen} 
-              onOpenChange={onOpenChange}
-              context="gamesummary"  />
+        onPress={onOpen}
+        className="absolute bottom-2 right-2 p-2 sm rounded-full bg-transparent"
+        isIconOnly
+      >
+        <InfoCircleTwoTone style={{ fontSize: "20px"}}/>
+      </Button>
+      <HowToPlayModal 
+        isOpen={isOpen} 
+        onOpenChange={onOpenChange}
+        context="gamesummary"  />
     </BaseContainer>
   );
 };

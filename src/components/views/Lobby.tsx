@@ -11,7 +11,7 @@ import ScrollableContentWrapper from "components/ui/ScrollableContentWrapper";
 import TimeButtons from "../ui/TimeButtons";
 import { notification } from "antd";
 import { getWebsocketDomain } from "helpers/getDomain";
-import HowToPlayModal from 'components/ui/HowToPlayModal';
+import HowToPlayModal from "components/ui/HowToPlayModal";
 import { InfoCircleTwoTone } from "@ant-design/icons";
 
 const Lobby = () => {
@@ -432,16 +432,16 @@ const Lobby = () => {
       </div>
       {/* {!admin && <InteractionDisabledOverlay />} */}
       <Button
-                onPress={onOpen}
-                className="absolute bottom-2 right-2 p-2 sm rounded-full bg-transparent"
-                isIconOnly
-            >
-                <InfoCircleTwoTone style={{ fontSize: '20px'}}/>
-            </Button>
-            <HowToPlayModal 
-              isOpen={isOpen} 
-              onOpenChange={onOpenChange}
-              context="lobby"  />
+        onPress={onOpen}
+        className="absolute bottom-2 right-2 p-2 sm rounded-full bg-transparent"
+        isIconOnly
+      >
+        <InfoCircleTwoTone style={{ fontSize: "20px"}}/>
+      </Button>
+      <HowToPlayModal 
+        isOpen={isOpen} 
+        onOpenChange={onOpenChange}
+        context="lobby"  />
     </BaseContainer>
   );
 };
