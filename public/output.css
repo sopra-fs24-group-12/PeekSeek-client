@@ -1031,6 +1031,10 @@ video {
   margin-top: -120px;
 }
 
+.mt-auto {
+  margin-top: auto;
+}
+
 .box-border {
   box-sizing: border-box;
 }
@@ -1170,12 +1174,20 @@ video {
   height: 2px;
 }
 
+.h-\[530px\] {
+  height: 530px;
+}
+
+.h-\[73\%\] {
+  height: 73%;
+}
+
 .h-\[85\%\] {
   height: 85%;
 }
 
-.h-\[90\%\] {
-  height: 90%;
+.h-\[95\%\] {
+  height: 95%;
 }
 
 .h-\[calc\(100dvh_-_var\(--navbar-height\)_-_1px\)\] {
@@ -1232,10 +1244,6 @@ video {
   max-height: 16rem;
 }
 
-.max-h-\[382px\] {
-  max-height: 382px;
-}
-
 .max-h-\[calc\(100\%_-_7\.5rem\)\] {
   max-height: calc(100% - 7.5rem);
 }
@@ -1262,6 +1270,10 @@ video {
 
 .min-h-7 {
   min-height: 1.75rem;
+}
+
+.min-h-\[530px\] {
+  min-height: 530px;
 }
 
 .min-h-screen {
@@ -1372,12 +1384,20 @@ video {
   width: 100%;
 }
 
+.w-\[120px\] {
+  width: 120px;
+}
+
 .w-\[25\%\] {
   width: 25%;
 }
 
 .w-\[250px\] {
   width: 250px;
+}
+
+.w-\[300px\] {
+  width: 300px;
 }
 
 .w-\[35\%\] {
@@ -1400,8 +1420,8 @@ video {
   width: 80%;
 }
 
-.w-\[90\%\] {
-  width: 90%;
+.w-\[95\%\] {
+  width: 95%;
 }
 
 .w-\[calc\(100\%_-_theme\(spacing\.unit-6\)\)\] {
@@ -2063,6 +2083,10 @@ video {
   border-radius: var(--nextui-radius-large);
 }
 
+.rounded-lg {
+  border-radius: 0.5rem;
+}
+
 .rounded-md {
   border-radius: 0.375rem;
 }
@@ -2525,12 +2549,20 @@ video {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
+.bg-opacity-10 {
+  --tw-bg-opacity: 0.1;
+}
+
 .bg-opacity-50 {
   --tw-bg-opacity: 0.5;
 }
 
 .bg-background {
   background-image: url('/public/images/backgroundimage.jpg');
+}
+
+.bg-gradient-to-br {
+  background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
 }
 
 .bg-gradient-to-tr {
@@ -2595,8 +2627,8 @@ video {
   --tw-gradient-to: #d1d5db var(--tw-gradient-to-position);
 }
 
-.to-green-600 {
-  --tw-gradient-to: #16a34a var(--tw-gradient-to-position);
+.to-green-500 {
+  --tw-gradient-to: #22c55e var(--tw-gradient-to-position);
 }
 
 .to-orange-200 {
@@ -2873,6 +2905,11 @@ video {
 .text-4xl {
   font-size: 2.25rem;
   line-height: 2.5rem;
+}
+
+.text-7xl {
+  font-size: 4.5rem;
+  line-height: 1;
 }
 
 .text-\[0\.55rem\] {

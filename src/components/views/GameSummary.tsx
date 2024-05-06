@@ -10,6 +10,8 @@ import Leaderboard from "../ui/Leaderboard";
 import ExternalLinkButton from "../ui/ExternalLinkButton";
 import BackDashboardButton from "../ui/BackDashboardButton";
 import { useParams } from "react-router-dom";
+import StartButton from "../ui/StartButton";
+import { Progress } from "@nextui-org/react";
 
 
 const GameSummary = () => {
@@ -74,9 +76,13 @@ const GameSummary = () => {
 
   return (
     <BaseContainer size="large" className="flex flex-col items-center">
+      <Progress
+        aria-label="Progress"
+        value={100}
+        color="success"
+        className="absolute right-0 top-0 w-full" />
       <div className="p-4 flex w-full items-center">
         <div className="w-1/6">
-          <BackDashboardButton />
         </div>
         <div className="w-2/3 text-center">
           <h1 className="text-3xl font-bold text-gray-700">You&apos;ve just explored {city} in {nrOfQuests} round(s) of
@@ -108,6 +114,9 @@ const GameSummary = () => {
         isOpen={isOpen} 
         onOpenChange={onOpenChange}
         context="gamesummary"  />
+      <div className="w-full flex justify-between px-4 bottom-8 mb-4 mt-auto" style={{ bottom: "16px" }}>
+        <BackDashboardButton/>
+      </div>
     </BaseContainer>
   );
 };

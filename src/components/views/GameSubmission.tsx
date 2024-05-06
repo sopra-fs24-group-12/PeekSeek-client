@@ -14,6 +14,7 @@ import SubmissionCard from "../ui/SubmissionCard";
 import SubmitButton from "../ui/SubmitButton";
 import Timer from "../ui/Timer";
 import { ThreeDots } from "react-loader-spinner";
+import { Progress } from "@nextui-org/react";
 
 
 interface CardData {
@@ -64,6 +65,9 @@ const GameSubmission = () => {
   const [notificationApi, contextHolder] = notification.useNotification();
   const [submissionDone, setSubmissionDone] = useState((localStorage.getItem("submissionDone") !== "false"));
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [showImages, setShowImages] = useState(false);
+  let loadedImages = 0;
+  const [currQuestNr, setQuestNr] = useState(parseInt(localStorage.getItem("currentQuest")));
 
   const mergeDataForSubmission = (): ExtendedDictionary => {
     const updatedBanned = new ExtendedDictionary();
@@ -186,9 +190,9 @@ const GameSubmission = () => {
 
         const transformedData: CardData[] = response.data.map((item: any, index: number) => ({
           id: item.id,
-          cityName: !item.noSubmission ? response1.data.gameLocation : "",
-          quest: !item.noSubmission ? response1.data.quest : "",
-          anonymousName: !item.noSubmission ? `Anonymous ${animalNames[index]}` : "NOTHING FOUND",
+          cityName: response1.data.geoCodingData.location,
+          quest: response1.data.quest,
+          anonymousName:`Anonymous ${animalNames[index]}`,
           imageUrl: !item.noSubmission ? generateStreetViewImageLink(item.submittedLocation.lat, item.submittedLocation.lng, item.submittedLocation.heading, item.submittedLocation.pitch) : "", // Use item.image if available, otherwise empty string
           noSubmission: item.noSubmission,
           //link: "https://example.com/link1"
@@ -204,63 +208,6 @@ const GameSubmission = () => {
 
     fetchData();
   }, []);
-
-  // const cardsData = [
-  //   {
-  //     id: 1,
-  //     cityName: "Rome",
-  //     quest: "Locate the best sunrise spot",
-  //     anonymousName: "Anonymous Koala",
-  //     imageUrl: generateStreetViewImageLink("10", "10", "10", "10"),
-  //     link: "https://example.com/link1",
-  //     noSubmission: true,
-  //   },
-  //   {
-  //     id: 2,
-  //     cityName: "Rome",
-  //     quest: "Locate the best sunrise spot",
-  //     anonymousName: "Anonymous Bear",
-  //     imageUrl: generateStreetViewImageLink("10", "10", "10", "10"),
-  //     link: "https://example.com/link1",
-  //     noSubmission: false,
-  //   },
-  //   {
-  //     id: 3,
-  //     cityName: "Rome",
-  //     quest: "Locate the best sunrise spot",
-  //     anonymousName: "Anonymous Giraffe",
-  //     imageUrl: generateStreetViewImageLink("10", "10", "10", "10"),
-  //     link: "https://example.com/link1",
-  //     noSubmission: false,
-  //   },
-  //   {
-  //     id: 4,
-  //     cityName: "Rome",
-  //     quest: "Locate the best sunrise spot",
-  //     anonymousName: "Anonymous Zebra",
-  //     imageUrl: generateStreetViewImageLink("10", "10", "10", "10"),
-  //     link: "https://example.com/link1",
-  //     noSubmission: false,
-  //   },
-  //   {
-  //     id: 5,
-  //     cityName: "Rome",
-  //     quest: "Locate the best sunrise spot",
-  //     anonymousName: "Anonymous Gazelle",
-  //     imageUrl: generateStreetViewImageLink("11", "11", "11", "11"),
-  //     link: "https://example.com/link1",
-  //     noSubmission: false,
-  //   },
-  //   {
-  //     id: 6,
-  //     cityName: "Rome",
-  //     quest: "Locate the best sunrise spot",
-  //     anonymousName: "Anonymous Elephant",
-  //     imageUrl: generateStreetViewImageLink("10", "10", "10", "10"),
-  //     link: "https://example.com/link1",
-  //     noSubmission: false,
-  //   },
-  // ];
 
 
   const handleImageClick = (url: string) => {
@@ -301,6 +248,19 @@ const GameSubmission = () => {
 
   };
 
+  const currentQuest = parseInt(localStorage.getItem("currentQuest"), 10)
+  const totalQuests = parseInt(localStorage.getItem("totalQuests"), 10)
+  const questProgress = ( currentQuest/ totalQuests) * 100;
+
+  const imageLoaded = () => {
+    loadedImages += 1;
+    if (loadedImages === cardsData.length) {
+      setTimeout(() => {
+        setShowImages(true);
+      }, 1000);
+    }
+  }
+
 
   return (
     <div className="relative min-h-screen w-screen flex flex-col items-center">
@@ -325,6 +285,13 @@ const GameSubmission = () => {
           size="large"
           className="flex flex-col items-center"
         >
+          <Progress
+            aria-label="Progress"
+            disableAnimation
+            maxValue= {parseInt(localStorage.getItem("totalQuests"), 10)}
+            value={currQuestNr-1}
+            color="success"
+            className="absolute right-0 top-0 w-full" />
           {contextHolder}
           <div className="order-first text-center p-4">
             <h1 className="text-3xl font-bold text-gray-700">Choose your Favourite Pick</h1>
@@ -348,6 +315,8 @@ const GameSubmission = () => {
                     isPicked={pickedCardId === card.id}
                     isBanned={banned.hasKey(card.id)}
                     noSubmission={card.noSubmission}
+                    imageLoaded={imageLoaded}
+                    showImage={showImages}
                   />
                 ))}
               </div>

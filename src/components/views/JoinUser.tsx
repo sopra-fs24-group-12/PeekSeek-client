@@ -26,7 +26,7 @@ const JoinUser = () => {
 
   const handleBackClick = () => {
     console.log("Button clicked!");
-    navigate("/joinlobby");
+    navigate("/join");
   };
 
   useEffect(() => {
@@ -60,7 +60,7 @@ const JoinUser = () => {
       localStorage.setItem("submissionDone", "false");
       console.log(localStorage.getItem("token"));
       if (response.status >= 300) {
-        navigate("/joinlobby");
+        navigate("/join");
       } else {
         navigate("/lobby/" + id);
       }
@@ -122,7 +122,7 @@ const JoinUser = () => {
               placeholder="..."
               onChange={(e) => setLobbyPassword(e.target.value)} />
           </div>
-          <div className="w-full flex justify-center mt-36 mb-4">
+          <div className="w-full flex justify-center mt-auto mb-4">
             <JoinButton
               isDisabled={!username || (lobbyRequiresPassword && !lobbyPassword)}
               onClick={handleJoinClick} />

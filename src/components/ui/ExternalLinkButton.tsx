@@ -13,7 +13,7 @@ const ExternalLinkButton: React.FC<ExternalLinkButtonProps> = ({ url, label }) =
       as={Link}
       target="_blank"
       rel="noopener noreferrer"
-      className="bg-gradient-to-tr from-yellow-500 to-yellow-200 text-black shadow-lg"
+      className="w-[300px] bg-gradient-to-tr from-yellow-500 to-yellow-200 text-black shadow-lg"
       showAnchorIcon
       variant="solid"
       radius="lg"

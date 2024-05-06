@@ -11,6 +11,7 @@ import Leaderboard from "../ui/Leaderboard";
 import Timer from "../ui/Timer";
 import { useNavigate, useParams } from "react-router-dom";
 import { Client } from "@stomp/stompjs";
+import { Progress } from "@nextui-org/react";
 
 // Mock winning submission data
 const mockWinningSubmission = {
@@ -39,7 +40,7 @@ const VotingResults = () => {
   const [timeRemaining, setTimeRemaining] = useState(0);
   const navigate = useNavigate();
   const [notificationApi, contextHolder] = notification.useNotification();
-
+  const [currQuestNr, setQuestNr] = useState(parseInt(localStorage.getItem("currentQuest")));
   const [winningSubmission, setWinningSubmission] = useState({
     id: "1",
     cityName: "",
@@ -204,10 +205,20 @@ const VotingResults = () => {
 
     return `${baseUrl}?${params}`;
   }
+  const currentQuest = parseInt(localStorage.getItem("currentQuest"), 10)
+  const totalQuests = parseInt(localStorage.getItem("totalQuests"), 10)
+  const questProgress = ( currentQuest/ totalQuests) * 100;
 
   return (
     <BaseContainer
       size="large" className="flex flex-col items-center justify-center min-h-screen">
+      <Progress
+        aria-label="Progress"
+        disableAnimation
+        maxValue= {parseInt(localStorage.getItem("totalQuests"), 10)}
+        value={currQuestNr-1}
+        color="success"
+        className="absolute right-0 top-0 w-full" />
       <div className="flex flex-col items-center justify-center w-full h-full">
         {contextHolder}
         <WinningCard
