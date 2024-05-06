@@ -6,30 +6,50 @@ import { Input } from "@nextui-org/react";
 import { api, handleError } from "helpers/api";
 import { useNavigate } from "react-router-dom";
 import Lobby from "models/Lobby";
+import { notification } from "antd";
+
 
 const CreateLobby = () => {
   const navigate = useNavigate();
-  const [name, setLobbyname] = useState<string>(null);
+  const [name, setLobbyname] = useState<string>("");
   const [username, setUsername] = useState<string>(null);
   const [password, setLobbypassword] = useState<string>("");
+  const [usernameNotificationShown, setUsernameNotificationShown] = useState(false);
+  const [lobbyNameNotificationShown, setLobbyNameNotificationShown] = useState(false);
+  
   const handleLobbyPasswordChange = (event: ChangeEvent<HTMLInputElement>): void => {
-
     const newPassword = event.target.value;
-
     setLobbypassword(newPassword);
   };
+
   const handleLobbyAdminChange = (event: ChangeEvent<HTMLInputElement>): void => {
-
-    const newUsername = event.target.value;
-
-    setUsername(newUsername);
+    setUsername(event.target.value);
+    if (event.target.value.length === 20 && !usernameNotificationShown) {
+      notification.warning({
+        message: "Username can be maximum 20 characters!",
+        duration: 2,
+        key: "username-limit"
+      });
+      setUsernameNotificationShown(true);
+    } else if (event.target.value.length < 20 && usernameNotificationShown) {
+      setUsernameNotificationShown(false);
+    }
   };
+
   const handleLobbyNameChange = (event: ChangeEvent<HTMLInputElement>): void => {
-
-    const newLobbyname = event.target.value;
-
-    setLobbyname(newLobbyname);
+    setLobbyname(event.target.value);
+    if (event.target.value.length === 20 && !lobbyNameNotificationShown) {
+      notification.warning({
+        message: "Lobby name can be maximum 20 characters!",
+        duration: 2,
+        key: "lobbyname-limit"
+      });
+      setLobbyNameNotificationShown(true);
+    } else if (event.target.value.length < 20 && lobbyNameNotificationShown) {
+      setLobbyNameNotificationShown(false);
+    }
   };
+
   const handleClick = () => {
     console.log("Button clicked!");
     doCreate();
@@ -43,12 +63,10 @@ const CreateLobby = () => {
 
       const lobby = new Lobby(response.data);
 
-
       localStorage.setItem("token", response.headers["authorization"]);
       localStorage.setItem("username", username);
       localStorage.setItem("submissionDone", "false");
       console.log("This should be the token" + response.headers);
-
 
       navigate("/lobby/" + lobby.id);
     } catch (error) {
@@ -70,14 +88,20 @@ const CreateLobby = () => {
           className="flex flex-col items-center">
           <div className="flex-row flex-wrap md:flex-nowrap mt-16 mb-16 mr-16 ml-16 gap-4">
             <text>Admin Username</text>
-            <Input className="mb-8 shadow-lg" isRequired onChange={handleLobbyAdminChange} radius={"sm"} type="username" label="required " placeholder="..." />
+            <Input className="mb-8 shadow-lg" isRequired onChange={handleLobbyAdminChange} radius={"sm"} type="username" label="required " placeholder="..." maxLength={20}
+            />
             <text>Lobby Name</text>
-            <Input className="mb-8 shadow-lg" isRequired onChange={handleLobbyNameChange} type="name" label="required " placeholder="..." />
+            <Input className="mb-8 shadow-lg" isRequired onChange={handleLobbyNameChange} type="name" label="required " placeholder="..." maxLength={20}
+            />
             <text>Lobby Password</text>
-            <Input className="mb-8 shadow-lg" onChange={handleLobbyPasswordChange} type="password" label="(optional)" placeholder="..." />
+            <Input className="mb-8 shadow-lg" onChange={handleLobbyPasswordChange} type="password" label="(optional)" placeholder="..." 
+            />
           </div>
           <div className="w-full flex justify-center mt-36 mb-4">
-            <CreateLo onClick={handleClick} disabled={!username || !name} />
+            <CreateLo 
+              onClick={handleClick} 
+              disabled={!username || !name}
+            />
           </div>
         </BaseContainer>
       </div>

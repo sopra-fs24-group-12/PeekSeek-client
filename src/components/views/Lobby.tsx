@@ -11,6 +11,9 @@ import ScrollableContentWrapper from "components/ui/ScrollableContentWrapper";
 import TimeButtons from "../ui/TimeButtons";
 import { notification } from "antd";
 import { getWebsocketDomain } from "helpers/getDomain";
+import BackIcon from "../ui/BackIcon";
+import UpdateSettingsIcon from "../ui/UpdateSettingsIcon";
+import BackDashboardButton from "../ui/BackDashboardButton";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -26,7 +29,7 @@ const Lobby = () => {
   const [lng, setLng] = useState("");
   const [cityName, setCityName] = useState("");
   const [settingsConfirmed, setSettingsConfirmed] = useState(false);
-  
+
   interface InputQuestsProps {
     disabled: boolean;
   }
@@ -111,6 +114,7 @@ const Lobby = () => {
         alert(
           `Something went wrong while sending active ping: \n${handleError(error)}`,
         );
+        navigate("/landing");
       }
     };
 
@@ -314,13 +318,14 @@ const Lobby = () => {
         radius="full"
         size="lg"
         color="default"
-        className="shadow-lg"
+        className="items-center bg-gradient-to-tr from-gray-400 to-gray-300 text-black shadow-lg"
+        startContent={<UpdateSettingsIcon size={40}/>}
         onClick={() => {
           console.log("Saving settings");
           save();
         }}
       >
-        Save Settings
+        Update
       </Button>
     );
   };
@@ -348,13 +353,14 @@ const Lobby = () => {
         radius="full"
         size="lg"
         color="default"
-        className="shadow-lg"
+        className="items-center bg-gradient-to-tr from-gray-400 to-gray-300 text-black shadow-lg"
+        startContent={<BackIcon />}
         onClick={() => {
           console.log("Leaving lobby");
           leave();
         }}
       >
-        Leave Lobby
+        Leave
       </Button>
     );
   };

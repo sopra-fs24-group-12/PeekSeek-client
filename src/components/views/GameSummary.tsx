@@ -7,6 +7,7 @@ import Leaderboard from "../ui/Leaderboard";
 import ExternalLinkButton from "../ui/ExternalLinkButton";
 import BackDashboardButton from "../ui/BackDashboardButton";
 import { useParams } from "react-router-dom";
+import StartButton from "../ui/StartButton";
 
 
 const GameSummary = () => {
@@ -72,7 +73,6 @@ const GameSummary = () => {
     <BaseContainer size="large" className="flex flex-col items-center">
       <div className="p-4 flex w-full items-center">
         <div className="w-1/6">
-          <BackDashboardButton />
         </div>
         <div className="w-2/3 text-center">
           <h1 className="text-3xl font-bold text-gray-700">You&apos;ve just explored {city} in {nrOfQuests} round(s) of
@@ -92,6 +92,9 @@ const GameSummary = () => {
 
           <img src={staticMap} alt="NO MAP IMAGE AVAILABLE" style={{ borderRadius: "10px 20px 30px 40px" }} />
         </div>
+      </div>
+      <div className="w-full flex justify-between px-4 bottom-8 mb-4 mt-auto" style={{ bottom: "16px" }}>
+        <BackDashboardButton/>
       </div>
     </BaseContainer>
   );

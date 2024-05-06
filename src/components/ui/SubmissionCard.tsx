@@ -2,6 +2,9 @@ import React from "react";
 import { Card, CardHeader, CardBody, Image, CardFooter, Button, Skeleton } from "@nextui-org/react";
 // @ts-ignore
 import placeholder from "../../assets/modelSubmission.png";
+import BackIcon from "./BackIcon";
+import PickIcon from "./PickIcon";
+import BanIcon from "./BanIcon";
 
 interface SubmissionCardProps {
   cityName: string;
@@ -16,8 +19,6 @@ interface SubmissionCardProps {
   isPicked: boolean;
   isBanned: boolean;
   noSubmission: boolean;
-  imageLoaded: () => void;
-  showImage: boolean;
 }
 
 const greenBorderStyle = {
@@ -84,20 +85,24 @@ const SubmissionCard: React.FC<SubmissionCardProps> = ({ cityName, quest, anonym
       </CardBody>
       <CardFooter className="flex justify-center space-x-4">
         <Button
+          isIconOnly
           onClick={!isPicked ? onPickClick : onUnpickClick}
           radius="full"
-          size="sm"
+          size="md"
           className="items-center bg-gradient-to-tr from-yellow-500 to-yellow-200 text-black shadow-sm"
         >
-          {!isPicked ? "Pick" : "Unpick"}
+          {/*{!isPicked ? "Pick" : "Unpick"}*/}
+          <PickIcon/>
         </Button>
         <Button
+          isIconOnly
           onClick={!isBanned ? onBanClick : onUnbanClick}
           radius="full"
-          size="sm"
+          size="md"
           className="items-center bg-gradient-to-tr from-red-600 to-red-500 text-white shadow-sm"
         >
-          {!isBanned ? "Ban" : "Unban"}
+          {/*{!isBanned ? "Ban" : "Unban"}*/}
+          <BanIcon/>
         </Button>
       </CardFooter>
     </Card>
