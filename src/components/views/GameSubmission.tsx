@@ -4,6 +4,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Client } from "@stomp/stompjs";
 import { getWebsocketDomain } from "helpers/getDomain";
 import { notification } from "antd";
+import HowToPlayModal from "components/ui/HowToPlayModal";
+import { InfoCircleTwoTone } from "@ant-design/icons";
+import { Input, Button, useDisclosure } from "@nextui-org/react";
 
 //import UI elements
 import BaseContainer from "../ui/BaseContainer";
@@ -60,7 +63,7 @@ const GameSubmission = () => {
   const [cardsData, setCardsData] = useState<CardData[]>([]);
   const [notificationApi, contextHolder] = notification.useNotification();
   const [submissionDone, setSubmissionDone] = useState((localStorage.getItem("submissionDone") !== "false"));
-
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const mergeDataForSubmission = (): ExtendedDictionary => {
     const updatedBanned = new ExtendedDictionary();
@@ -359,6 +362,17 @@ const GameSubmission = () => {
               <Timer initialTimeInSeconds={10} timeInSeconds={remainingSeconds} title={"RESULTS IN:"} />
             </div>
           </div>
+          <Button
+            onPress={onOpen}
+            className="absolute bottom-2 right-2 p-2 sm rounded-full bg-transparent"
+            isIconOnly
+          >
+            <InfoCircleTwoTone style={{ fontSize: "20px"}}/>
+          </Button>
+          <HowToPlayModal 
+            isOpen={isOpen} 
+            onOpenChange={onOpenChange}
+            context="gamesubmission"  />
         </BaseContainer>
       )}
     </div>
