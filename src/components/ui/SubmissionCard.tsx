@@ -2,7 +2,6 @@ import React from "react";
 import { Card, CardHeader, CardBody, Image, CardFooter, Button, Skeleton } from "@nextui-org/react";
 // @ts-ignore
 import placeholder from "../../assets/modelSubmission.png";
-import BackIcon from "./BackIcon";
 import PickIcon from "./PickIcon";
 import BanIcon from "./BanIcon";
 
@@ -19,6 +18,8 @@ interface SubmissionCardProps {
   isPicked: boolean;
   isBanned: boolean;
   noSubmission: boolean;
+  imageLoaded: () => void;
+  showImage: boolean;
 }
 
 const greenBorderStyle = {
