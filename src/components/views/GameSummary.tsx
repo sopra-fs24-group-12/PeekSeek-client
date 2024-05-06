@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { api, handleError } from "helpers/api";
+import HowToPlayModal from "components/ui/HowToPlayModal";
+import { InfoCircleTwoTone } from "@ant-design/icons";
+import { Input, Button, useDisclosure } from "@nextui-org/react";
 
 //import UI elements
 import BaseContainer from "../ui/BaseContainer";
@@ -21,6 +24,7 @@ const GameSummary = () => {
   const [staticMap, setStaticMap] = useState("");
   const lats = [];
   const lngs = [];
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
 
   async function generateStaticMapUrl(latitudes: string[], longitudes: string[]): Promise<string> {
@@ -99,6 +103,17 @@ const GameSummary = () => {
           <img src={staticMap} alt="NO MAP IMAGE AVAILABLE" style={{ borderRadius: "10px 20px 30px 40px" }} />
         </div>
       </div>
+      <Button
+        onPress={onOpen}
+        className="absolute bottom-2 right-2 p-2 sm rounded-full bg-transparent"
+        isIconOnly
+      >
+        <InfoCircleTwoTone style={{ fontSize: "20px"}}/>
+      </Button>
+      <HowToPlayModal 
+        isOpen={isOpen} 
+        onOpenChange={onOpenChange}
+        context="gamesummary"  />
       <div className="w-full flex justify-between px-4 bottom-8 mb-4 mt-auto" style={{ bottom: "16px" }}>
         <BackDashboardButton/>
       </div>

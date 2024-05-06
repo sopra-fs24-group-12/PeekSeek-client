@@ -2,18 +2,20 @@ import React, { useState, ChangeEvent } from "react";
 import BaseContainer from "../ui/BaseContainer";
 import CreateLo from "components/ui/CreateLobbyButton";
 import BackButton from "components/ui/BackButton";
-import { Input } from "@nextui-org/react";
+import { Input, Button, useDisclosure } from "@nextui-org/react";
 import { api, handleError } from "helpers/api";
 import { useNavigate } from "react-router-dom";
 import Lobby from "models/Lobby";
+import HowToPlayModal from "components/ui/HowToPlayModal";
+import { InfoCircleTwoTone } from "@ant-design/icons";
 import { notification } from "antd";
-
 
 const CreateLobby = () => {
   const navigate = useNavigate();
   const [name, setLobbyname] = useState<string>("");
   const [username, setUsername] = useState<string>(null);
   const [password, setLobbypassword] = useState<string>("");
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [usernameNotificationShown, setUsernameNotificationShown] = useState(false);
   const [lobbyNameNotificationShown, setLobbyNameNotificationShown] = useState(false);
   
@@ -103,6 +105,17 @@ const CreateLobby = () => {
               isDisabled={!username || !name}
             />
           </div>
+          <Button
+            onPress={onOpen}
+            className="absolute bottom-2 right-2 p-2 sm rounded-full bg-transparent"
+            isIconOnly
+          >
+            <InfoCircleTwoTone style={{ fontSize: "20px"}}/>
+          </Button>
+          <HowToPlayModal 
+            isOpen={isOpen} 
+            onOpenChange={onOpenChange}
+            context="createLobby"  />
         </BaseContainer>
       </div>
     </div>

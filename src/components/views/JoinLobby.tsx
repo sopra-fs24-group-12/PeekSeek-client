@@ -6,6 +6,9 @@ import BackButton from "components/ui/BackButton";
 import { useNavigate } from "react-router-dom";
 import { api, handleError } from "helpers/api";
 import Lobby from "models/Lobby";
+import PropTypes from "prop-types";
+import HowToPlayModal from "components/ui/HowToPlayModal";
+import { InfoCircleTwoTone } from "@ant-design/icons";
 import {
   Table,
   TableBody,
@@ -13,6 +16,8 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
+  Button, 
+  useDisclosure
   Spinner,
 } from "@nextui-org/react";
 
@@ -20,15 +25,31 @@ import {
 const JoinLobby = () => {
   const navigate = useNavigate();
   const [lobbyRequiresPassword, setLobbyRequiresPassword] = useState(false);
+  const { id } = useParams();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+  const handleBackClick = () => {
+    console.log("Button clicked!");
+    navigate("/joinlobby");
+  };
+
+
+  const handleSelectionChange = (selectedKeys) => {
+
+    const selectedKey = selectedKeys[0];
   const [lobbies, setLobbies] = useState<Lobby[]>([]);
   const [selectedLobbyId, setSelectedLobbyId] = useState();
   const [isLoading, setIsLoading] = useState(true);
 
+
   const handleClickList = () => {
-    console.log("Join button clicked!");
-    localStorage.setItem("undefined", String(lobbyRequiresPassword));
-    console.log(String(lobbyRequiresPassword));
-    navigate("/join/" + selectedLobbyId);
+    if (!selectedLobbyId){
+      alert("No lobby has been selected!");
+    }
+    else{console.log("Join button clicked!");
+      localStorage.setItem("undefined", String(lobbyRequiresPassword));
+      console.log(String(lobbyRequiresPassword));
+      navigate("/joinuser/" + selectedLobbyId);}
   };
 
   useEffect(() => {
@@ -126,6 +147,17 @@ const JoinLobby = () => {
           <div className="w-full flex justify-center mb-4">
             <CreateButton />
           </div>
+          <Button
+            onPress={onOpen}
+            className="absolute bottom-2 right-2 p-2 sm rounded-full bg-transparent"
+            isIconOnly
+          >
+            <InfoCircleTwoTone style={{ fontSize: "20px"}}/>
+          </Button>
+          <HowToPlayModal 
+            isOpen={isOpen} 
+            onOpenChange={onOpenChange}
+            context="joinLobby"  />
         </BaseContainer>
       </div>
     </div>
