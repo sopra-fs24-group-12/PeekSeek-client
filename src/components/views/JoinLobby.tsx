@@ -1,11 +1,9 @@
-// JoinPage.tsx or similar
 import React, { useEffect, useState } from "react";
 import BaseContainer from "../ui/BaseContainer";
 import JoinButton from "components/ui/JoinButton";
 import CreateButton from "components/ui/CreateButton";
 import BackButton from "components/ui/BackButton";
-import App from "../ui/LobbyTable";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { api, handleError } from "helpers/api";
 import Lobby from "models/Lobby";
 import PropTypes from "prop-types";
@@ -25,10 +23,6 @@ import {
 
 const JoinLobby = () => {
   const navigate = useNavigate();
-  const staticMapImageUrl = "URL_STATIC_MAP";
-  const [username, setUsername] = useState<string>(null);
-  const [password, setPassword] = useState<string>(null);
-  const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
   const [lobbyRequiresPassword, setLobbyRequiresPassword] = useState(false);
   const { id } = useParams();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -42,9 +36,10 @@ const JoinLobby = () => {
   const handleSelectionChange = (selectedKeys) => {
 
     const selectedKey = selectedKeys[0];
+  const [lobbies, setLobbies] = useState<Lobby[]>([]);
+  const [selectedLobbyId, setSelectedLobbyId] = useState();
 
-    console.log("selected id " + selectedKeys[0]);
-  };
+
 
   const handleClickList = () => {
     if (!selectedLobbyId){
@@ -61,38 +56,33 @@ const JoinLobby = () => {
       try {
         const response = await api.get("/lobbies");
 
-
         setLobbies(response.data);
-
 
         console.log("request to:", response.request.responseURL);
         console.log("status code:", response.status);
         console.log("status text:", response.statusText);
         console.log("requested data:", response.data);
 
-        // See here to get more data.
         console.log(response);
       } catch (error) {
-        console.error(
-          `Something went wrong while fetching the lobbies: \n${handleError(
-            error,
-          )}`,
-        );
-        console.error("Details:", error);
         alert(
-          "Something went wrong while fetching the lobbies! See the console for details.",
+          `Something went wrong while fetching information: \n${handleError(error)}`,
         );
+        localStorage.clear()
+        navigate("/landing");
       }
     }
 
     fetchData();
   }, []);
 
-  const [selectedColor, setSelectedColor] = React.useState("default");
-  const [lobbies, setLobbies] = useState<Lobby[]>([]);
-  const [selectedLobbyId, setSelectedLobbyId] = useState();
-  const [selectionBehavior, setSelectionBehavior] = React.useState("replace");
-
+  function selectLobby(id) {
+    if (selectedLobbyId !== id) {
+      setSelectedLobbyId(id)
+    } else {
+      setSelectedLobbyId(null)
+    }
+  }
 
   return (
     <div className="relative min-h-screen w-screen">
@@ -116,7 +106,7 @@ const JoinLobby = () => {
               {lobbies.map((lobby: Lobby) => (
                 <TableRow
                   key={lobby.id}
-                  onClick={() => {setSelectedLobbyId(lobby.id); setLobbyRequiresPassword(lobby.passwordProtected);}}
+                  onClick={() => {selectLobby(lobby.id); setLobbyRequiresPassword(lobby.passwordProtected);}}
                   className={
                     selectedLobbyId === lobby.id ? "selected-row" : ""
                   }

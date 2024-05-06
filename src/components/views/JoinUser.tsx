@@ -8,6 +8,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { api, handleError } from "helpers/api";
 import HowToPlayModal from 'components/ui/HowToPlayModal';
 import { InfoCircleTwoTone } from "@ant-design/icons";
+import { notification } from "antd";
+
 
 const JoinUser = () => {
   const navigate = useNavigate();
@@ -20,27 +22,29 @@ const JoinUser = () => {
   const isJoinDisabled = !username || (lobbyRequiresPassword && !lobbyPassword);
   const [usernameError, setUsernameError] = useState("");
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [usernameNotificationShown, setUsernameNotificationShown] = useState(false);
 
   const handleBackClick = () => {
     console.log("Button clicked!");
     navigate("/joinlobby");
   };
 
-useEffect(() => {
-  const sendRequest = async () => {
-    try {
-    if (localStorage.getItem("undefined") === "true"){
-      setLobbyRequiresPassword(true);
-    }
-    } catch (error) {
-      alert(
-        `An error occured because you tried using the new method. \n${handleError(error)}`,
-      );
-      navigate("/landing");
-    }
-  };
-  sendRequest();
-}, []);
+  useEffect(() => {
+    const sendRequest = async () => {
+      try {
+        if (localStorage.getItem("undefined") === "true"){
+          setLobbyRequiresPassword(true);
+        }
+      } catch (error) {
+        alert(
+          `An error occured because you tried using the new method. \n${handleError(error)}`,
+        );
+        navigate("/landing");
+      }
+    };
+    sendRequest();
+  }, []);
+
   const handleJoinClick = async () => {
     try {
       if (!username.trim()){
@@ -68,13 +72,20 @@ useEffect(() => {
     }
 
   };
+
   const handleUsernameChange = (e) => {
-    const trimmedUsername = e.target.value.trim();
-    if (trimmedUsername) {
-      setUsername(trimmedUsername);
-      setUsernameError("");
-    } else {
-      setUsernameError("Username is required.");
+    const newUsername = e.target.value.trim().slice(0, 20);
+    setUsername(newUsername);
+
+    if (e.target.value.trim().length === 20 && !usernameNotificationShown) {
+      notification.warning({
+        message: "Username can be maximum 20 characters!",
+        duration: 2,
+        key: "username-limit"
+      });
+      setUsernameNotificationShown(true);
+    } else if (e.target.value.trim().length < 20 && usernameNotificationShown) {
+      setUsernameNotificationShown(false);
     }
   };
 
@@ -97,6 +108,7 @@ useEffect(() => {
               type="username"
               label="required "
               placeholder="..."
+              value={username}
               onChange={handleUsernameChange}
             />
             <text>Lobby Password</text>
@@ -112,7 +124,7 @@ useEffect(() => {
           </div>
           <div className="w-full flex justify-center mt-36 mb-4">
             <JoinButton
-              isDisabled={isJoinDisabled}
+              isDisabled={!username || (lobbyRequiresPassword && !lobbyPassword)}
               onClick={handleJoinClick} />
           </div>
           <Button

@@ -207,8 +207,8 @@ const VotingResults = () => {
 
   return (
     <BaseContainer
-      size="large">
-      <div className="flex flex-col items-center justify-center w-full">
+      size="large" className="flex flex-col items-center justify-center min-h-screen">
+      <div className="flex flex-col items-center justify-center w-full h-full">
         {contextHolder}
         <WinningCard
           key={winningSubmission.id}
@@ -218,7 +218,7 @@ const VotingResults = () => {
           imageUrl={winningSubmission.imageUrl}
           noSubmission={winningSubmission.noSubmission}
         />
-        <div className="mt-10 w-full relative">
+        <div className="mt-10 w-full relative flex flex-col items-center">
           <div className="max-w-2xl mx-auto"> {/* Leaderboard centered */}
             <Leaderboard data={formattedLeaderboard} />
           </div>
