@@ -18,6 +18,7 @@ interface SubmissionCardProps {
   isPicked: boolean;
   isBanned: boolean;
   noSubmission: boolean;
+  ownSubmission: boolean;
   imageLoaded: () => void;
   showImage: boolean;
 }
@@ -37,7 +38,7 @@ const noBorderStyle = {
   boxShadow: "none",
 };
 
-const SubmissionCard: React.FC<SubmissionCardProps> = ({ cityName, quest, anonymousName, imageUrl, onImageClick, onPickClick, onBanClick, onUnpickClick, onUnbanClick, isPicked, isBanned, noSubmission, imageLoaded, showImage, }) => {
+const SubmissionCard: React.FC<SubmissionCardProps> = ({ cityName, quest, anonymousName, imageUrl, onImageClick, onPickClick, onBanClick, onUnpickClick, onUnbanClick, isPicked, isBanned, noSubmission, imageLoaded, showImage, ownSubmission}) => {
   const determineBorderStyle = () => {
     if (isBanned) {
       return redBorderStyle;

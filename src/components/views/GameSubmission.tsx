@@ -24,6 +24,7 @@ interface CardData {
   imageUrl?: string;
   link: string;
   noSubmission: boolean;
+  ownSubmission: boolean;
 }
 
 class ExtendedDictionary {
@@ -187,15 +188,34 @@ const GameSubmission = () => {
         const response1 = await api.get("/games/" + gameId + "/round", { headers });
         console.log("API Response 2:", response1.data);
 
-        const transformedData: CardData[] = response.data.map((item: any, index: number) => ({
-          id: item.id,
-          cityName: response1.data.geoCodingData.location,
-          quest: response1.data.quest,
-          anonymousName:`Anonymous ${animalNames[index]}`,
-          imageUrl: !item.noSubmission ? generateStreetViewImageLink(item.submittedLocation.lat, item.submittedLocation.lng, item.submittedLocation.heading, item.submittedLocation.pitch) : "", // Use item.image if available, otherwise empty string
-          noSubmission: item.noSubmission,
-          //link: "https://example.com/link1"
-        }));
+        const transformedData: CardData[] = [];
+        response.data.forEach((item: any, index: number) => {
+          const transformedItem: CardData = {
+            id: item.id,
+            cityName: response1.data.geoCodingData.location,
+            quest: response1.data.quest,
+            anonymousName: `Anonymous ${animalNames[index]}`,
+            imageUrl: !item.noSubmission
+              ? generateStreetViewImageLink(
+                item.submittedLocation.lat,
+                item.submittedLocation.lng,
+                item.submittedLocation.heading,
+                item.submittedLocation.pitch
+              )
+              : "",
+            noSubmission: item.noSubmission,
+            link: "",
+            ownSubmission: localStorage.getItem("username") === item.username,
+          };
+          if (!transformedItem.ownSubmission) {
+            transformedData.push(transformedItem);
+          }
+        });
+
+        console.log(localStorage.getItem("username"))
+        console.log("Before filtering:", transformedData);
+        const filteredData = transformedData.filter((item) => !item.ownSubmission);
+        console.log("After filtering:", filteredData);
 
         setCardsData(transformedData);
       } catch (error) {
@@ -314,6 +334,7 @@ const GameSubmission = () => {
                     isPicked={pickedCardId === card.id}
                     isBanned={banned.hasKey(card.id)}
                     noSubmission={card.noSubmission}
+                    ownSubmission={card.ownSubmission}
                     imageLoaded={imageLoaded}
                     showImage={showImages}
                   />
