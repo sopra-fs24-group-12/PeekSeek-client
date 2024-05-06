@@ -3,10 +3,9 @@ import BaseContainer from "../ui/BaseContainer";
 import JoinButton from "components/ui/JoinButton";
 import CreateButton from "components/ui/CreateButton";
 import BackButton from "components/ui/BackButton";
+import Lobby from "models/Lobby";
 import { useNavigate } from "react-router-dom";
 import { api, handleError } from "helpers/api";
-import Lobby from "models/Lobby";
-import PropTypes from "prop-types";
 import HowToPlayModal from "components/ui/HowToPlayModal";
 import { InfoCircleTwoTone } from "@ant-design/icons";
 import {
@@ -16,40 +15,25 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
+  Spinner, 
   Button, 
   useDisclosure
-  Spinner,
 } from "@nextui-org/react";
 
 
 const JoinLobby = () => {
   const navigate = useNavigate();
   const [lobbyRequiresPassword, setLobbyRequiresPassword] = useState(false);
-  const { id } = useParams();
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
-  const handleBackClick = () => {
-    console.log("Button clicked!");
-    navigate("/joinlobby");
-  };
-
-
-  const handleSelectionChange = (selectedKeys) => {
-
-    const selectedKey = selectedKeys[0];
   const [lobbies, setLobbies] = useState<Lobby[]>([]);
   const [selectedLobbyId, setSelectedLobbyId] = useState();
   const [isLoading, setIsLoading] = useState(true);
-
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const handleClickList = () => {
-    if (!selectedLobbyId){
-      alert("No lobby has been selected!");
-    }
-    else{console.log("Join button clicked!");
-      localStorage.setItem("undefined", String(lobbyRequiresPassword));
-      console.log(String(lobbyRequiresPassword));
-      navigate("/joinuser/" + selectedLobbyId);}
+    console.log("Join button clicked!");
+    localStorage.setItem("undefined", String(lobbyRequiresPassword));
+    console.log(String(lobbyRequiresPassword));
+    navigate("/join/" + selectedLobbyId);
   };
 
   useEffect(() => {
@@ -157,7 +141,7 @@ const JoinLobby = () => {
           <HowToPlayModal 
             isOpen={isOpen} 
             onOpenChange={onOpenChange}
-            context="joinLobby"  />
+            context="createLobby"  />
         </BaseContainer>
       </div>
     </div>
