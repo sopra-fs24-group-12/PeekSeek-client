@@ -14,6 +14,7 @@ import BackButton from "components/ui/BackButton";
 import GameButton from "components/ui/GameButton";
 import GameSubmitButton from "components/ui/GameSubmitButton";
 import Timer from "../ui/Timer";
+import { Progress } from "@nextui-org/react";
 
 //imports for Google Maps API
 import { GoogleMap as ReactGoogleMap, LoadScript, StreetViewPanorama, Marker } from "@react-google-maps/api";
@@ -56,7 +57,7 @@ function MyGoogleMap() {
   const [noSubmission, setNoSubmission] = useState<boolean>(false);
   const [remainingTime, setRemainingTime] = useState(0);
   const [submissionDone, setSubmissionDone] = useState((localStorage.getItem("submissionDone") !== "false"));
-
+  const [currQuestNr, setQuestNr] = useState(parseInt(localStorage.getItem("currentQuest"))-1);
   const openNotification = (message: string) => {
     notificationApi.open({
       message: message,
@@ -87,6 +88,7 @@ function MyGoogleMap() {
         setResLatSw(response.data.geoCodingData.resLatSw);
         setResLngSw(response.data.geoCodingData.resLngSw);
         setMapCenter({ lat, lng });
+        setQuestNr(parseInt(localStorage.getItem("currentQuest"), 10))
       } catch (error) {
         alert(
           `Something went wrong while fetching round information: \n${handleError(error)}`,
@@ -98,7 +100,7 @@ function MyGoogleMap() {
 
     fetchData();
   }, []);
-
+  console.log("QuestNr:"+ {currQuestNr})
   useEffect(() => {
     const sendRequest = async () => {
       const headers = {
@@ -189,6 +191,7 @@ function MyGoogleMap() {
     };
     const body = JSON.stringify({ lat, lng, heading, pitch, noSubmission });
     try {
+      localStorage.setItem("currentQuest", String(currQuestNr+1))
       const response = await api.post("games/" + gameId + "/submission", body, { headers });
       console.log("API Response:", response.data);
       //navigate("/waiting/" + gameId);
@@ -251,6 +254,13 @@ function MyGoogleMap() {
           <div className="font-bold text-lg mt-16">{"TIME REMAINING: " + remainingTime}</div>
           <div className="w-3/4 flex flex-col items-center">
             <BaseContainer size="medium" className="flex flex-col items-center mb-20">
+              <Progress
+                aria-label="Progress"
+                // disableAnimation
+                maxValue= {parseInt(localStorage.getItem("totalQuests"), 10)}
+                value={currQuestNr}
+                color="success"
+                className="absolute right-0 top-0 w-full" />
               <h3 className="text-xl font-bold my-4">Find a {quest} in {cityName}!</h3>
               {lat && lng && (
                 <LoadScript googleMapsApiKey={API_Key} libraries={libs}>
@@ -314,6 +324,6 @@ function MyGoogleMap() {
       )}
     </div>
   );
-};
+}
 
 export default MyGoogleMap;

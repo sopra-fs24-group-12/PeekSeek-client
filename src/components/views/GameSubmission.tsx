@@ -11,6 +11,7 @@ import SubmissionCard from "../ui/SubmissionCard";
 import SubmitButton from "../ui/SubmitButton";
 import Timer from "../ui/Timer";
 import { ThreeDots } from "react-loader-spinner";
+import { Progress } from "@nextui-org/react";
 
 
 interface CardData {
@@ -60,7 +61,7 @@ const GameSubmission = () => {
   const [cardsData, setCardsData] = useState<CardData[]>([]);
   const [notificationApi, contextHolder] = notification.useNotification();
   const [submissionDone, setSubmissionDone] = useState((localStorage.getItem("submissionDone") !== "false"));
-
+  const [currQuestNr, setQuestNr] = useState(parseInt(localStorage.getItem("currentQuest")));
 
   const mergeDataForSubmission = (): ExtendedDictionary => {
     const updatedBanned = new ExtendedDictionary();
@@ -298,6 +299,9 @@ const GameSubmission = () => {
 
   };
 
+  const currentQuest = parseInt(localStorage.getItem("currentQuest"), 10)
+  const totalQuests = parseInt(localStorage.getItem("totalQuests"), 10)
+  const questProgress = ( currentQuest/ totalQuests) * 100;
 
   return (
     <div className="relative min-h-screen w-screen flex flex-col items-center">
@@ -322,6 +326,13 @@ const GameSubmission = () => {
           size="large"
           className="flex flex-col items-center"
         >
+          <Progress
+            aria-label="Progress"
+            disableAnimation
+            maxValue= {parseInt(localStorage.getItem("totalQuests"), 10)}
+            value={currQuestNr-1}
+            color="success"
+            className="absolute right-0 top-0 w-full" />
           {contextHolder}
           <div className="order-first text-center p-4">
             <h1 className="text-3xl font-bold text-gray-700">Choose your Favourite Pick</h1>
