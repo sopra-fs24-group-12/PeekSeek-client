@@ -5,12 +5,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import BaseContainer from "../ui/BaseContainer";
 import StartButton from "../ui/StartButton";
 import PlayerTable from "../ui/PlayerTable";
-import { Button, Input } from "@nextui-org/react";
+import { Button, Input, useDisclosure } from "@nextui-org/react";
 import ContentWrapper from "components/ui/ContentWrapper";
 import ScrollableContentWrapper from "components/ui/ScrollableContentWrapper";
 import TimeButtons from "../ui/TimeButtons";
 import { notification } from "antd";
 import { getWebsocketDomain } from "helpers/getDomain";
+import HowToPlayModal from 'components/ui/HowToPlayModal';
+import { InfoCircleTwoTone } from "@ant-design/icons";
 
 const Lobby = () => {
   const [quests, setQuests] = React.useState(["", "", "", ""]);
@@ -25,7 +27,9 @@ const Lobby = () => {
   const [cityName, setCityName] = useState("");
   const [settingsConfirmed, setSettingsConfirmed] = useState(false);
   const [notificationApi, contextHolder] = notification.useNotification();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
+  
   interface InputQuestsProps {
     disabled: boolean;
   }
@@ -427,6 +431,17 @@ const Lobby = () => {
         </div>
       </div>
       {/* {!admin && <InteractionDisabledOverlay />} */}
+      <Button
+                onPress={onOpen}
+                className="absolute bottom-2 right-2 p-2 sm rounded-full bg-transparent"
+                isIconOnly
+            >
+                <InfoCircleTwoTone style={{ fontSize: '20px'}}/>
+            </Button>
+            <HowToPlayModal 
+              isOpen={isOpen} 
+              onOpenChange={onOpenChange}
+              context="lobby"  />
     </BaseContainer>
   );
 };

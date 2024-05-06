@@ -45,7 +45,7 @@ const LandingPage = () => {
             <HowToPlayModal 
               isOpen={isOpen} 
               onOpenChange={onOpenChange}
-              context="lobby"  />
+              context="landing"  />
         </BaseContainer>
   );
 };
