@@ -32,9 +32,9 @@ const AppRouter = () => {
 
         <Route path="/landing" element={<Landing />} />
 
-        <Route path="/joinlobby" element={<JoinLobby />} />
+        <Route path="/join" element={<JoinLobby />} />
 
-        <Route path="/joinuser/:id" element={<JoinUser />} />
+        <Route path="/join/:id" element={<JoinUser />} />
 
         <Route path="/create" element={<CreateLobby />} />
 

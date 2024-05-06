@@ -18,6 +18,7 @@ import {
   TableRow,
   Button, 
   useDisclosure
+  Spinner,
 } from "@nextui-org/react";
 
 
@@ -38,7 +39,7 @@ const JoinLobby = () => {
     const selectedKey = selectedKeys[0];
   const [lobbies, setLobbies] = useState<Lobby[]>([]);
   const [selectedLobbyId, setSelectedLobbyId] = useState();
-
+  const [isLoading, setIsLoading] = useState(true);
 
 
   const handleClickList = () => {
@@ -56,8 +57,10 @@ const JoinLobby = () => {
       try {
         const response = await api.get("/lobbies");
 
-        setLobbies(response.data);
-
+        setTimeout(() => {
+          setLobbies(response.data);
+          setIsLoading(false);
+        }, 1000);
         console.log("request to:", response.request.responseURL);
         console.log("status code:", response.status);
         console.log("status text:", response.statusText);
@@ -91,39 +94,51 @@ const JoinLobby = () => {
       </div>
       <div className="flex justify-center items-center h-full">
         <BaseContainer size="small" className="flex flex-col items-center">
-          <Table
-            color={"default"}
-            selectionMode="single"
-            aria-label="Example static collection table"
-          >
-            <TableHeader>
-              <TableColumn>ID</TableColumn>
-              <TableColumn>LOBBY NAME</TableColumn>
-              <TableColumn>PARTICIPANTS</TableColumn>
-              <TableColumn>PASSWORD</TableColumn>
-            </TableHeader>
-            <TableBody>
-              {lobbies.map((lobby: Lobby) => (
-                <TableRow
-                  key={lobby.id}
-                  onClick={() => {selectLobby(lobby.id); setLobbyRequiresPassword(lobby.passwordProtected);}}
-                  className={
-                    selectedLobbyId === lobby.id ? "selected-row" : ""
-                  }
-                >
-                  <TableCell>{lobby.id}</TableCell>
-                  <TableCell>{lobby.name}</TableCell>
-                  <TableCell>
-                    {lobby.joinedParticipants} / {lobby.maxParticipants}
-                  </TableCell>
-                  <TableCell>
-                    {lobby.passwordProtected ? "🔒" : ""}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          <div className="w-full flex justify-center mt-24 mb-4">
+          <div className="flex-grow w-full overflow-hidden rounded-lg mb-4" style={{ maxHeight: "85%" }}>
+            <Table
+              isHeaderSticky
+              color={"primary"}
+              selectionMode="single"
+              aria-label="Lobby Table"
+              classNames={{
+                base: "overflow-y-auto h-[530px] min-h-[530px]",
+              }}
+            >
+              <TableHeader>
+                <TableColumn>ID</TableColumn>
+                <TableColumn>LOBBY</TableColumn>
+                <TableColumn>PLAYERS</TableColumn>
+                <TableColumn>🔒</TableColumn>
+              </TableHeader>
+              <TableBody
+                isLoading={isLoading}
+                emptyContent={<Spinner size="md" color="default" />}
+              >
+                {lobbies.map((lobby: Lobby) => (
+                  <TableRow
+                    key={lobby.id}
+                    onClick={() => {
+                      selectLobby(lobby.id);
+                      setLobbyRequiresPassword(lobby.passwordProtected);
+                    }}
+                    className={
+                      selectedLobbyId === lobby.id ? "selected-row" : ""
+                    }
+                  >
+                    <TableCell>{lobby.id}</TableCell>
+                    <TableCell>{lobby.name}</TableCell>
+                    <TableCell>
+                      {lobby.joinedParticipants} / {lobby.maxParticipants}
+                    </TableCell>
+                    <TableCell>
+                      {lobby.passwordProtected ? "🔒" : ""}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+          <div className="w-full flex justify-center mt-auto mb-4">
             <JoinButton
               onClick={handleClickList}
               isDisabled={!selectedLobbyId}

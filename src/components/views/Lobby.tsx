@@ -13,6 +13,11 @@ import { notification } from "antd";
 import { getWebsocketDomain } from "helpers/getDomain";
 import HowToPlayModal from "components/ui/HowToPlayModal";
 import { InfoCircleTwoTone } from "@ant-design/icons";
+import BackIcon from "../ui/BackIcon";
+import UpdateSettingsIcon from "../ui/UpdateSettingsIcon";
+import BackDashboardButton from "../ui/BackDashboardButton";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Lobby = () => {
   const [quests, setQuests] = React.useState(["", "", "", ""]);
@@ -49,10 +54,7 @@ const Lobby = () => {
   }
 
   const openNotification = (message: string) => {
-    notificationApi.open({
-      message: message,
-      duration: 2,
-    });
+    toast.info(message, {autoClose: 3000});
   };
 
   const addPlayer = (newPlayer: String) => {
@@ -92,6 +94,10 @@ const Lobby = () => {
           setLng("0");
         }
         setSettingsConfirmed(response.data.quests && response.data.quests.length > 0 && response.data.gameLocation);
+        // Set the total number of quests in localStorage
+        const filteredQuests = quests.filter(quest => quest.trim() !== "");
+        // Set currentQuest to 1
+        localStorage.setItem("currentQuest", String(1));
       } catch (error) {
         alert(
           `Something went wrong while fetching lobby information: \n${handleError(error)}`,
@@ -294,6 +300,9 @@ const Lobby = () => {
     );
   };
 
+  localStorage.setItem("totalQuests", String(quests.length-1));
+  const total = localStorage.getItem("totalQuests")
+  console.log("total quests " + total)
 
   const SaveButton: React.FC = () => {
     async function save() {
@@ -315,19 +324,21 @@ const Lobby = () => {
       }
     }
 
+
     return (
       <Button
         disabled={!admin}
         radius="full"
         size="lg"
         color="default"
-        className="shadow-lg"
+        className="items-center bg-gradient-to-tr from-gray-400 to-gray-300 text-black shadow-lg"
+        startContent={<UpdateSettingsIcon size={40}/>}
         onClick={() => {
           console.log("Saving settings");
           save();
         }}
       >
-        Save Settings
+        Update
       </Button>
     );
   };
@@ -355,13 +366,14 @@ const Lobby = () => {
         radius="full"
         size="lg"
         color="default"
-        className="shadow-lg"
+        className="items-center bg-gradient-to-tr from-gray-400 to-gray-300 text-black shadow-lg"
+        startContent={<BackIcon />}
         onClick={() => {
           console.log("Leaving lobby");
           leave();
         }}
       >
-        Leave Lobby
+        Leave
       </Button>
     );
   };
@@ -393,7 +405,10 @@ const Lobby = () => {
 
   return (
     <BaseContainer size="large" className="flex flex-col items-center p-2">
-      {contextHolder}
+      <ToastContainer
+        pauseOnFocusLoss={false}
+        pauseOnHover={false}
+      />
       <h1 className="text-3xl font-bold text-gray-700 my-4 text-center">{lobbyName}</h1>
       <div className="flex w-full">
         <div className="flex flex-col w-full items-start gap-4 ml-6">
@@ -418,7 +433,7 @@ const Lobby = () => {
         </div>
         <div className="w-full flex justify-between px-12 absolute bottom-8" style={{ position: "absolute", bottom: "16px" }}>
           <LeaveButton />
-          {!admin ? 
+          {!admin ?
             (<p className="text-xl font-bold">Waiting for the admin to configure and start the game...</p>) : (
               <>
                 <StartButton

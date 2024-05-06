@@ -26,17 +26,20 @@ const StartButton: React.FC<StartButtonProps> = ({ disabled, lobbyId }) => {
     <Button
       radius="full"
       size="lg"
-      className="bg-gradient-to-tr from-green-600 to-green-600 mr-6 shadow-lg"
+      className="bg-gradient-to-br from-green-600 to-green-500 mr-6 shadow-lg"
       // make the button round
       disabled={disabled}
       style={{
         borderRadius: "100%",
-        width: "80px",
+        width: "90px",
         height: "90px",
         padding: "0",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        fontFamily: "'Roboto', sans-serif",
+        fontSize: "18px",
+        fontWeight: "bold",
       }}
       onClick={doStart}
     >
