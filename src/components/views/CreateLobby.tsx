@@ -58,6 +58,9 @@ const CreateLobby = () => {
     if (!username){
       alert("Username required!");
     }
+    else if (!name){
+      alert("Name required!");
+    }
     else{
       doCreate();
     }
