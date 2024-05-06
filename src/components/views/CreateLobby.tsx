@@ -36,6 +36,7 @@ const CreateLobby = () => {
     } else if (event.target.value.length < 20 && usernameNotificationShown) {
       setUsernameNotificationShown(false);
     }
+    
   };
 
   const handleLobbyNameChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -54,7 +55,12 @@ const CreateLobby = () => {
 
   const handleClick = () => {
     console.log("Button clicked!");
-    doCreate();
+    if (!username){
+      alert("Username required!");
+    }
+    else{
+      doCreate();
+    }
   };
 
   const doCreate = async () => {
