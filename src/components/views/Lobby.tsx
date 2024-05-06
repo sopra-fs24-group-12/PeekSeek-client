@@ -89,6 +89,10 @@ const Lobby = () => {
           setLng("0");
         }
         setSettingsConfirmed(response.data.quests && response.data.quests.length > 0 && response.data.gameLocation);
+        // Set the total number of quests in localStorage
+        const filteredQuests = quests.filter(quest => quest.trim() !== "");
+        // Set currentQuest to 1
+        localStorage.setItem("currentQuest", String(1));
       } catch (error) {
         alert(
           `Something went wrong while fetching lobby information: \n${handleError(error)}`,
@@ -291,6 +295,9 @@ const Lobby = () => {
     );
   };
 
+  localStorage.setItem("totalQuests", String(quests.length-1));
+  const total = localStorage.getItem("totalQuests")
+  console.log("total quests " + total)
 
   const SaveButton: React.FC = () => {
     async function save() {
@@ -311,6 +318,7 @@ const Lobby = () => {
         );
       }
     }
+
 
     return (
       <Button
