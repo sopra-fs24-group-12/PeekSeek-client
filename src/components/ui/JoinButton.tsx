@@ -6,8 +6,7 @@ interface JoinButtonProps {
   isDisabled?: boolean;
   onClick?: () => void;
 }
-
-
+ 
 const JoinButton: React.FC<JoinButtonProps> = ({ isDisabled, onClick }) => {
   return (
     <Button

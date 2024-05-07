@@ -12,8 +12,13 @@ import { Input, Button, useDisclosure, Progress } from "@nextui-org/react";
 import BaseContainer from "../ui/BaseContainer";
 import SubmissionCard from "../ui/SubmissionCard";
 import SubmitButton from "../ui/SubmitButton";
+//import StreetViewModal from "../ui/StreetViewModal"; //TODO: Get this working
 import Timer from "../ui/Timer";
 import { ThreeDots } from "react-loader-spinner";
+import { Progress} from "@nextui-org/react";
+import { set } from "lodash";
+
+const google = window.google;
 
 
 interface CardData {
@@ -21,6 +26,10 @@ interface CardData {
   cityName: string;
   quest: string;
   anonymousName: string;
+  lat: string;
+  lng: string;
+  heading: string;
+  pitch: string;
   imageUrl?: string;
   link: string;
   noSubmission: boolean;
@@ -99,6 +108,7 @@ const GameSubmission = () => {
           `You were kicked due to inactivity. \n${handleError(error)}`,
         );
         localStorage.clear();
+        //setModalOpen(false);
         navigate("/landing");
       }
     };
@@ -149,11 +159,13 @@ const GameSubmission = () => {
           console.log("Received message:", messageParsed);
           if (messageParsed.status === "summary") {
             localStorage.setItem("submissionDone", "false");
+            //setModalOpen(false);
             navigate(`/voting/${gameId}/`);
           } else if (messageParsed.status === "left") {
             openNotification(messageParsed.username + " left");
           } else if (messageParsed.status === "game_over") {
             localStorage.setItem("submissionDone", "false");
+            //setModalOpen(false);
             navigate("/gamesummary/" + messageParsed.summaryId);
           }
         });
@@ -172,8 +184,6 @@ const GameSubmission = () => {
   }, []);
 
   useEffect(() => {
-    //localStorage.setItem("token", "aeeafad9-60c5-4662-8ea7-6909a7d8b9e5");
-    //localStorage.setItem("username", "a");
 
     async function fetchData() {
       const headers = {
@@ -195,7 +205,11 @@ const GameSubmission = () => {
             cityName: response1.data.geoCodingData.location,
             quest: response1.data.quest,
             anonymousName: `Anonymous ${animalNames[index]}`,
-            imageUrl: !item.noSubmission
+            lat: item.submittedLocation.lat,
+          lng: item.submittedLocation.lng,
+          heading: item.submittedLocation.heading,
+          pitch: item.submittedLocation.pitch,
+          imageUrl: !item.noSubmission
               ? generateStreetViewImageLink(
                 item.submittedLocation.lat,
                 item.submittedLocation.lng,
@@ -227,10 +241,32 @@ const GameSubmission = () => {
 
     fetchData();
   }, []);
+  /*
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [selectedCoords, setSelectedCoords] = useState({ lat: 0, lng: 0, heading: 0, pitch: 0 });
 
+  const handleImageClick = (index) => {
+    const card = cardsData.find((card) => card.id === index);
+    if (card) {
+      const newCoords = {
+        lat: parseFloat(card.lat),
+        lng: parseFloat(card.lng),
+        heading: parseFloat(card.heading),
+        pitch: parseFloat(card.pitch)
+      };
+      setSelectedCoords(newCoords);
+    }
+  }
 
-  const handleImageClick = (url: string) => {
-    window.open(url, "_blank");
+  useEffect(() => {
+    if (selectedCoords.lat !== 0 || selectedCoords.lng !== 0){
+      setModalOpen(true);
+    }
+  }, [selectedCoords]);
+  */
+
+  const handleImageClick = (index) => {
+    console.log("IMAGE CLICKED");
   };
 
   const handlePickClick = (index) => {
@@ -325,8 +361,12 @@ const GameSubmission = () => {
                     cityName={card.cityName}
                     quest={card.quest}
                     anonymousName={card.anonymousName}
+                    lat={card.lat}
+                    lng={card.lng}
+                    heading={card.heading}
+                    pitch={card.pitch}
                     imageUrl={card.imageUrl}
-                    onImageClick={() => handleImageClick(card.link)}
+                    onImageClick={() => handleImageClick(card.id)}
                     onPickClick={() => handlePickClick(card.id)}
                     onBanClick={() => handleBanClick(card.id)}
                     onUnpickClick={() => handleUnpickClick(card.id)}
@@ -340,7 +380,8 @@ const GameSubmission = () => {
                   />
                 ))}
               </div>
-
+              
+              
               <div className="w-full flex justify-center p-4">
                 <SubmitButton voteData={mergeDataForSubmission()} gameId={gameId} setSubmissionDone={setSubmissionDone} />
               </div>
@@ -369,3 +410,14 @@ const GameSubmission = () => {
 };
 
 export default GameSubmission;
+//TODO: Close modal
+/*<StreetViewModal
+                isOpen={isModalOpen}
+                onClose={() => setModalOpen(false)}
+                coords={{
+                  lat: selectedCoords.lat,
+                  lng: selectedCoords.lng,
+                  heading: selectedCoords.heading,
+                  pitch: selectedCoords.pitch
+                }}
+              /> */

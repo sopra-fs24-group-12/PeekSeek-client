@@ -31,10 +31,7 @@ const Lobby = () => {
   const [lng, setLng] = useState("");
   const [cityName, setCityName] = useState("");
   const [settingsConfirmed, setSettingsConfirmed] = useState(false);
-  const [notificationApi, contextHolder] = notification.useNotification();
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-  
   interface InputQuestsProps {
     disabled: boolean;
   }
@@ -54,7 +51,10 @@ const Lobby = () => {
   }
 
   const openNotification = (message: string) => {
-    toast.info(message, {autoClose: 3000});
+    notificationApi.open({
+      message: message,
+      duration: 2,
+    });
   };
 
   const addPlayer = (newPlayer: String) => {
@@ -67,6 +67,7 @@ const Lobby = () => {
 
 
   useEffect(() => {
+
     async function fetchData() {
       const headers = {
         "Authorization": localStorage.getItem("token"),
@@ -94,10 +95,6 @@ const Lobby = () => {
           setLng("0");
         }
         setSettingsConfirmed(response.data.quests && response.data.quests.length > 0 && response.data.gameLocation);
-        // Set the total number of quests in localStorage
-        const filteredQuests = quests.filter(quest => quest.trim() !== "");
-        // Set currentQuest to 1
-        localStorage.setItem("currentQuest", String(1));
       } catch (error) {
         alert(
           `Something went wrong while fetching lobby information: \n${handleError(error)}`,
@@ -123,7 +120,6 @@ const Lobby = () => {
         alert(
           `Something went wrong while sending active ping: \n${handleError(error)}`,
         );
-        navigate("/landing");
       }
     };
 
@@ -212,23 +208,15 @@ const Lobby = () => {
       setLocalQuests(updatedQuests);
     };
 
+
     const deleteQuest = (index) => {
-      if (!disabled) {
-        const updatedQuests = [...localQuests];
-        updatedQuests.splice(index, 1);
-        // Ensure there is always at least one input field
-        if (updatedQuests.length === 0) {
-          updatedQuests.push("");
-        }
-        setLocalQuests(updatedQuests);
-      }
+      const updatedQuests = [...localQuests];
+      updatedQuests.splice(index, 1);
+      setLocalQuests(updatedQuests);
     };
 
     const saveQuestsToGlobal = () => {
-      // Filter out empty quests but ensure one empty field at the end for new entries
-      const filteredQuests = localQuests.filter(quest => quest.trim() !== "");
-      filteredQuests.push("");
-      setQuests(filteredQuests);
+      setQuests(localQuests.filter(quest => quest.trim() !== ""));
     };
 
     return (
@@ -238,8 +226,9 @@ const Lobby = () => {
         <div style={{ overflowY: "auto", maxHeight: "500px", width: "100%" }}>
           {localQuests.map((quest, index) => (
             <Input
-              isClearable={!disabled}
+              isClearable
               key={`quest-${index}`}  // Unique key for each input
+              //key={index}
               placeholder={`Quest #${index + 1}`}
               value={quest}
               onChange={(e) => handleQuestChange(index, e.target.value)}
@@ -281,7 +270,6 @@ const Lobby = () => {
     return (
       <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
         <Input
-          disabled={!admin}
           type="text"
           label="Your Destination"
           title="city name"
@@ -289,9 +277,9 @@ const Lobby = () => {
           value={localCityName}
           onChange={handleCityNameChange}
           style={{ width: "300px" }}
+          disabled={!admin}
         />
         <Button
-          disabled={!admin}
           radius="md"
           size="sm"
           style={{ paddingLeft: "20px", paddingRight: "20px" }}
@@ -300,9 +288,53 @@ const Lobby = () => {
     );
   };
 
-  localStorage.setItem("totalQuests", String(quests.length-1));
-  const total = localStorage.getItem("totalQuests")
-  console.log("total quests " + total)
+  /*  const CityInputField: React.FC<CityInputFieldProps> = ({ disabled }) => {
+    const cityNameRef = useRef(cityName);
+
+    useEffect(() => {
+      cityNameRef.current = cityName;
+    }, [cityName]);
+
+    const handleCityNameChange = useCallback(debounce((value) => {
+      setCityName(value);
+      console.log("City name changed to:", value);
+      save();
+    }, 1000), []);
+
+    async function save() {
+      const headers = {
+        "Authorization": localStorage.getItem("token"),
+      };
+      const body = JSON.stringify({
+        gameLocation: cityNameRef.current
+      });
+      try {
+        await api.put("/lobbies/" + lobbyId, body, { headers });
+        setSettingsConfirmed(true);
+      } catch (error) {
+        alert(
+          `Something went wrong while saving lobby settings: \n${handleError(error)}`,
+        );
+      }
+    }
+
+    return (
+      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+        <Input
+          type="text"
+          label="Your Destination"
+          title="city name"
+          placeholder="Enter city name"
+          value={cityName}
+          onChange={(event) => handleCityNameChange(event.target.value)}
+          style={{ width: "300px" }}
+          disabled={!admin}
+        />
+      </div>
+    );
+  };
+*/
+
 
   const SaveButton: React.FC = () => {
     async function save() {
@@ -324,21 +356,19 @@ const Lobby = () => {
       }
     }
 
-
     return (
       <Button
         disabled={!admin}
         radius="full"
         size="lg"
         color="default"
-        className="items-center bg-gradient-to-tr from-gray-400 to-gray-300 text-black shadow-lg"
-        startContent={<UpdateSettingsIcon size={40}/>}
+        className="shadow-lg"
         onClick={() => {
           console.log("Saving settings");
           save();
         }}
       >
-        Update
+        Save Settings
       </Button>
     );
   };
@@ -366,14 +396,13 @@ const Lobby = () => {
         radius="full"
         size="lg"
         color="default"
-        className="items-center bg-gradient-to-tr from-gray-400 to-gray-300 text-black shadow-lg"
-        startContent={<BackIcon />}
+        className="shadow-lg"
         onClick={() => {
           console.log("Leaving lobby");
           leave();
         }}
       >
-        Leave
+        Leave Lobby
       </Button>
     );
   };
@@ -389,34 +418,29 @@ const Lobby = () => {
     return (
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
         <div style={{ height: "25px" }}></div>
-        <div style={{ borderRadius: "50%", overflow: "hidden", width: "480px", height: "480px", boxShadow: "0 4px 8px rgba(0,0,0,0.3)", border: "5px solid white", marginBottom: "130px" }}>
+        <div style={{ borderRadius: "50%", overflow: "hidden", width: "550px", height: "550px" }}>
           <img src={imageUrl} alt="Google Map" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         </div>
       </div>
     );
   };
 
-  /*
   const InteractionDisabledOverlay = () => (
-    <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-10 flex justify-center items-center">
+    <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
+      <p className="text-white text-xl">Waiting for the admin to configure and start the game...</p>
     </div>
   );
-  */
 
   return (
-    <BaseContainer size="large" className="flex flex-col items-center p-2">
-      <ToastContainer
-        pauseOnFocusLoss={false}
-        pauseOnHover={false}
-      />
+    <BaseContainer size="large" className="flex flex-col items-center p-4">
+      {contextHolder}
       <h1 className="text-3xl font-bold text-gray-700 my-4 text-center">{lobbyName}</h1>
       <div className="flex w-full">
         <div className="flex flex-col w-full items-start gap-4 ml-6">
           <TimeButtons
-            disabled={!admin}
             selectedDuration={roundDurationSeconds}
             setRoundDurationSeconds={setRoundDurationSeconds}
-          />
+            disabled={!admin} />
           <PlayerTable
             players={players} />
         </div>
@@ -431,18 +455,13 @@ const Lobby = () => {
           <InputQuests
             disabled={!admin} />
         </div>
-        <div className="w-full flex justify-between px-12 absolute bottom-8" style={{ position: "absolute", bottom: "16px" }}>
+        <div className="w-full flex justify-between px-12 absolute bottom-8">
           <LeaveButton />
-          {!admin ?
-            (<p className="text-xl font-bold">Waiting for the admin to configure and start the game...</p>) : (
-              <>
-                <StartButton
-                  disabled={!settingsConfirmed}
-                  lobbyId={lobbyId}
-                />
-                <SaveButton />
-              </>
-            )}
+          <StartButton
+            disabled={!settingsConfirmed}
+            lobbyId={lobbyId}
+          />
+          <SaveButton />
         </div>
       </div>
       {/* {!admin && <InteractionDisabledOverlay />} */}
