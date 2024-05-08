@@ -14,11 +14,11 @@ const BaseContainer: React.FC<BaseContainerProps> = ({ className, children, size
   const [containerSize, setContainerSize] = useState<ContainerSize>(size || initialSize);
 
   const containerClasses = {
-    waiting: "w-[100%] h-[100%] overflow-auto shadow-lg",
-    landing: "w-[25%] h-[73%] overflow-auto shadow-lg",
-    large: "w-[95%] h-[95%] overflow-auto shadow-lg",
-    medium: "w-3/4 h-3/4 overflow-auto shadow-lg",
-    small: "w-[35%] h-[85%] overflow-auto shadow-lg",
+    waiting: "w-full max-h-full overflow-auto shadow-lg",
+    landing: "w-full sm:w-2/3 md:w-1/2 lg:w-2/5 xl:w-1/3 max-h-full md:max-h-screen lg:max-h-screen xl:max-h-screen overflow-auto shadow-lg",
+    large: "w-full md:w-full lg:w-full xl:w-full h-full md:h-screen lg:h-screen xl:h-screen overflow-auto shadow-lg",
+    medium: "w-full sm:w-4/5 md:w-3/4 lg:w-2/3 xl:w-2/3 max-h-full sm:max-h-screen md:max-h-screen lg:max-h-screen xl:max-h-screen overflow-auto shadow-lg",
+    small: "w-full sm:w-4/5 md:w-2/3 lg:w-1/2 xl:w-1/2 max-h-full sm:max-h-screen md:max-h-screen lg:max-h-screen xl:max-h-screen overflow-auto shadow-lg",
   };
 
   // Function to determine container size based on window width

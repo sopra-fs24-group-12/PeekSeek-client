@@ -12,7 +12,8 @@ const ScrollableContentWrapper: React.FC<ContentWrapperProps> = ({ children }) =
     <Card
       isBlurred
     >
-      <CardBody style={{
+      <CardBody 
+        style={{
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",

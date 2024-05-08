@@ -141,7 +141,7 @@ const JoinLobby = () => {
           <HowToPlayModal 
             isOpen={isOpen} 
             onOpenChange={onOpenChange}
-            context="createLobby"  />
+            context="joinLobby"  />
         </BaseContainer>
       </div>
     </div>

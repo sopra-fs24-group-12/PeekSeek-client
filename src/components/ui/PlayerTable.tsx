@@ -7,7 +7,7 @@ interface Props {
 
 const PlayerTable: React.FC<Props> = ({ players }) => {
   return (
-    <div className="w-[250px] max-w-2xl ml-8 shadow-lg items-center">
+    <div className="w-full max-w-2xl shadow-lg items-center">
       <Table color={"default"} aria-label="Example static collection table">
         <TableHeader>
           <TableColumn>Players</TableColumn>

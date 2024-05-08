@@ -406,9 +406,9 @@ const Lobby = () => {
         pauseOnFocusLoss={false}
         pauseOnHover={false}
       />
-      <h1 className="text-3xl font-bold text-gray-700 my-4 text-center">{lobbyName}</h1>
-      <div className="flex w-full">
-        <div className="flex flex-col w-full items-start gap-4 ml-6">
+      <h1 className="text-3xl font-bold text-gray-700 my-2 text-center">{lobbyName}</h1>
+      <div className="flex flex-col md:flex-row w-full justify-between space-y-6 md:space-y-0 md:space-x-4 overflow-auto">
+        <div className="md:w-1/3 p-4 gap-4">
           <TimeButtons
             disabled={!admin}
             selectedDuration={roundDurationSeconds}
@@ -417,18 +417,18 @@ const Lobby = () => {
           <PlayerTable
             players={players} />
         </div>
-        <div className="flex-1 items-center justify-center px-16">
+        <div className="md:w-1/3 p-4 flex flex-col items-center justify-center">
           <ContentWrapper>
             <CityInputField
               disabled={!admin} />
           </ContentWrapper>
           <GoogleMapStaticImage />
         </div>
-        <div className="flex flex-col w-full items-end mr-8">
+        <div className="md:w-1/3 p-4">
           <InputQuests
             disabled={!admin} />
         </div>
-        <div className="w-full flex justify-between px-12 absolute bottom-8" style={{ position: "absolute", bottom: "16px" }}>
+        <div className="w-full flex flex-col md:flex-row justify-between p-4" style={{ position: "absolute", bottom: "16px" }}>
           <LeaveButton />
           {!admin ?
             (<p className="text-xl font-bold">Waiting for the admin to configure and start the game...</p>) : (
