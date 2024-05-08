@@ -65,8 +65,6 @@ const GameSubmission = () => {
   const [notificationApi, contextHolder] = notification.useNotification();
   const [submissionDone, setSubmissionDone] = useState((localStorage.getItem("submissionDone") !== "false"));
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [showImages, setShowImages] = useState(false);
-  let loadedImages = 0;
   const [currQuestNr, setQuestNr] = useState(parseInt(localStorage.getItem("currentQuest")));
 
   const mergeDataForSubmission = (): ExtendedDictionary => {
@@ -130,23 +128,16 @@ const GameSubmission = () => {
     return `${baseUrl}?${params}`;
   }
 
-  // const animalNames = ["Koala", "Bear", "Giraffe", "Zebra", "Gazelle", "Elephant"];
-  // const shuffledAnimalNames = [...animalNames].sort(() => Math.random() - 0.5);
-
   useEffect(() => {
     let client = new Client();
     const websocketUrl = getWebsocketDomain();
     client.configure({
       brokerURL: websocketUrl,
-      debug: function(str) {
-        console.log(str);
-      },
       onConnect: () => {
         const destination = "/topic/games/" + gameId;
         const timerDestination = "/topic/games/" + gameId + "/timer";
         client && client.subscribe(destination, (message) => {
           let messageParsed = JSON.parse(message.body);
-          console.log("Received message:", messageParsed);
           if (messageParsed.status === "summary") {
             localStorage.setItem("submissionDone", "false");
             navigate(`/voting/${gameId}/`);
@@ -172,8 +163,6 @@ const GameSubmission = () => {
   }, []);
 
   useEffect(() => {
-    //localStorage.setItem("token", "aeeafad9-60c5-4662-8ea7-6909a7d8b9e5");
-    //localStorage.setItem("username", "a");
 
     async function fetchData() {
       const headers = {
@@ -211,11 +200,6 @@ const GameSubmission = () => {
             transformedData.push(transformedItem);
           }
         });
-
-        console.log(localStorage.getItem("username"))
-        console.log("Before filtering:", transformedData);
-        const filteredData = transformedData.filter((item) => !item.ownSubmission);
-        console.log("After filtering:", filteredData);
 
         setCardsData(transformedData);
       } catch (error) {
@@ -271,16 +255,6 @@ const GameSubmission = () => {
   const totalQuests = parseInt(localStorage.getItem("totalQuests"), 10)
   const questProgress = ( currentQuest/ totalQuests) * 100;
 
-  const imageLoaded = () => {
-    loadedImages += 1;
-    if (loadedImages === cardsData.length) {
-      setTimeout(() => {
-        setShowImages(true);
-      }, 1000);
-    }
-  }
-
-
   return (
     <div className="relative min-h-screen w-screen flex flex-col items-center">
       {submissionDone ? (
@@ -334,9 +308,6 @@ const GameSubmission = () => {
                     isPicked={pickedCardId === card.id}
                     isBanned={banned.hasKey(card.id)}
                     noSubmission={card.noSubmission}
-                    ownSubmission={card.ownSubmission}
-                    imageLoaded={imageLoaded}
-                    showImage={showImages}
                   />
                 ))}
               </div>

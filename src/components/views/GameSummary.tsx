@@ -47,9 +47,6 @@ const GameSummary = () => {
           return { url: quest.link, label: index + 1 + ": " + quest.description + " found by " + quest.name };
         });
 
-        console.log(linkList);
-
-        console.log("response: ", response);
 
         setExternalLinks(linkList);
         setSuccessfulRounds(linkList.length);

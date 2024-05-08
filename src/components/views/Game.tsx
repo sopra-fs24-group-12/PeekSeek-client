@@ -100,7 +100,6 @@ function MyGoogleMap() {
 
     fetchData();
   }, []);
-  console.log("QuestNr:"+ {currQuestNr})
   useEffect(() => {
     const sendRequest = async () => {
       const headers = {
@@ -134,9 +133,6 @@ function MyGoogleMap() {
     const websocketUrl = getWebsocketDomain();
     client.configure({
       brokerURL: websocketUrl,
-      debug: function(str) {
-        console.log(str);
-      },
       onConnect: () => {
         const destination = "/topic/games/" + gameId;
         const timerDestination = "/topic/games/" + gameId + "/timer";
@@ -154,7 +150,6 @@ function MyGoogleMap() {
         });
         client && client.subscribe(timerDestination, (message) => {
           let messageParsed = JSON.parse(message.body);
-          console.log("Received message from topic 2:", messageParsed);
           setRemainingTime(messageParsed.secondsRemaining);
         });
       },

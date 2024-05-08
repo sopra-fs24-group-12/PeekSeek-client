@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardHeader, CardBody, Image, CardFooter, Button, Skeleton } from "@nextui-org/react";
 // @ts-ignore
 import placeholder from "../../assets/modelSubmission.png";
@@ -18,9 +18,6 @@ interface SubmissionCardProps {
   isPicked: boolean;
   isBanned: boolean;
   noSubmission: boolean;
-  ownSubmission: boolean;
-  imageLoaded: () => void;
-  showImage: boolean;
 }
 
 const greenBorderStyle = {
@@ -38,7 +35,9 @@ const noBorderStyle = {
   boxShadow: "none",
 };
 
-const SubmissionCard: React.FC<SubmissionCardProps> = ({ cityName, quest, anonymousName, imageUrl, onImageClick, onPickClick, onBanClick, onUnpickClick, onUnbanClick, isPicked, isBanned, noSubmission, imageLoaded, showImage, ownSubmission}) => {
+
+const SubmissionCard: React.FC<SubmissionCardProps> = ({ cityName, quest, anonymousName, imageUrl, onImageClick, onPickClick, onBanClick, onUnpickClick, onUnbanClick, isPicked, isBanned, noSubmission}) => {
+  const [hideSkeleton, setHideSkeleton] = useState(false);
   const determineBorderStyle = () => {
     if (isBanned) {
       return redBorderStyle;
@@ -49,6 +48,12 @@ const SubmissionCard: React.FC<SubmissionCardProps> = ({ cityName, quest, anonym
     }
   };
 
+  function onImageLoad() {
+    setTimeout(() =>
+      setHideSkeleton(true), 1000
+    )
+  }
+
   return (
     <Card
       style={determineBorderStyle()}
@@ -56,23 +61,23 @@ const SubmissionCard: React.FC<SubmissionCardProps> = ({ cityName, quest, anonym
     >
       <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
         <div className="mb-0.5">
-          <Skeleton isLoaded={showImage} className="rounded-lg">
+          <Skeleton data-loaded={hideSkeleton} className="rounded-lg">
             <div className="text-tiny uppercase font-bold">{cityName}</div>
           </Skeleton>
         </div>
         <div className="mb-0.5">
-          <Skeleton isLoaded={showImage} className="rounded-lg">
+          <Skeleton data-loaded={hideSkeleton} className="rounded-lg">
             <div className="text-default-500">{quest}</div>
           </Skeleton>
         </div>
         <div>
-          <Skeleton isLoaded={showImage} className="rounded-lg">
+          <Skeleton data-loaded={hideSkeleton} className="rounded-lg">
             <div className="font-bold text-large">{anonymousName}</div>
           </Skeleton>
         </div>
       </CardHeader>
       <CardBody className="overflow-visible py-2">
-        <Skeleton isLoaded={showImage} className="rounded-lg">
+        <Skeleton data-loaded={hideSkeleton} className="rounded-lg">
           <Image
             alt="Card image"
             className="object-cover rounded-xl"
@@ -81,7 +86,7 @@ const SubmissionCard: React.FC<SubmissionCardProps> = ({ cityName, quest, anonym
             isZoomed
             isBlurred
             onClick={onImageClick}
-            onLoad={imageLoaded}
+            onLoad={onImageLoad}
           />
         </Skeleton>
       </CardBody>
