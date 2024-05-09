@@ -7,6 +7,8 @@ import { notification } from "antd";
 import HowToPlayModal from "components/ui/HowToPlayModal";
 import { InfoCircleTwoTone } from "@ant-design/icons";
 import { Input, Button, useDisclosure, Progress } from "@nextui-org/react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 //import UI elements
 import BaseContainer from "../ui/BaseContainer";
@@ -14,7 +16,6 @@ import SubmissionCard from "../ui/SubmissionCard";
 import SubmitButton from "../ui/SubmitButton";
 import Timer from "../ui/Timer";
 import { ThreeDots } from "react-loader-spinner";
-
 
 interface CardData {
   id: number;
@@ -62,7 +63,6 @@ const GameSubmission = () => {
   const [remainingSeconds, setRemainingSeconds] = useState(0);
   const navigate = useNavigate();
   const [cardsData, setCardsData] = useState<CardData[]>([]);
-  const [notificationApi, contextHolder] = notification.useNotification();
   const [submissionDone, setSubmissionDone] = useState((localStorage.getItem("submissionDone") !== "false"));
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [currQuestNr, setQuestNr] = useState(parseInt(localStorage.getItem("currentQuest")));
@@ -79,10 +79,7 @@ const GameSubmission = () => {
   };
 
   const openNotification = (message: string) => {
-    notificationApi.open({
-      message: message,
-      duration: 2,
-    });
+    toast.info(message, {autoClose: 3000});
   };
 
   useEffect(() => {
@@ -285,6 +282,10 @@ const GameSubmission = () => {
           size="large"
           className="flex flex-col items-center"
         >
+          <ToastContainer
+            pauseOnFocusLoss={false}
+            pauseOnHover={false}
+          />
           <Progress
             aria-label="Progress"
             disableAnimation
@@ -292,7 +293,6 @@ const GameSubmission = () => {
             value={currQuestNr-1}
             color="success"
             className="absolute right-0 top-0 w-full" />
-          {contextHolder}
           <div className="order-first text-center p-4">
             <h1 className="text-3xl font-bold text-gray-700">Choose your Favourite Pick</h1>
           </div>

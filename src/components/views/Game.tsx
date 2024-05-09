@@ -4,7 +4,8 @@ import { api, handleError } from "helpers/api";
 import { Client } from "@stomp/stompjs";
 import { Library } from "@googlemaps/js-api-loader";
 import { getWebsocketDomain } from "helpers/getDomain";
-import { notification } from "antd";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { ThreeDots } from "react-loader-spinner";
 
 
@@ -14,7 +15,7 @@ import BackButton from "components/ui/BackButton";
 import GameButton from "components/ui/GameButton";
 import GameSubmitButton from "components/ui/GameSubmitButton";
 import Timer from "../ui/Timer";
-import { Progress } from "@nextui-org/react";
+import { Progress, useDisclosure } from "@nextui-org/react";
 
 //imports for Google Maps API
 import { GoogleMap as ReactGoogleMap, LoadScript, StreetViewPanorama, Marker } from "@react-google-maps/api";
@@ -40,7 +41,6 @@ function MyGoogleMap() {
   const [roundDurationSeconds, setRoundDurationSeconds] = useState();
   const [currentRound, setCurrentRound] = useState();
   const [nrOfRounds, setNrOfRounds] = useState();
-  const [notificationApi, contextHolder] = notification.useNotification();
 
   const [lat, setLat] = useState<number | null>(null);
   const [lng, setLng] = useState<number | null>(null);
@@ -61,10 +61,7 @@ function MyGoogleMap() {
   let timerId;
 
   const openNotification = (message: string) => {
-    notificationApi.open({
-      message: message,
-      duration: 2,
-    });
+    toast.info(message, {autoClose: 3000});
   };
 
   useEffect(() => {
@@ -231,7 +228,10 @@ function MyGoogleMap() {
 
   return (
     <div className="relative min-h-screen w-screen flex flex-col items-center">
-      {contextHolder}
+      <ToastContainer
+        pauseOnFocusLoss={false}
+        pauseOnHover={false}
+      />
       {submissionDone ? (
         <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50">
           <div className="flex flex-col items-center">
@@ -250,7 +250,10 @@ function MyGoogleMap() {
         </div>
       ) : (
         <div className="relative min-h-screen w-screen flex flex-col items-center">
-          {contextHolder}
+          <ToastContainer
+            pauseOnFocusLoss={false}
+            pauseOnHover={false}
+          />
           {/*<div className="absolute top-4 left-4">
         <BackButton />
       </div>*/}

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { api, handleError } from "helpers/api";
 import { getWebsocketDomain } from "helpers/getDomain";
-import { notification } from "antd";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 //import UI Elements
@@ -39,7 +40,6 @@ const VotingResults = () => {
   const [formattedLeaderboard, setFormattedLeaderboard] = useState([]);
   const [timeRemaining, setTimeRemaining] = useState(0);
   const navigate = useNavigate();
-  const [notificationApi, contextHolder] = notification.useNotification();
   const [currQuestNr, setQuestNr] = useState(parseInt(localStorage.getItem("currentQuest")));
   const [winningSubmission, setWinningSubmission] = useState({
     id: "1",
@@ -52,10 +52,7 @@ const VotingResults = () => {
   let timerId;
 
   const openNotification = (message: string) => {
-    notificationApi.open({
-      message: message,
-      duration: 2,
-    });
+    toast.info(message, {autoClose: 3000});
   };
 
   useEffect(() => {
@@ -212,6 +209,10 @@ const VotingResults = () => {
   return (
     <BaseContainer
       size="large" className="flex flex-col items-center justify-center min-h-screen">
+      <ToastContainer
+        pauseOnFocusLoss={false}
+        pauseOnHover={false}
+      />
       <Progress
         aria-label="Progress"
         disableAnimation
@@ -220,7 +221,6 @@ const VotingResults = () => {
         color="success"
         className="absolute right-0 top-0 w-full" />
       <div className="flex flex-col items-center justify-center w-full h-full">
-        {contextHolder}
         <WinningCard
           key={winningSubmission.id}
           cityName={winningSubmission.cityName}
