@@ -58,6 +58,8 @@ function MyGoogleMap() {
   const [remainingTime, setRemainingTime] = useState(0);
   const [submissionDone, setSubmissionDone] = useState((localStorage.getItem("submissionDone") !== "false"));
   const [currQuestNr, setQuestNr] = useState(parseInt(localStorage.getItem("currentQuest"))-1);
+  let timerId;
+
   const openNotification = (message: string) => {
     notificationApi.open({
       message: message,
@@ -100,33 +102,38 @@ function MyGoogleMap() {
 
     fetchData();
   }, []);
+
   useEffect(() => {
-    const sendRequest = async () => {
-      const headers = {
-        "Authorization": localStorage.getItem("token"),
-      };
-
-      try {
-        await api.put(`/games/${gameId}/active`, null, { headers });
-      } catch (error) {
-        alert(
-          `You were kicked due to inactivity. \n${handleError(error)}`,
-        );
-        localStorage.clear();
-        navigate("/landing");
-      }
-    };
-
-    sendRequest();
-
-    const intervalId = setInterval(() => {
-      sendRequest();
-    }, 1000);
+    let tempId = startInactivityTimer();
 
     return () => {
-      clearInterval(intervalId);
+      clearInterval(tempId);
     };
   }, []);
+
+  function startInactivityTimer() {
+    const headers = {
+      "Authorization": localStorage.getItem("token"),
+    };
+
+    timerId = setInterval(async () => {
+      try {
+        await api.put(`/games/${gameId}/active`, null, { headers });
+        console.log("sent active message")
+      } catch (error) {
+        alert(
+          `Something went wrong while sending active ping: \n${handleError(error)}`,
+        );
+        navigate("/landing");
+      }
+    }, 2000);
+
+    return timerId;
+  }
+
+  function stopInactivityTimer() {
+    clearInterval(timerId);
+  }
 
   useEffect(() => {
     let client = new Client();
@@ -139,11 +146,13 @@ function MyGoogleMap() {
         client && client.subscribe(destination, (message) => {
           let messageParsed = JSON.parse(message.body);
           if (messageParsed.status === "voting") {
+            stopInactivityTimer();
             localStorage.setItem("submissionDone", "false");
             navigate(`/submissions/${gameId}/`);
           } else if (messageParsed.status === "left") {
             openNotification(messageParsed.username + " left");
           } else if (messageParsed.status === "game_over") {
+            stopInactivityTimer();
             localStorage.setItem("submissionDone", "false");
             navigate("/gamesummary/" + messageParsed.summaryId);
           }
@@ -189,7 +198,6 @@ function MyGoogleMap() {
       localStorage.setItem("currentQuest", String(currQuestNr+1))
       const response = await api.post("games/" + gameId + "/submission", body, { headers });
       console.log("API Response:", response.data);
-      //navigate("/waiting/" + gameId);
       localStorage.setItem("submissionDone", "true");
       setSubmissionDone(true);
     } catch (error) {

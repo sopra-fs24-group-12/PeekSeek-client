@@ -31,8 +31,8 @@ const Lobby = () => {
   const [lng, setLng] = useState("");
   const [cityName, setCityName] = useState("");
   const [settingsConfirmed, setSettingsConfirmed] = useState(false);
-  const [notificationApi, contextHolder] = notification.useNotification();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  let timerId;
 
   
   interface InputQuestsProps {
@@ -64,7 +64,6 @@ const Lobby = () => {
   const removePlayer = (usernameToRemove) => {
     setPlayers(prevPlayers => prevPlayers.filter(player => player !== usernameToRemove));
   };
-
 
   useEffect(() => {
     async function fetchData() {
@@ -111,11 +110,19 @@ const Lobby = () => {
   }, []);
 
   useEffect(() => {
-    const sendRequest = async () => {
-      const headers = {
-        "Authorization": localStorage.getItem("token"),
-      };
+    let tempId = startInactivityTimer();
 
+    return () => {
+      clearInterval(tempId);
+    };
+  }, []);
+
+  function startInactivityTimer() {
+    const headers = {
+      "Authorization": localStorage.getItem("token"),
+    };
+
+    timerId = setInterval(async () => {
       try {
         await api.put(`/lobbies/${lobbyId}/active`, null, { headers });
         console.log("sent active message")
@@ -125,18 +132,15 @@ const Lobby = () => {
         );
         navigate("/landing");
       }
-    };
+    }, 2000);
 
-    sendRequest();
+    return timerId;
+  }
 
-    const intervalId = setInterval(() => {
-      sendRequest();
-    }, 1000);
+  function stopInactivityTimer() {
+    clearInterval(timerId);
+  }
 
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, []);
 
   useEffect(() => {
     let client = new Client();
@@ -181,6 +185,7 @@ const Lobby = () => {
             }
             openNotification("Lobby settings have been updated");
           } else if (messageParsed.status === "started") {
+            stopInactivityTimer();
             const gameId = messageParsed.gameId;
             navigate("/game/" + gameId);
           }

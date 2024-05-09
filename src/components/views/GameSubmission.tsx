@@ -66,6 +66,7 @@ const GameSubmission = () => {
   const [submissionDone, setSubmissionDone] = useState((localStorage.getItem("submissionDone") !== "false"));
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [currQuestNr, setQuestNr] = useState(parseInt(localStorage.getItem("currentQuest")));
+  let timerId;
 
   const mergeDataForSubmission = (): ExtendedDictionary => {
     const updatedBanned = new ExtendedDictionary();
@@ -85,32 +86,36 @@ const GameSubmission = () => {
   };
 
   useEffect(() => {
-    const sendRequest = async () => {
-      const headers = {
-        "Authorization": localStorage.getItem("token"),
-      };
-
-      try {
-        await api.put(`/games/${gameId}/active`, null, { headers });
-      } catch (error) {
-        alert(
-          `You were kicked due to inactivity. \n${handleError(error)}`,
-        );
-        localStorage.clear();
-        navigate("/landing");
-      }
-    };
-
-    sendRequest();
-
-    const intervalId = setInterval(() => {
-      sendRequest();
-    }, 1000);
+    let tempId = startInactivityTimer();
 
     return () => {
-      clearInterval(intervalId);
+      clearInterval(tempId);
     };
   }, []);
+
+  function startInactivityTimer() {
+    const headers = {
+      "Authorization": localStorage.getItem("token"),
+    };
+
+    timerId = setInterval(async () => {
+      try {
+        await api.put(`/games/${gameId}/active`, null, { headers });
+        console.log("sent active message")
+      } catch (error) {
+        alert(
+          `Something went wrong while sending active ping: \n${handleError(error)}`,
+        );
+        navigate("/landing");
+      }
+    }, 2000);
+
+    return timerId;
+  }
+
+  function stopInactivityTimer() {
+    clearInterval(timerId);
+  }
 
   function generateStreetViewImageLink(lat: string, long: string, heading: string, pitch: string): string {
     const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
@@ -139,11 +144,13 @@ const GameSubmission = () => {
         client && client.subscribe(destination, (message) => {
           let messageParsed = JSON.parse(message.body);
           if (messageParsed.status === "summary") {
+            stopInactivityTimer();
             localStorage.setItem("submissionDone", "false");
             navigate(`/voting/${gameId}/`);
           } else if (messageParsed.status === "left") {
             openNotification(messageParsed.username + " left");
           } else if (messageParsed.status === "game_over") {
+            stopInactivityTimer();
             localStorage.setItem("submissionDone", "false");
             navigate("/gamesummary/" + messageParsed.summaryId);
           }
