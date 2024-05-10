@@ -14,8 +14,7 @@ import BackButton from "components/ui/BackButton";
 import GameButton from "components/ui/GameButton";
 import GameSubmitButton from "components/ui/GameSubmitButton";
 import Timer from "../ui/Timer";
-import { Progress } from "@nextui-org/react";
-
+import { Progress, CircularProgress, Chip } from "@nextui-org/react";
 //imports for Google Maps API
 import { GoogleMap as ReactGoogleMap, LoadScript, StreetViewPanorama, Marker } from "@react-google-maps/api";
 import { GoogleMapStyle as googleMapsStyling } from "../../assets/GoogleMapStyle";
@@ -37,7 +36,7 @@ function MyGoogleMap() {
   const navigate = useNavigate();
   const [quest, setQuest] = useState("Landmark");
   const [cityName, setCityName] = useState("Zurich, Switzerland");
-  const [roundDurationSeconds, setRoundDurationSeconds] = useState();
+  const [roundDurationSeconds, setRoundDurationSeconds] = useState(0);
   const [currentRound, setCurrentRound] = useState();
   const [nrOfRounds, setNrOfRounds] = useState();
   const [notificationApi, contextHolder] = notification.useNotification();
@@ -80,7 +79,7 @@ function MyGoogleMap() {
         console.log("API Response:", response.data);
         setQuest(response.data.quest);
         setCityName(response.data.geoCodingData.formAddress);
-        setRoundDurationSeconds(response.data.roundDurationSeconds);
+        setRoundDurationSeconds(response.data.roundTime);
         setLat(response.data.geoCodingData.lat);
         setLng(response.data.geoCodingData.lng);
         setResLatNe(response.data.geoCodingData.resLatNe);
@@ -167,6 +166,31 @@ function MyGoogleMap() {
     };
   }, []);
 
+  const calculateProgressValue = () => {
+
+    return (remainingTime / roundDurationSeconds) * 100;
+  };
+  const getIndicatorClass = () => {
+    if(remainingTime <= 3){
+      return "pulse-animation";
+    }
+    else if (remainingTime <= 14) {
+      return "red-color";
+    } else if (remainingTime <= 15) {
+      return "slow-pulse-animation";
+    } else {
+      return "stroke-white";
+    }
+  };
+  const circularProgressStyles = {
+    svg: "w-28 h-28 drop-shadow-md",
+    indicator: getIndicatorClass(),
+    track: "stroke-white/10",
+    value: "text-xl font-semibold text-white",
+  };
+
+
+  console.log("rounddurationseconds: ", roundDurationSeconds);
   const handleCenterChanged = (map) => {
     if (map) {
       // Get the new center of the map
@@ -251,9 +275,8 @@ function MyGoogleMap() {
           {/*<div className="absolute top-4 left-4">
         <BackButton />
       </div>*/}
-          <div className="font-bold text-lg mt-16">{"TIME REMAINING: " + remainingTime}</div>
           <div className="w-3/4 flex flex-col items-center">
-            <BaseContainer size="medium" className="flex flex-col items-center mb-20">
+            <BaseContainer size="medium" className="flex flex-col items-center mb-32">
               <Progress
                 aria-label="Progress"
                 // disableAnimation
@@ -315,9 +338,35 @@ function MyGoogleMap() {
                 </LoadScript>
               )}
             </BaseContainer>
-            <div className="w-3/4 flex justify-between px-4 absolute bottom-16">
-              <GameButton onClick={submitEmptyNow} />
-              <GameSubmitButton onClick={submitNow} />
+            <div className="w-3/4 flex items-center justify-between px-4 absolute bottom-16" style={{ minHeight: '10vh'}}>
+              <div className="flex-1 flex justify-start">
+                <GameButton onClick={submitEmptyNow} />
+              </div>
+              <div className="flex-1 flex justify-center">
+                <CircularProgress
+                  classNames={circularProgressStyles}
+                  size="md"
+                  value={calculateProgressValue()}
+                  valueLabel={`${remainingTime}s`}
+                  strokeWidth={3}
+                  showValueLabel={true}
+                  // style={{ transition: 'stroke 0.3s ease-in-out' }}
+                  // label={(
+                  //   <Chip
+                  //     classNames={{
+                  //       base: "border-1 border-white/30",
+                  //       content: "text-xs text-white/90 font-semibold"
+                  //     }}
+                  //     variant="bordered"
+                  //   >
+                  //     TIME REMAINING
+                  //   </Chip>
+                  // )}
+                />
+              </div>
+              <div className="flex-1 flex justify-end">
+                <GameSubmitButton onClick={submitNow} />
+              </div>
             </div>
           </div>
         </div>
