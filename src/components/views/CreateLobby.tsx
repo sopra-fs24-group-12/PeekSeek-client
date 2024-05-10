@@ -111,7 +111,7 @@ const CreateLobby = () => {
           <div className="w-full flex justify-center mt-auto mb-4">
             <CreateLo 
               onClick={handleClick} 
-              isDisabled={!username || !name}
+              isDisabled={!username.trim() || !name.trim()}
             />
           </div>
           <Button
