@@ -13,7 +13,7 @@ import { notification } from "antd";
 const CreateLobby = () => {
   const navigate = useNavigate();
   const [name, setLobbyname] = useState<string>("");
-  const [username, setUsername] = useState<string>(null);
+  const [username, setUsername] = useState<string>("");
   const [password, setLobbypassword] = useState<string>("");
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [usernameNotificationShown, setUsernameNotificationShown] = useState(false);
