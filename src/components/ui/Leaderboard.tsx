@@ -1,6 +1,7 @@
 import React from "react";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue } from "@nextui-org/react";
 import ContentWrapper from "./ContentWrapper";
+import { PiMedalFill } from "react-icons/pi";
 
 interface LeaderboardEntry {
   rank: number;
@@ -15,6 +16,7 @@ interface LeaderboardProps {
 
 const Leaderboard: React.FC<LeaderboardProps> = ({ data }) => {
   const columns = [
+    { key: "trophy", label: ""},
     { key: "rank", label: "RANK" },
     { key: "name", label: "NAME" },
     { key: "totalPoints", label: "TOTAL POINTS" },
@@ -24,6 +26,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ data }) => {
   const rows = data.map(entry => ({
     ...entry,
     totalPoints: `${entry.basePoints} + ${entry.bonusPoints}`,
+    trophy: (entry.rank === 1 ? <PiMedalFill color="gold" />: entry.rank === 2 ? <PiMedalFill color="silver" />: entry.rank === 3 ? <PiMedalFill color="#cd7f32" /> : null)
   }));
 
   return (
