@@ -7,6 +7,8 @@ import { notification } from "antd";
 import HowToPlayModal from "components/ui/HowToPlayModal";
 import { InfoCircleTwoTone } from "@ant-design/icons";
 import { Input, Button, useDisclosure, Progress } from "@nextui-org/react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 //import UI elements
 import BaseContainer from "../ui/BaseContainer";
@@ -14,7 +16,6 @@ import SubmissionCard from "../ui/SubmissionCard";
 import SubmitButton from "../ui/SubmitButton";
 import Timer from "../ui/Timer";
 import { ThreeDots } from "react-loader-spinner";
-
 
 interface CardData {
   id: number;
@@ -62,12 +63,10 @@ const GameSubmission = () => {
   const [remainingSeconds, setRemainingSeconds] = useState(0);
   const navigate = useNavigate();
   const [cardsData, setCardsData] = useState<CardData[]>([]);
-  const [notificationApi, contextHolder] = notification.useNotification();
   const [submissionDone, setSubmissionDone] = useState((localStorage.getItem("submissionDone") !== "false"));
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [showImages, setShowImages] = useState(false);
-  let loadedImages = 0;
   const [currQuestNr, setQuestNr] = useState(parseInt(localStorage.getItem("currentQuest")));
+  let timerId;
 
   const mergeDataForSubmission = (): ExtendedDictionary => {
     const updatedBanned = new ExtendedDictionary();
@@ -80,39 +79,40 @@ const GameSubmission = () => {
   };
 
   const openNotification = (message: string) => {
-    notificationApi.open({
-      message: message,
-      duration: 2,
-    });
+    toast.info(message, {autoClose: 3000});
   };
 
   useEffect(() => {
-    const sendRequest = async () => {
-      const headers = {
-        "Authorization": localStorage.getItem("token"),
-      };
-
-      try {
-        await api.put(`/games/${gameId}/active`, null, { headers });
-      } catch (error) {
-        alert(
-          `You were kicked due to inactivity. \n${handleError(error)}`,
-        );
-        localStorage.clear();
-        navigate("/landing");
-      }
-    };
-
-    sendRequest();
-
-    const intervalId = setInterval(() => {
-      sendRequest();
-    }, 1000);
+    let tempId = startInactivityTimer();
 
     return () => {
-      clearInterval(intervalId);
+      clearInterval(tempId);
     };
   }, []);
+
+  function startInactivityTimer() {
+    const headers = {
+      "Authorization": localStorage.getItem("token"),
+    };
+
+    timerId = setInterval(async () => {
+      try {
+        await api.put(`/games/${gameId}/active`, null, { headers });
+        console.log("sent active message")
+      } catch (error) {
+        alert(
+          `Something went wrong while sending active ping: \n${handleError(error)}`,
+        );
+        navigate("/landing");
+      }
+    }, 2000);
+
+    return timerId;
+  }
+
+  function stopInactivityTimer() {
+    clearInterval(timerId);
+  }
 
   function generateStreetViewImageLink(lat: string, long: string, heading: string, pitch: string): string {
     const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
@@ -130,29 +130,24 @@ const GameSubmission = () => {
     return `${baseUrl}?${params}`;
   }
 
-  // const animalNames = ["Koala", "Bear", "Giraffe", "Zebra", "Gazelle", "Elephant"];
-  // const shuffledAnimalNames = [...animalNames].sort(() => Math.random() - 0.5);
-
   useEffect(() => {
     let client = new Client();
     const websocketUrl = getWebsocketDomain();
     client.configure({
       brokerURL: websocketUrl,
-      debug: function(str) {
-        console.log(str);
-      },
       onConnect: () => {
         const destination = "/topic/games/" + gameId;
         const timerDestination = "/topic/games/" + gameId + "/timer";
         client && client.subscribe(destination, (message) => {
           let messageParsed = JSON.parse(message.body);
-          console.log("Received message:", messageParsed);
           if (messageParsed.status === "summary") {
+            stopInactivityTimer();
             localStorage.setItem("submissionDone", "false");
             navigate(`/voting/${gameId}/`);
           } else if (messageParsed.status === "left") {
             openNotification(messageParsed.username + " left");
           } else if (messageParsed.status === "game_over") {
+            stopInactivityTimer();
             localStorage.setItem("submissionDone", "false");
             navigate("/gamesummary/" + messageParsed.summaryId);
           }
@@ -172,8 +167,6 @@ const GameSubmission = () => {
   }, []);
 
   useEffect(() => {
-    //localStorage.setItem("token", "aeeafad9-60c5-4662-8ea7-6909a7d8b9e5");
-    //localStorage.setItem("username", "a");
 
     async function fetchData() {
       const headers = {
@@ -211,11 +204,6 @@ const GameSubmission = () => {
             transformedData.push(transformedItem);
           }
         });
-
-        console.log(localStorage.getItem("username"))
-        console.log("Before filtering:", transformedData);
-        const filteredData = transformedData.filter((item) => !item.ownSubmission);
-        console.log("After filtering:", filteredData);
 
         setCardsData(transformedData);
       } catch (error) {
@@ -271,16 +259,6 @@ const GameSubmission = () => {
   const totalQuests = parseInt(localStorage.getItem("totalQuests"), 10)
   const questProgress = ( currentQuest/ totalQuests) * 100;
 
-  const imageLoaded = () => {
-    loadedImages += 1;
-    if (loadedImages === cardsData.length) {
-      setTimeout(() => {
-        setShowImages(true);
-      }, 1000);
-    }
-  }
-
-
   return (
     <div className="relative min-h-screen w-screen flex flex-col items-center">
       {submissionDone ? (
@@ -304,6 +282,10 @@ const GameSubmission = () => {
           size="large"
           className="flex flex-col items-center"
         >
+          <ToastContainer
+            pauseOnFocusLoss={false}
+            pauseOnHover={false}
+          />
           <Progress
             aria-label="Progress"
             disableAnimation
@@ -311,7 +293,6 @@ const GameSubmission = () => {
             value={currQuestNr-1}
             color="success"
             className="absolute right-0 top-0 w-full" />
-          {contextHolder}
           <div className="order-first text-center p-4">
             <h1 className="text-3xl font-bold text-gray-700">Choose your Favourite Pick</h1>
           </div>
@@ -334,9 +315,6 @@ const GameSubmission = () => {
                     isPicked={pickedCardId === card.id}
                     isBanned={banned.hasKey(card.id)}
                     noSubmission={card.noSubmission}
-                    ownSubmission={card.ownSubmission}
-                    imageLoaded={imageLoaded}
-                    showImage={showImages}
                   />
                 ))}
               </div>

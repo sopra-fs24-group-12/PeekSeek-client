@@ -4,7 +4,8 @@ import { api, handleError } from "helpers/api";
 import { Client } from "@stomp/stompjs";
 import { Library } from "@googlemaps/js-api-loader";
 import { getWebsocketDomain } from "helpers/getDomain";
-import { notification } from "antd";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { ThreeDots } from "react-loader-spinner";
 
 
@@ -39,7 +40,6 @@ function MyGoogleMap() {
   const [roundDurationSeconds, setRoundDurationSeconds] = useState(0);
   const [currentRound, setCurrentRound] = useState();
   const [nrOfRounds, setNrOfRounds] = useState();
-  const [notificationApi, contextHolder] = notification.useNotification();
 
   const [lat, setLat] = useState<number | null>(null);
   const [lng, setLng] = useState<number | null>(null);
@@ -57,11 +57,10 @@ function MyGoogleMap() {
   const [remainingTime, setRemainingTime] = useState(0);
   const [submissionDone, setSubmissionDone] = useState((localStorage.getItem("submissionDone") !== "false"));
   const [currQuestNr, setQuestNr] = useState(parseInt(localStorage.getItem("currentQuest"))-1);
+  let timerId;
+
   const openNotification = (message: string) => {
-    notificationApi.open({
-      message: message,
-      duration: 2,
-    });
+    toast.info(message, {autoClose: 3000});
   };
 
   useEffect(() => {
@@ -99,61 +98,64 @@ function MyGoogleMap() {
 
     fetchData();
   }, []);
-  console.log("QuestNr:"+ {currQuestNr})
-  useEffect(() => {
-    const sendRequest = async () => {
-      const headers = {
-        "Authorization": localStorage.getItem("token"),
-      };
 
+  useEffect(() => {
+    let tempId = startInactivityTimer();
+
+    return () => {
+      clearInterval(tempId);
+    };
+  }, []);
+
+  function startInactivityTimer() {
+    const headers = {
+      "Authorization": localStorage.getItem("token"),
+    };
+
+    timerId = setInterval(async () => {
       try {
         await api.put(`/games/${gameId}/active`, null, { headers });
+        console.log("sent active message")
       } catch (error) {
         alert(
-          `You were kicked due to inactivity. \n${handleError(error)}`,
+          `Something went wrong while sending active ping: \n${handleError(error)}`,
         );
         localStorage.clear();
         navigate("/landing");
       }
-    };
+    }, 2000);
 
-    sendRequest();
+    return timerId;
+  }
 
-    const intervalId = setInterval(() => {
-      sendRequest();
-    }, 1000);
-
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, []);
+  function stopInactivityTimer() {
+    clearInterval(timerId);
+  }
 
   useEffect(() => {
     let client = new Client();
     const websocketUrl = getWebsocketDomain();
     client.configure({
       brokerURL: websocketUrl,
-      debug: function(str) {
-        console.log(str);
-      },
       onConnect: () => {
         const destination = "/topic/games/" + gameId;
         const timerDestination = "/topic/games/" + gameId + "/timer";
         client && client.subscribe(destination, (message) => {
           let messageParsed = JSON.parse(message.body);
           if (messageParsed.status === "voting") {
+            stopInactivityTimer();
             localStorage.setItem("submissionDone", "false");
             navigate(`/submissions/${gameId}/`);
           } else if (messageParsed.status === "left") {
             openNotification(messageParsed.username + " left");
           } else if (messageParsed.status === "game_over") {
+            stopInactivityTimer();
             localStorage.setItem("submissionDone", "false");
             navigate("/gamesummary/" + messageParsed.summaryId);
           }
         });
         client && client.subscribe(timerDestination, (message) => {
           let messageParsed = JSON.parse(message.body);
-          console.log("Received message from topic 2:", messageParsed);
           setRemainingTime(messageParsed.secondsRemaining);
         });
       },
@@ -218,7 +220,6 @@ function MyGoogleMap() {
       localStorage.setItem("currentQuest", String(currQuestNr+1))
       const response = await api.post("games/" + gameId + "/submission", body, { headers });
       console.log("API Response:", response.data);
-      //navigate("/waiting/" + gameId);
       localStorage.setItem("submissionDone", "true");
       setSubmissionDone(true);
     } catch (error) {
@@ -252,7 +253,10 @@ function MyGoogleMap() {
 
   return (
     <div className="relative min-h-screen w-screen flex flex-col items-center">
-      {contextHolder}
+      <ToastContainer
+        pauseOnFocusLoss={false}
+        pauseOnHover={false}
+      />
       {submissionDone ? (
         <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50">
           <div className="flex flex-col items-center">
@@ -271,7 +275,10 @@ function MyGoogleMap() {
         </div>
       ) : (
         <div className="relative min-h-screen w-screen flex flex-col items-center">
-          {contextHolder}
+          <ToastContainer
+            pauseOnFocusLoss={false}
+            pauseOnHover={false}
+          />
           {/*<div className="absolute top-4 left-4">
         <BackButton />
       </div>*/}

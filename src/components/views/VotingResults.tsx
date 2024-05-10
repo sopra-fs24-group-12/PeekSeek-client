@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { api, handleError } from "helpers/api";
 import { getWebsocketDomain } from "helpers/getDomain";
-import { notification } from "antd";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 //import UI Elements
@@ -39,7 +40,6 @@ const VotingResults = () => {
   const [formattedLeaderboard, setFormattedLeaderboard] = useState([]);
   const [timeRemaining, setTimeRemaining] = useState(0);
   const navigate = useNavigate();
-  const [notificationApi, contextHolder] = notification.useNotification();
   const [currQuestNr, setQuestNr] = useState(parseInt(localStorage.getItem("currentQuest")));
   const [winningSubmission, setWinningSubmission] = useState({
     id: "1",
@@ -49,46 +49,45 @@ const VotingResults = () => {
     imageUrl: "",
     noSubmission: false,
   });
+  let timerId;
 
   const openNotification = (message: string) => {
-    notificationApi.open({
-      message: message,
-      duration: 2,
-    });
+    toast.info(message, {autoClose: 3000});
   };
 
   useEffect(() => {
-    const sendRequest = async () => {
-      const headers = {
-        "Authorization": localStorage.getItem("token"),
-      };
-
-      try {
-        await api.put(`/games/${gameId}/active`, null, { headers });
-      } catch (error) {
-        alert(
-          `You were kicked due to inactivity. \n${handleError(error)}`,
-        );
-        localStorage.clear();
-        navigate("/landing");
-      }
-    };
-
-    sendRequest();
-
-    const intervalId = setInterval(() => {
-      sendRequest();
-    }, 1000);
+    let tempId = startInactivityTimer();
 
     return () => {
-      clearInterval(intervalId);
+      clearInterval(tempId);
     };
   }, []);
 
-  useEffect(() => {
-    //localStorage.setItem("token", "eb47db3a-d291-4a93-8dc3-d71d5742031d");
-    //localStorage.setItem("username", "a");
+  function startInactivityTimer() {
+    const headers = {
+      "Authorization": localStorage.getItem("token"),
+    };
 
+    timerId = setInterval(async () => {
+      try {
+        await api.put(`/games/${gameId}/active`, null, { headers });
+        console.log("sent active message")
+      } catch (error) {
+        alert(
+          `Something went wrong while sending active ping: \n${handleError(error)}`,
+        );
+        navigate("/landing");
+      }
+    }, 2000);
+
+    return timerId;
+  }
+
+  function stopInactivityTimer() {
+    clearInterval(timerId);
+  }
+
+  useEffect(() => {
     async function fetchData() {
       const headers = {
         "Authorization": localStorage.getItem("token"),
@@ -105,6 +104,7 @@ const VotingResults = () => {
             name: user.username,
             basePoints: user.score,
             bonusPoints: user.pointsThisRound,
+            streak: user.streak,
           }));
 
           setFormattedLeaderboard(formattedLeaderboard);
@@ -158,18 +158,16 @@ const VotingResults = () => {
     const websocketUrl = getWebsocketDomain();
     client.configure({
       brokerURL: websocketUrl,
-      debug: function(str) {
-        console.log(str);
-      },
       onConnect: () => {
         const destination = "/topic/games/" + gameId;
         const timerDestination = "/topic/games/" + gameId + "/timer";
         client && client.subscribe(destination, (message) => {
           let messageParsed = JSON.parse(message.body);
-          console.log("Received message:", messageParsed);
           if (messageParsed.status === "round") {
+            stopInactivityTimer();
             navigate(`/game/${gameId}/`);
           } else if (messageParsed.status === "game_over") {
+            stopInactivityTimer();
             localStorage.clear();
             navigate(`/gamesummary/${messageParsed.summaryId}/`);
           } else if (messageParsed.status === "left") {
@@ -212,6 +210,10 @@ const VotingResults = () => {
   return (
     <BaseContainer
       size="large" className="flex flex-col items-center justify-center min-h-screen">
+      <ToastContainer
+        pauseOnFocusLoss={false}
+        pauseOnHover={false}
+      />
       <Progress
         aria-label="Progress"
         disableAnimation
@@ -220,7 +222,6 @@ const VotingResults = () => {
         color="success"
         className="absolute right-0 top-0 w-full" />
       <div className="flex flex-col items-center justify-center w-full h-full">
-        {contextHolder}
         <WinningCard
           key={winningSubmission.id}
           cityName={winningSubmission.cityName}

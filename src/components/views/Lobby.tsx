@@ -9,13 +9,11 @@ import { Button, Input, useDisclosure } from "@nextui-org/react";
 import ContentWrapper from "components/ui/ContentWrapper";
 import ScrollableContentWrapper from "components/ui/ScrollableContentWrapper";
 import TimeButtons from "../ui/TimeButtons";
-import { notification } from "antd";
 import { getWebsocketDomain } from "helpers/getDomain";
 import HowToPlayModal from "components/ui/HowToPlayModal";
 import { InfoCircleTwoTone } from "@ant-design/icons";
 import BackIcon from "../ui/BackIcon";
 import UpdateSettingsIcon from "../ui/UpdateSettingsIcon";
-import BackDashboardButton from "../ui/BackDashboardButton";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -31,8 +29,8 @@ const Lobby = () => {
   const [lng, setLng] = useState("");
   const [cityName, setCityName] = useState("");
   const [settingsConfirmed, setSettingsConfirmed] = useState(false);
-  const [notificationApi, contextHolder] = notification.useNotification();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  let timerId;
 
   
   interface InputQuestsProps {
@@ -64,7 +62,6 @@ const Lobby = () => {
   const removePlayer = (usernameToRemove) => {
     setPlayers(prevPlayers => prevPlayers.filter(player => player !== usernameToRemove));
   };
-
 
   useEffect(() => {
     async function fetchData() {
@@ -111,11 +108,19 @@ const Lobby = () => {
   }, []);
 
   useEffect(() => {
-    const sendRequest = async () => {
-      const headers = {
-        "Authorization": localStorage.getItem("token"),
-      };
+    let tempId = startInactivityTimer();
 
+    return () => {
+      clearInterval(tempId);
+    };
+  }, []);
+
+  function startInactivityTimer() {
+    const headers = {
+      "Authorization": localStorage.getItem("token"),
+    };
+
+    timerId = setInterval(async () => {
       try {
         await api.put(`/lobbies/${lobbyId}/active`, null, { headers });
         console.log("sent active message")
@@ -125,18 +130,15 @@ const Lobby = () => {
         );
         navigate("/landing");
       }
-    };
+    }, 2000);
 
-    sendRequest();
+    return timerId;
+  }
 
-    const intervalId = setInterval(() => {
-      sendRequest();
-    }, 1000);
+  function stopInactivityTimer() {
+    clearInterval(timerId);
+  }
 
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, []);
 
   useEffect(() => {
     let client = new Client();
@@ -181,6 +183,7 @@ const Lobby = () => {
             }
             openNotification("Lobby settings have been updated");
           } else if (messageParsed.status === "started") {
+            stopInactivityTimer();
             const gameId = messageParsed.gameId;
             navigate("/game/" + gameId);
           }
@@ -351,6 +354,7 @@ const Lobby = () => {
         "Authorization": localStorage.getItem("token"),
       };
       try {
+        stopInactivityTimer();
         const response = await api.delete("/lobbies/" + lobbyId + "/leave/", { headers });
         localStorage.clear();
         navigate("/landing");
@@ -395,13 +399,6 @@ const Lobby = () => {
       </div>
     );
   };
-
-  /*
-  const InteractionDisabledOverlay = () => (
-    <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-10 flex justify-center items-center">
-    </div>
-  );
-  */
 
   return (
     <BaseContainer size="large" className="flex flex-col items-center p-2">
