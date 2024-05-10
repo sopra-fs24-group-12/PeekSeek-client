@@ -338,7 +338,7 @@ function MyGoogleMap() {
                 </LoadScript>
               )}
             </BaseContainer>
-            <div className="w-3/4 flex items-center justify-between px-4 absolute bottom-16" style={{ minHeight: '10vh'}}>
+            <div className="w-3/4 flex items-center justify-between px-4 absolute bottom-16" style={{ minHeight: "10vh"}}>
               <div className="flex-1 flex justify-start">
                 <GameButton onClick={submitEmptyNow} />
               </div>
