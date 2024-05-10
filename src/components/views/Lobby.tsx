@@ -354,6 +354,7 @@ const Lobby = () => {
         "Authorization": localStorage.getItem("token"),
       };
       try {
+        stopInactivityTimer();
         const response = await api.delete("/lobbies/" + lobbyId + "/leave/", { headers });
         localStorage.clear();
         navigate("/landing");
@@ -398,13 +399,6 @@ const Lobby = () => {
       </div>
     );
   };
-
-  /*
-  const InteractionDisabledOverlay = () => (
-    <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-10 flex justify-center items-center">
-    </div>
-  );
-  */
 
   return (
     <BaseContainer size="large" className="flex flex-col items-center p-2">
