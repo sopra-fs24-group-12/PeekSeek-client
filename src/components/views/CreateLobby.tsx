@@ -55,10 +55,10 @@ const CreateLobby = () => {
 
   const handleClick = () => {
     console.log("Button clicked!");
-    if (!username){
+    if (!username.trim()){
       alert("Username required!");
     }
-    else if (!name){
+    else if (!name.trim()){
       alert("Name required!");
     }
     else{
