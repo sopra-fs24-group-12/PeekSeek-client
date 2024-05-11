@@ -13,6 +13,7 @@ import Timer from "../ui/Timer";
 import { useNavigate, useParams } from "react-router-dom";
 import { Client } from "@stomp/stompjs";
 import { Progress } from "@nextui-org/react";
+import { TailSpin, ThreeDots } from "react-loader-spinner";
 
 // Mock winning submission data
 const mockWinningSubmission = {
@@ -49,11 +50,13 @@ const VotingResults = () => {
     imageUrl: "",
     noSubmission: false,
   });
+  const [pageLoading, setPageLoading] = useState(true);
   let timerId;
 
   const openNotification = (message: string) => {
     toast.info(message, {autoClose: 3000});
   };
+
 
   useEffect(() => {
     let tempId = startInactivityTimer();
@@ -154,6 +157,13 @@ const VotingResults = () => {
   }, []);
 
   useEffect(() => {
+    setInterval(() => {
+      setPageLoading(false);
+    }, 1500
+    )
+  }, []);
+
+  useEffect(() => {
     let client = new Client();
     const websocketUrl = getWebsocketDomain();
     client.configure({
@@ -208,42 +218,61 @@ const VotingResults = () => {
   const questProgress = ( currentQuest/ totalQuests) * 100;
 
   return (
-    <BaseContainer
-      size="large" className="flex flex-col items-center justify-center min-h-screen">
-      <ToastContainer
-        pauseOnFocusLoss={false}
-        pauseOnHover={false}
-      />
-      <Progress
-        aria-label="Progress"
-        disableAnimation
-        maxValue= {parseInt(localStorage.getItem("totalQuests"), 10)}
-        value={currQuestNr-1}
-        color="success"
-        className="absolute right-0 top-0 w-full" />
-      <div className="flex flex-col items-center justify-center w-full h-full">
-        <WinningCard
-          key={winningSubmission.id}
-          cityName={winningSubmission.cityName}
-          quest={winningSubmission.quest}
-          anonymousName={winningSubmission.anonymousName}
-          imageUrl={winningSubmission.imageUrl}
-          noSubmission={winningSubmission.noSubmission}
-        />
-        <div className="mt-10 w-full relative flex flex-col items-center">
-          <div className="max-w-2xl mx-auto"> {/* Leaderboard centered */}
-            <Leaderboard data={formattedLeaderboard} />
-          </div>
-          <div className="absolute right-0 top-0 mr-10"> {/* Position the Timer to the right of Leaderboard */}
-            <Timer
-              initialTimeInSeconds={initialTime}
-              timeInSeconds={timeRemaining}
-              title="NEXT ROUND:"
+    <div className="relative min-h-screen w-screen flex flex-col items-center">
+      {pageLoading ? (
+        <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50">
+          <div className="flex flex-col items-center">
+            <TailSpin
+              visible={true}
+              height={80}
+              width={80}
+              color="white"
+              ariaLabel="three-dots-loading"
+              wrapperStyle={{}}
+              wrapperClass=""
             />
           </div>
         </div>
-      </div>
-    </BaseContainer>
+      ) : (
+        <BaseContainer
+          size="large" className="flex flex-col items-center justify-center min-h-screen">
+          <ToastContainer
+            pauseOnFocusLoss={false}
+            pauseOnHover={false}
+          />
+          <Progress
+            aria-label="Progress"
+            disableAnimation
+            maxValue={parseInt(localStorage.getItem("totalQuests"), 10)}
+            value={currQuestNr - 1}
+            color="success"
+            className="absolute right-0 top-0 w-full" />
+          <div className="flex flex-col items-center justify-center w-full h-full">
+            <WinningCard
+              key={winningSubmission.id}
+              cityName={winningSubmission.cityName}
+              quest={winningSubmission.quest}
+              anonymousName={winningSubmission.anonymousName}
+              imageUrl={winningSubmission.imageUrl}
+              noSubmission={winningSubmission.noSubmission}
+            />
+            <div className="mt-10 w-full relative flex flex-col items-center">
+              <div className="max-w-2xl mx-auto"> {/* Leaderboard centered */}
+                <Leaderboard data={formattedLeaderboard} />
+              </div>
+              <div className="absolute right-0 top-0 mr-10"> {/* Position the Timer to the right of Leaderboard */}
+                <Timer
+                  initialTimeInSeconds={initialTime}
+                  timeInSeconds={timeRemaining}
+                  title="NEXT ROUND:"
+                />
+              </div>
+            </div>
+          </div>
+        </BaseContainer>
+      )
+      }
+    </div>
   );
 };
 

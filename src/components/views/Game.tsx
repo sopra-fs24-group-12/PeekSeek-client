@@ -6,7 +6,7 @@ import { Library } from "@googlemaps/js-api-loader";
 import { getWebsocketDomain } from "helpers/getDomain";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { ThreeDots } from "react-loader-spinner";
+import { MagnifyingGlass, TailSpin, ThreeDots } from "react-loader-spinner";
 
 
 //imports for UI
@@ -50,13 +50,13 @@ function MyGoogleMap() {
   const [resLatSw, setResLatSw] = useState(47.32021839999999);
   const [resLngSw, setResLngSw] = useState(8.448018099999999);
   const [mapCenter, setMapCenter] = useState({ lat: 47.3768866, lng: 8.541694 });
-  const [mapCenterStart, setMapCenterStart] = useState({ lat: 47.3768866, lng: 8.541694 });
   const [map, setMap] = useState(null);
   const [streetView, setStreetView] = useState(null);
   const [noSubmission, setNoSubmission] = useState<boolean>(false);
   const [remainingTime, setRemainingTime] = useState(0);
   const [submissionDone, setSubmissionDone] = useState((localStorage.getItem("submissionDone") !== "false"));
   const [currQuestNr, setQuestNr] = useState(parseInt(localStorage.getItem("currentQuest"))-1);
+  const [pageLoading, setPageLoading] = useState(true);
   let timerId;
 
   const openNotification = (message: string) => {
@@ -64,10 +64,6 @@ function MyGoogleMap() {
   };
 
   useEffect(() => {
-    //only for dev purposes
-    // localStorage.setItem("token", "2ae5e306-e333-468d-8939-a4292601d694");
-    // localStorage.setItem("username", "a");
-
     async function fetchData() {
       try {
         const headers = {
@@ -105,6 +101,13 @@ function MyGoogleMap() {
     return () => {
       clearInterval(tempId);
     };
+  }, []);
+
+  useEffect(() => {
+    setInterval(() => {
+      setPageLoading(false);
+    }, 1500
+    )
   }, []);
 
   function startInactivityTimer() {
@@ -260,17 +263,30 @@ function MyGoogleMap() {
       {submissionDone ? (
         <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50">
           <div className="flex flex-col items-center">
-            <ThreeDots
+            <MagnifyingGlass
               visible={true}
               height={80}
               width={80}
               color="white"
-              radius={9}
               ariaLabel="three-dots-loading"
               wrapperStyle={{}}
               wrapperClass=""
             />
             <div className="text-white mt-4">Waiting for participants to submit...</div>
+          </div>
+        </div>
+      ) : pageLoading ? (
+        <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50">
+          <div className="flex flex-col items-center">
+            <TailSpin
+              visible={true}
+              height={80}
+              width={80}
+              color="white"
+              ariaLabel="three-dots-loading"
+              wrapperStyle={{}}
+              wrapperClass=""
+            />
           </div>
         </div>
       ) : (

@@ -15,7 +15,7 @@ import BaseContainer from "../ui/BaseContainer";
 import SubmissionCard from "../ui/SubmissionCard";
 import SubmitButton from "../ui/SubmitButton";
 import Timer from "../ui/Timer";
-import { ThreeDots } from "react-loader-spinner";
+import { MagnifyingGlass, TailSpin, ThreeDots } from "react-loader-spinner";
 
 interface CardData {
   id: number;
@@ -66,6 +66,7 @@ const GameSubmission = () => {
   const [submissionDone, setSubmissionDone] = useState((localStorage.getItem("submissionDone") !== "false"));
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [currQuestNr, setQuestNr] = useState(parseInt(localStorage.getItem("currentQuest")));
+  const [pageLoading, setPageLoading] = useState(true);
   let timerId;
 
   const mergeDataForSubmission = (): ExtendedDictionary => {
@@ -88,6 +89,13 @@ const GameSubmission = () => {
     return () => {
       clearInterval(tempId);
     };
+  }, []);
+
+  useEffect(() => {
+    setInterval(() => {
+      setPageLoading(false);
+    }, 1500
+    )
   }, []);
 
   function startInactivityTimer() {
@@ -264,17 +272,30 @@ const GameSubmission = () => {
       {submissionDone ? (
         <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50">
           <div className="flex flex-col items-center">
-            <ThreeDots
+            <MagnifyingGlass
               visible={true}
               height={80}
               width={80}
               color="white"
-              radius={9}
               ariaLabel="three-dots-loading"
               wrapperStyle={{}}
               wrapperClass=""
             />
-            <div className="text-white mt-4">Waiting for participants to vote...</div>
+            <div className="text-white mt-4">Waiting for participants to submit...</div>
+          </div>
+        </div>
+      ) : pageLoading ? (
+        <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50">
+          <div className="flex flex-col items-center">
+            <TailSpin
+              visible={true}
+              height={80}
+              width={80}
+              color="white"
+              ariaLabel="three-dots-loading"
+              wrapperStyle={{}}
+              wrapperClass=""
+            />
           </div>
         </div>
       ) : (
