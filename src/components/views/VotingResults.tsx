@@ -11,28 +11,7 @@ import Leaderboard from "../ui/Leaderboard";
 import Timer from "../ui/Timer";
 import { useNavigate, useParams } from "react-router-dom";
 import { Client } from "@stomp/stompjs";
-import { Progress } from "@nextui-org/react";
-
-// Mock winning submission data
-const mockWinningSubmission = {
-  id: "1",
-  cityName: "Rome",
-  quest: "Locate the best sunrise spot",
-  anonymousName: "Nils",
-  imageUrl: "https://example.com/path/to/winning/image.jpg",
-};
-
-const mockLeaderboardData = [
-  { rank: 1, name: "Nils", basePoints: 100, bonusPoints: 50 },
-  { rank: 2, name: "Ece", basePoints: 90, bonusPoints: 45 },
-  { rank: 3, name: "Youssef", basePoints: 85, bonusPoints: 40 },
-  { rank: 4, name: "Georg", basePoints: 80, bonusPoints: 35 },
-  { rank: 4, name: "Silvan", basePoints: 80, bonusPoints: 35 },
-  { rank: 4, name: "Böhlen", basePoints: 80, bonusPoints: 35 },
-];
-
-// Mock initial time for the timer in seconds
-const initialTime = 30;
+import { Chip, CircularProgress, Progress } from "@nextui-org/react";
 
 const VotingResults = () => {
   const { gameId, setGameId } = useParams();
@@ -49,6 +28,8 @@ const VotingResults = () => {
     imageUrl: "",
     noSubmission: false,
   });
+  const [remainingTime, setRemainingTime] = useState(0);
+  const [roundDurationSeconds, setRoundDurationSeconds] = useState(20);
 
   const openNotification = (message: string) => {
     notificationApi.open({
@@ -178,7 +159,7 @@ const VotingResults = () => {
         });
         client && client.subscribe(timerDestination, (message) => {
           let messageParsed = JSON.parse(message.body);
-          setTimeRemaining(messageParsed.secondsRemaining);
+          setRemainingTime(messageParsed.secondsRemaining);
         });
       },
 
@@ -208,6 +189,17 @@ const VotingResults = () => {
   const currentQuest = parseInt(localStorage.getItem("currentQuest"), 10)
   const totalQuests = parseInt(localStorage.getItem("totalQuests"), 10)
   const questProgress = ( currentQuest/ totalQuests) * 100;
+  const calculateProgressValue = () => {
+
+    return (remainingTime / roundDurationSeconds) * 100;
+  };
+  const circularProgressStyles = {
+    svg: "w-368 h-36 drop-shadow-md",
+    indicator: "stroke-white",
+    track: "stroke-white/10",
+    value: "text-2xl font-semibold text-white",
+  };
+
 
   return (
     <BaseContainer
@@ -233,13 +225,30 @@ const VotingResults = () => {
           <div className="max-w-2xl mx-auto"> {/* Leaderboard centered */}
             <Leaderboard data={formattedLeaderboard} />
           </div>
-          <div className="absolute right-0 top-0 mr-10"> {/* Position the Timer to the right of Leaderboard */}
-            <Timer
-              initialTimeInSeconds={initialTime}
-              timeInSeconds={timeRemaining}
-              title="NEXT ROUND:"
-            />
-          </div>
+        </div>
+        <div className="absolute bottom-0 right-0 mr-5 mb-5 flex flex-col items-center justify-center">
+          <Chip
+            classNames={{
+              base: "border-1 customStroke",
+              content: "text-xs text-customStroke font-semibold"
+            }}
+            variant="bordered"
+          >
+            NEXT ROUND:
+          </Chip>
+          <CircularProgress
+            classNames={{
+              svg: "w-36 h-36 drop-shadow-md",
+              indicator: "customStroke",
+              track: "stroke-white/20",
+              value: "text-2xl font-semibold customStroke",
+            }}
+            size="md"
+            value={calculateProgressValue()}
+            valueLabel={`${remainingTime}s`}
+            strokeWidth={3}
+            showValueLabel={true}
+          />
         </div>
       </div>
     </BaseContainer>
