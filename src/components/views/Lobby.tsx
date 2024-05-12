@@ -428,7 +428,7 @@ const Lobby = () => {
           <InputQuests
             disabled={!admin} />
         </div>
-        <div className="w-full flex justify-between px-12 absolute bottom-8" style={{ position: "absolute", bottom: "16px" }}>
+        <div className="fixed bottom-0 left-0 right-0 flex justify-between items-center p-4">
           <LeaveButton />
           {!admin ?
             (<p className="text-xl font-bold">Waiting for the admin to configure and start the game...</p>) : (
