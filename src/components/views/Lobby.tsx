@@ -334,7 +334,7 @@ const Lobby = () => {
         radius="full"
         size="lg"
         color="default"
-        className="items-center bg-gradient-to-tr from-gray-400 to-gray-300 text-black shadow-lg"
+        className="items-center bg-gradient-to-tr from-gray-400 to-gray-300 text-black shadow-lg p-4"
         startContent={<UpdateSettingsIcon size={40}/>}
         onClick={() => {
           console.log("Saving settings");
@@ -401,12 +401,12 @@ const Lobby = () => {
   };
 
   return (
-    <BaseContainer size="large" className="flex flex-col items-center p-2">
+    <BaseContainer size="large" className="flex flex-col items-center p-2 min.h-screen overflow-auto">
       <ToastContainer
         pauseOnFocusLoss={false}
         pauseOnHover={false}
       />
-      <h1 className="text-3xl font-bold text-gray-700 my-2 text-center">{lobbyName}</h1>
+      <h1 className="text-3xl font-bold text-gray-700 my-0 text-center">{lobbyName}</h1>
       <div className="flex flex-col md:flex-row w-full justify-between space-y-6 md:space-y-0 md:space-x-4 overflow-auto">
         <div className="md:w-1/3 p-4 gap-4">
           <TimeButtons
@@ -418,9 +418,11 @@ const Lobby = () => {
             players={players} />
         </div>
         <div className="md:w-1/3 p-4 flex flex-col items-center justify-center">
-          <ContentWrapper>
-            <CityInputField
-              disabled={!admin} />
+          <ContentWrapper className="flex flex-1 flex-col">
+            <div className="flex w-full">
+              <CityInputField
+                disabled={!admin} />
+            </div>
           </ContentWrapper>
           <GoogleMapStaticImage />
         </div>
@@ -428,7 +430,7 @@ const Lobby = () => {
           <InputQuests
             disabled={!admin} />
         </div>
-        <div className="w-full flex flex-col md:flex-row justify-between p-4" style={{ position: "absolute", bottom: "16px" }}>
+        <div className="w-full flex flex-col md:flex-row justify-between p-4 mt-auto" style={{ position: "absolute", bottom: "16px" }}>
           <LeaveButton />
           {!admin ?
             (<p className="text-xl font-bold">Waiting for the admin to configure and start the game...</p>) : (

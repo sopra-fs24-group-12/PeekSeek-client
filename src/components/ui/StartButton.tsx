@@ -5,9 +5,10 @@ import { api, handleError } from "helpers/api";
 interface StartButtonProps {
   disabled?: boolean;
   lobbyId: string;
+  className?: string;
 }
 
-const StartButton: React.FC<StartButtonProps> = ({ disabled, lobbyId }) => {
+const StartButton: React.FC<StartButtonProps> = ({ disabled, lobbyId, className }) => {
   async function doStart() {
     const headers = {
       "Authorization": localStorage.getItem("token"),
