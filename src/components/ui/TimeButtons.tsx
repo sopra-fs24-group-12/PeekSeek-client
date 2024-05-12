@@ -19,7 +19,14 @@ const TimeButtons = ({ selectedDuration, setRoundDurationSeconds, disabled }) =>
           <Button
             key={time.value}
             disabled={disabled}
-            className={`bg-gradient-to-tr from-orange-500 to-orange-200 text-black shadow-lg ${selectedDuration === time.value ? "border-4 border-green-500 bg-orange-700" : ""}`}
+            className={`text-black text-bold shadow-lg ${selectedDuration === time.value ? "border-4 border-green-500 bg-orange-700" : ""}`}
+            style={{
+              margin: "1px", // Separating each button horizontally
+              background: "linear-gradient(to bottom, #fbcf9d 0%, #e59455 20%, #e59455 65%, #fbcf9d 100%)",
+              boxShadow: "5px 5px 15px rgba(0, 0, 0, 0.6)", // Increased depth of shadow for 3D effect
+              transform: "perspective(1px) translateZ(0)", // Prepare for 3D press effect
+              transition: "box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out"
+            }}
             onClick={() => {
               if (!disabled) {  // Prevent action if disabled
                 setRoundDurationSeconds(time.value);
