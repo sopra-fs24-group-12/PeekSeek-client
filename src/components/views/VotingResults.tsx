@@ -159,7 +159,7 @@ const VotingResults = () => {
   useEffect(() => {
     setInterval(() => {
       setPageLoading(false);
-    }, 1500
+    }, 2000
     )
   }, []);
 
