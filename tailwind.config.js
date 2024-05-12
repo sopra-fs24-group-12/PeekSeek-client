@@ -20,5 +20,9 @@ module.exports = {
       "esModuleInterop": true,
     },
   darkMode: "class",
-  plugins: [nextui()],
+  plugins: [nextui({
+      addCommonColors: true,
+    }
+
+  )],
 }

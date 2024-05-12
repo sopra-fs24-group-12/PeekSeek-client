@@ -176,9 +176,9 @@ function MyGoogleMap() {
     if(remainingTime <= 3){
       return "pulse-animation";
     }
-    else if (remainingTime <= 14) {
+    else if (remainingTime <= 9) {
       return "red-color";
-    } else if (remainingTime <= 15) {
+    } else if (remainingTime <= 10) {
       return "slow-pulse-animation";
     } else {
       return "stroke-white";
@@ -357,18 +357,6 @@ function MyGoogleMap() {
                   valueLabel={`${remainingTime}s`}
                   strokeWidth={3}
                   showValueLabel={true}
-                  // style={{ transition: 'stroke 0.3s ease-in-out' }}
-                  // label={(
-                  //   <Chip
-                  //     classNames={{
-                  //       base: "border-1 border-white/30",
-                  //       content: "text-xs text-white/90 font-semibold"
-                  //     }}
-                  //     variant="bordered"
-                  //   >
-                  //     TIME REMAINING
-                  //   </Chip>
-                  // )}
                 />
               </div>
               <div className="flex-1 flex justify-end">

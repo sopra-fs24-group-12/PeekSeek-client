@@ -6,7 +6,7 @@ import { getWebsocketDomain } from "helpers/getDomain";
 import { notification } from "antd";
 import HowToPlayModal from "components/ui/HowToPlayModal";
 import { InfoCircleTwoTone } from "@ant-design/icons";
-import { Input, Button, useDisclosure, Progress } from "@nextui-org/react";
+import { Input, Button, useDisclosure, Progress, CircularProgress, Chip } from "@nextui-org/react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -16,6 +16,8 @@ import SubmissionCard from "../ui/SubmissionCard";
 import SubmitButton from "../ui/SubmitButton";
 import Timer from "../ui/Timer";
 import { ThreeDots } from "react-loader-spinner";
+import GameButton from "../ui/GameButton";
+import GameSubmitButton from "../ui/GameSubmitButton";
 
 interface CardData {
   id: number;
@@ -66,6 +68,8 @@ const GameSubmission = () => {
   const [submissionDone, setSubmissionDone] = useState((localStorage.getItem("submissionDone") !== "false"));
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [currQuestNr, setQuestNr] = useState(parseInt(localStorage.getItem("currentQuest")));
+  const [remainingTime, setRemainingTime] = useState(0);
+  const [roundDurationSeconds, setRoundDurationSeconds] = useState(0);
   let timerId;
 
   const mergeDataForSubmission = (): ExtendedDictionary => {
@@ -154,7 +158,7 @@ const GameSubmission = () => {
         });
         client && client.subscribe(timerDestination, (message) => {
           let messageParsed = JSON.parse(message.body);
-          setRemainingSeconds(messageParsed.secondsRemaining);
+          setRemainingTime(messageParsed.secondsRemaining);
         });
       },
 
@@ -180,6 +184,7 @@ const GameSubmission = () => {
 
         const response1 = await api.get("/games/" + gameId + "/round", { headers });
         console.log("API Response 2:", response1.data);
+        setRoundDurationSeconds(response1.data.roundTime)
 
         const transformedData: CardData[] = [];
         response.data.forEach((item: any, index: number) => {
@@ -259,6 +264,19 @@ const GameSubmission = () => {
   const totalQuests = parseInt(localStorage.getItem("totalQuests"), 10)
   const questProgress = ( currentQuest/ totalQuests) * 100;
 
+
+  const calculateProgressValue = () => {
+
+    return (remainingTime / roundDurationSeconds) * 100;
+  };
+  const circularProgressStyles = {
+    svg: "w-368 h-36 drop-shadow-md",
+    indicator: "stroke-white",
+    track: "stroke-white/10",
+    value: "text-2xl font-semibold text-white",
+  };
+
+
   return (
     <div className="relative min-h-screen w-screen flex flex-col items-center">
       {submissionDone ? (
@@ -325,8 +343,38 @@ const GameSubmission = () => {
             </div>
 
             {/* Chat Component */}
-            <div className="md:w-1/4 w-full p-4 lg:order-none flex justify-center items-center mt-[-120px]">
-              <Timer initialTimeInSeconds={10} timeInSeconds={remainingSeconds} title={"RESULTS IN:"} />
+            <div className="md:w-1/4 w-full p-2 lg:order-none flex justify-center items-center mt-auto mb-1">
+              <div className="flex-1 flex justify-start">
+
+              </div>
+              <div className="flex-1 flex justify-center">
+
+              </div>
+              <div className="flex-1 flex flex-col items-center justify-center">
+                <Chip
+                  classNames={{
+                    base: "border-1 customStroke",
+                    content: "text-xs text-customStroke font-semibold"
+                  }}
+                  variant="bordered"
+                >
+                  RESULTS IN:
+                </Chip>
+                <CircularProgress
+                  classNames={{
+                    svg: "w-36 h-36 drop-shadow-md",
+                    indicator: "customStroke",
+                    track: "stroke-white/20",
+                    value: "text-2xl font-semibold customStroke",
+                  }}
+                  size="md"
+                  value={calculateProgressValue()}
+                  valueLabel={`${remainingTime}s`}
+                  strokeWidth={3}
+                  showValueLabel={true}
+                />
+              </div>
+
             </div>
           </div>
           <Button
@@ -336,8 +384,8 @@ const GameSubmission = () => {
           >
             <InfoCircleTwoTone style={{ fontSize: "20px"}}/>
           </Button>
-          <HowToPlayModal 
-            isOpen={isOpen} 
+          <HowToPlayModal
+            isOpen={isOpen}
             onOpenChange={onOpenChange}
             context="gamesubmission"  />
         </BaseContainer>
