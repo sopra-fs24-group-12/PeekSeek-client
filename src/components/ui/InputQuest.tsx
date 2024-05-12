@@ -1,6 +1,6 @@
 import React from "react";
 import { Input } from "@nextui-org/react";
-import ScrollableContentWrapper from "./ScrollableContentWrapper";
+import FlexWrapper from "./FlexWrapper";
 
 const InputQuest: React.FC = () => {
   // State for multiple quests
@@ -23,7 +23,7 @@ const InputQuest: React.FC = () => {
 
 
   return (
-    <ScrollableContentWrapper>
+    <FlexWrapper>
       <div style={{ overflowY: "visible", maxHeight: "500px" }}>
       <h6 className="font-bold text-center mt-2 mb-4">Your Quests</h6>
       {quests.map((quest, index) => (
@@ -37,7 +37,7 @@ const InputQuest: React.FC = () => {
         />
       ))}
       </div>
-    </ScrollableContentWrapper>
+    </FlexWrapper>
   );
 };
 
