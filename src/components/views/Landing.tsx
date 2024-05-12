@@ -19,26 +19,31 @@ const LandingPage = () => {
 
 
   return (
-    <BaseContainer size="landing" className="flex flex-col items-center">
-      <h4
-        className="text-center mt-8"
-        style={{ fontFamily: "'Lato', regular-400" }}
-      >
-        Welcome to
-      </h4>
-      <h1
-        className="text-7xl text-center"
-        style={{
-          fontFamily: "'Permanent Marker', cursive",
-          fontSize: "4rem", // Adjust this value for a larger base size
-          maxWidth: "90vw", // Limits the width of the text to the viewport
-          whiteSpace: "nowrap", // Prevents the text from wrapping
-          overflow: "hidden",
-          textOverflow: "ellipsis", // Prevent overflow issues
-        }}
-      >
-        PeekSeek
-      </h1>
+    <BaseContainer size="landing" className="flex flex-col items-center justify-center">
+      <div className="text-center mt-8">
+        <h4
+          style={{ 
+            fontFamily: "'Lato', regular-400",
+            fontSize: "1.3rem",
+            fontWeight: "bold",
+          }}
+        >
+          Welcome to
+        </h4>
+        <h1
+          className="text-7xl text-center"
+          style={{
+            fontFamily: "'Permanent Marker', cursive",
+            fontSize: "4rem", // Adjust this value for a larger base size
+            maxWidth: "90vw", // Limits the width of the text to the viewport
+            whiteSpace: "nowrap", // Prevents the text from wrapping
+            overflow: "hidden",
+            textOverflow: "ellipsis", // Prevent overflow issues
+          }}
+        >
+          PeekSeek
+        </h1>
+      </div>
       <div className="flex-grow flex items-center justify-center">
         <img
           src="/images/PeekSeeklogo.jpg"
@@ -47,13 +52,12 @@ const LandingPage = () => {
             width: "350px", // Adjust the width to fit the container
             maxWidth: "100%", // Prevents overflow from the container
             height: "auto", // Adjusts height based on the width
-            objectFit: "contain" // Ensures image retains its aspect ratio
+            objectFit: "contain", // Ensures image retains its aspect ratio
+            marginBottom: "120px"
           }} />
       </div>
-      <div className="w-full flex justify-center mb-4">
+      <div className="absolute bottom-2 w-full flex flex-col items-center mt-auto gap-2">
         <JoinButton onClick={handleClick}/>
-      </div>
-      <div className="w-full flex justify-center mb-4">
         <CreateButton />
       </div>
       <Button
