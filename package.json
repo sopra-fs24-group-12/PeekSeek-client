@@ -10,7 +10,6 @@
     "@react-stately/data": "^3.11.2",
     "@stomp/stompjs": "^7.0.0",
     "@types/googlemaps": "^3.43.3",
-    "@types/styled-components": "^5.1.34",
     "antd": "^5.16.2",
     "axios": "^1.6.7",
     "boxicons": "^2.1.4",
@@ -27,8 +26,7 @@
     "react-scripts": "^5.0.1",
     "react-stately": "^3.30.1",
     "react-toastify": "^10.0.5",
-    "serve": "^14.2.1",
-    "styled-components": "^6.1.11"
+    "serve": "^14.2.1"
   },
   "scripts": {
     "dev": "react-scripts start",

@@ -26,11 +26,9 @@ const BaseContainer: React.FC<BaseContainerProps> = ({ className, children, size
     if (size) return; // Do not adjust size if it's explicitly set
 
     const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight;
-
-    if (windowWidth < 640 || windowHeight < 480) {
+    if (windowWidth < 768) {
       setContainerSize("small");
-    } else if (windowWidth < 1024 || windowHeight < 768) {
+    } else if (windowWidth < 1024) {
       setContainerSize("medium");
     } else {
       setContainerSize("large");
