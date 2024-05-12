@@ -24,7 +24,7 @@ const InputQuest: React.FC = () => {
 
   return (
     <ScrollableContentWrapper>
-      <div style={{ overflowY: "visible", maxHeight: "500px", width: "95%" }}>
+      <div style={{ overflowY: "visible", maxHeight: "500px" }}>
       <h6 className="font-bold text-center mt-2 mb-4">Your Quests</h6>
       {quests.map((quest, index) => (
         <Input
