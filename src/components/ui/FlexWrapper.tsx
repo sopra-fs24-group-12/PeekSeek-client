@@ -8,13 +8,13 @@ interface FlexWrapperProps {
 const FlexWrapper: React.FC<FlexWrapperProps> = ({ children }) => {
   return (
     <Card style={{
-        maxWidth: "100%",
-        padding: "$6",
-        boxShadow: "$lg",
-        width: "100%",
-        overflow: "visible"
-      }}
-      isBlurred
+      maxWidth: "100%",
+      padding: "$6",
+      boxShadow: "$lg",
+      width: "100%",
+      overflow: "visible"
+    }}
+    isBlurred
     >
       <CardBody style={{
         display: "flex",

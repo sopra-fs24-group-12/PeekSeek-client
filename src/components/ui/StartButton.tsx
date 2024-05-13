@@ -1,11 +1,11 @@
 import React from "react";
 import { Button } from "@nextui-org/react";
 import { api, handleError } from "helpers/api";
-import styled, { css } from 'styled-components';
+import styled, { css } from "styled-components";
 
-const slateColor = 'rgb(16,24,50)';
-const lightGreenColor = '#B2FFC7'; 
-const darkGreenColor = '#19763D'; 
+const slateColor = "rgb(16,24,50)";
+const lightGreenColor = "#B2FFC7";
+const darkGreenColor = "#19763D";
 
 const transitionAll = css`
   -webkit-transition: all 200ms ease-in-out;
@@ -14,7 +14,7 @@ const transitionAll = css`
   transition: all 200ms ease-in-out;
 `;
 
-const borderRadius = '12px 12px 0px 0px';
+const borderRadius = "12px 12px 0px 0px";
 
 const ThreeDButton = styled.button`
   color: white;
