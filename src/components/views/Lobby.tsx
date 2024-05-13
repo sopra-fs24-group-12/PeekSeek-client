@@ -31,7 +31,6 @@ const Lobby = () => {
   const [lng, setLng] = useState("");
   const [cityName, setCityName] = useState("");
   const [settingsConfirmed, setSettingsConfirmed] = useState(false);
-
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   let timerId;
   const [errorModalOpen, setErrorModalOpen] = useState(false);
@@ -56,10 +55,7 @@ const Lobby = () => {
   }
 
   const openNotification = (message: string) => {
-    notification.open({
-      message: message,
-      duration: 2,
-    });
+    toast.info(message, {autoClose: 3000});
   };
 
   const addPlayer = (newPlayer: String) => {
@@ -71,7 +67,6 @@ const Lobby = () => {
   };
 
   useEffect(() => {
-
     async function fetchData() {
       const headers = {
         "Authorization": localStorage.getItem("token"),
@@ -99,6 +94,10 @@ const Lobby = () => {
           setLng("0");
         }
         setSettingsConfirmed(response.data.quests && response.data.quests.length > 0 && response.data.gameLocation);
+        // Set the total number of quests in localStorage
+        const filteredQuests = quests.filter(quest => quest.trim() !== "");
+        // Set currentQuest to 1
+        localStorage.setItem("currentQuest", String(1));
       } catch (error) {
         console.log("Error caught:", error.response.data.message);
         setErrorMessage(error.response.data.message);
