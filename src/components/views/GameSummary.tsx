@@ -11,7 +11,12 @@ import BackDashboardButton from "../ui/BackDashboardButton";
 import { useParams } from "react-router-dom";
 import StartButton from "../ui/StartButton";
 import { MutatingDots, ThreeDots, DNA, BallTriangle, TailSpin } from "react-loader-spinner";
+import { LoadScript, Marker, GoogleMap as ReactGoogleMap} from '@react-google-maps/api';
+import { Library } from "@googlemaps/js-api-loader";
 
+const API_Key = "AIzaSyDZL47Qm8iIwvwss7wrB5vZikRgO0K7Ndg";
+
+const libs: Library[] = ["places"];
 
 const GameSummary = () => {
   // Mock data for city and number of quests
@@ -27,20 +32,17 @@ const GameSummary = () => {
   const [errorModalOpen, setErrorModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [pageLoading, setPageLoading] = useState(true);
-
-  async function generateStaticMapUrl(latitudes: string[], longitudes: string[]): Promise<string> {
-    const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
-    const baseUrl = "https://maps.googleapis.com/maps/api/staticmap";
-
-    const markers = latitudes.map((lat, index) => `markers=color:red%7Clabel:${index + 1}%7C${lat},${longitudes[index]}`).join("&");
-
-    return `${baseUrl}?size=600x400&${markers}&key=${apiKey}`;
-  }
+  const [resLatNe, setResLatNe] = useState(0);
+  const [resLngNe, setResLngNe] = useState(0);
+  const [resLatSw, setResLatSw] = useState(0);
+  const [resLngSw, setResLngSw] = useState(0);
+  const [lat, setLat] = useState(0);
+  const [lng, setLng] = useState(0);
+  const [mapCenter, setMapCenter] = useState({ lat: 47.3768866, lng: 8.541694 });
+  const [map, setMap] = useState(null);
+  const [markers, setMarkers] = useState([]);
 
   useEffect(() => {
-    //localStorage.setItem("token", "eb47db3a-d291-4a93-8dc3-d71d5742031d");
-    //localStorage.setItem("username", "a");
-
     async function fetchData() {
       try {
         const response = await api.get("/summaries/" + summaryId);
@@ -48,20 +50,27 @@ const GameSummary = () => {
         const linkList = response.data.quests.map((quest, index) => {
           return { url: quest.link, label: index + 1 + ": " + quest.description + " found by " + quest.name };
         });
-
-
+        setResLatNe(response.data.resLatNe);
+        setResLngNe(response.data.resLngNe);
+        setResLatSw(response.data.resLatSw);
+        setResLngSw(response.data.resLngSw);
+        setLat(parseFloat(response.data.lat));
+        setLng(parseFloat(response.data.lng));
+        setMapCenter({ lat, lng });
         setExternalLinks(linkList);
         setSuccessfulRounds(linkList.length);
         setCity(response.data.cityName);
         setNrOfQuests(response.data.roundsPlayed);
-
+        console.log("Response data:", response.data);
         response.data.quests.forEach(quest => {
           lats.push(quest.lat);
           lngs.push(quest.lng);
         });
-
-        setStaticMap(await generateStaticMapUrl(lats, lngs));
-
+        const newMarkers = lats.map((lat, index) => new google.maps.Marker({
+          position: { lat: parseFloat(lat), lng: parseFloat(lngs[index]) },
+          map: map,
+        }));
+        setMarkers(newMarkers);
       } catch (error) {
         console.log("Error caught:", error.response.data.message);
         setErrorMessage(error.response.data.message);
@@ -79,6 +88,8 @@ const GameSummary = () => {
     }, 1500
     )
   }, []);
+
+  
 
   return (
     <div className="relative min-h-screen w-screen flex flex-col items-center">
@@ -120,10 +131,31 @@ const GameSummary = () => {
                 <ExternalLinkButton key={link.url} url={link.url} label={link.label} />
               ))}
             </div>
-            <div className="w-2/3 flex flex-col p-4"> {/* Right part for Leaderboard and Google Maps */}
-              {/*<Leaderboard data={mockLeaderboardData} />*/}
-
-              <img src={staticMap} alt="NO MAP IMAGE AVAILABLE" style={{ borderRadius: "10px 20px 30px 40px" }} />
+            <div className="w-2/3 flex flex-col p-4 h-screen h-80vh">
+            {lat && lng && (
+              <LoadScript googleMapsApiKey={API_Key} libraries={libs}>
+                <ReactGoogleMap
+                  mapContainerStyle={{
+                    width: "100%",
+                    height: "100%",
+                  }}
+                  zoom={15}
+                  onLoad={(map) => {
+                    const bounds = new window.google.maps.LatLngBounds(
+                      new window.google.maps.LatLng(resLatSw, resLngSw),  // Southwest
+                      new window.google.maps.LatLng(resLatNe, resLngNe),   // Northeast
+                    );
+                    map.fitBounds(bounds);
+                    setMap(map);
+                  }}
+                  center={mapCenter}
+                >
+                  {markers.map((marker, index) => (
+                    <Marker key={index} position={marker.position} />
+                  ))}
+                </ReactGoogleMap>
+              </LoadScript>
+              )}
             </div>
           </div>
           <Button
