@@ -196,7 +196,7 @@ const VotingResults = () => {
   }, []);
 
   function generateStreetViewImageLink(lat: string, long: string, heading: string, pitch: string): string {
-    const apiKey = "AIzaSyDZL47Qm8iIwvwss7wrB5vZikRgO0K7Ndg";
+    const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
     const baseUrl = "https://maps.googleapis.com/maps/api/streetview";
 

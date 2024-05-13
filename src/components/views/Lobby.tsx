@@ -300,7 +300,7 @@ const Lobby = () => {
     const latitude = lat || "0";
     const longitude = lng || "0";
     const zoom = 10;
-    const apiKey = "AIzaSyDZL47Qm8iIwvwss7wrB5vZikRgO0K7Ndg";
+    const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
     const imageUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${latitude},${longitude}&zoom=${zoom}&size=400x400&maptype=roadmap&key=${apiKey}`;
 

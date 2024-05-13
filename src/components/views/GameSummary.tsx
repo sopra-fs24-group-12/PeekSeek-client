@@ -14,7 +14,7 @@ import { MutatingDots, ThreeDots, DNA, BallTriangle, TailSpin } from "react-load
 import { LoadScript, Marker, GoogleMap as ReactGoogleMap} from '@react-google-maps/api';
 import { Library } from "@googlemaps/js-api-loader";
 
-const API_Key = "AIzaSyDZL47Qm8iIwvwss7wrB5vZikRgO0K7Ndg";
+const API_Key = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
 const libs: Library[] = ["places"];
 
