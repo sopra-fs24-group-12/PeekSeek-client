@@ -14,14 +14,23 @@ import "react-toastify/dist/ReactToastify.css";
 import BaseContainer from "../ui/BaseContainer";
 import SubmissionCard from "../ui/SubmissionCard";
 import SubmitButton from "../ui/SubmitButton";
+import StreetViewModal from "../ui/StreetViewModal"; //TODO: Get this working
 import Timer from "../ui/Timer";
+import { ThreeDots } from "react-loader-spinner";
+import { set } from "lodash";
 import { MagnifyingGlass, TailSpin } from "react-loader-spinner";
+
+const google = window.google;
 
 interface CardData {
   id: number;
   cityName: string;
   quest: string;
   anonymousName: string;
+  lat: string;
+  lng: string;
+  heading: string;
+  pitch: string;
   imageUrl?: string;
   link: string;
   noSubmission: boolean;
@@ -113,6 +122,7 @@ const GameSubmission = () => {
         alert(
           `Something went wrong while sending active ping: \n${handleError(error)}`,
         );
+        localStorage.clear();
         navigate("/landing");
       }
     }, 2000);
@@ -153,12 +163,14 @@ const GameSubmission = () => {
           if (messageParsed.status === "summary") {
             stopInactivityTimer();
             localStorage.setItem("submissionDone", "false");
+            //setModalOpen(false);
             navigate(`/voting/${gameId}/`);
           } else if (messageParsed.status === "left") {
             openNotification(messageParsed.username + " left");
           } else if (messageParsed.status === "game_over") {
             stopInactivityTimer();
             localStorage.setItem("submissionDone", "false");
+            //setModalOpen(false);
             navigate("/gamesummary/" + messageParsed.summaryId);
           }
         });
@@ -214,6 +226,10 @@ const GameSubmission = () => {
             cityName: response1.data.geoCodingData.location,
             quest: response1.data.quest,
             anonymousName: `Anonymous ${animalNames[index]}`,
+            lat: item.submittedLocation.lat,
+            lng: item.submittedLocation.lng,
+            heading: item.submittedLocation.heading,
+            pitch: item.submittedLocation.pitch,
             imageUrl: !item.noSubmission
               ? generateStreetViewImageLink(
                 item.submittedLocation.lat,
@@ -242,10 +258,43 @@ const GameSubmission = () => {
     fetchData();
   }, []);
 
+  function generateStreetViewSubmissionLink(lat: string, long: string, heading: string, pitch: string): string {
+    const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
-  const handleImageClick = (url: string) => {
-    window.open(url, "_blank");
-  };
+    const baseUrl = "https://www.google.com/maps/embed/v1/streetview/";
+
+    const params = new URLSearchParams({
+      key: apiKey,
+      location: `${lat},${long}`,
+      heading: heading,
+      pitch: pitch,
+    });
+
+    return `${baseUrl}?${params}`;
+  }
+
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [selectedCoords, setSelectedCoords] = useState({ lat: 0, lng: 0, heading: 0, pitch: 0 });
+
+  const handleImageClick = (index) => {
+    const card = cardsData.find((card) => card.id === index);
+    if (card) {
+      const newCoords = {
+        lat: parseFloat(card.lat),
+        lng: parseFloat(card.lng),
+        heading: parseFloat(card.heading),
+        pitch: parseFloat(card.pitch)
+      };
+      setSelectedCoords(newCoords);
+    }
+    setModalOpen(true);
+  }
+
+  useEffect(() => {
+    if (selectedCoords.lat !== 0 || selectedCoords.lng !== 0){
+      setModalOpen(true);
+    }
+  }, [selectedCoords]);
 
   const handlePickClick = (index) => {
     if (banned.hasKey(index)) {
@@ -358,8 +407,12 @@ const GameSubmission = () => {
                     cityName={card.cityName}
                     quest={card.quest}
                     anonymousName={card.anonymousName}
+                    lat={card.lat}
+                    lng={card.lng}
+                    heading={card.heading}
+                    pitch={card.pitch}
                     imageUrl={card.imageUrl}
-                    onImageClick={() => handleImageClick(card.link)}
+                    onImageClick={() => handleImageClick(card.id)}
                     onPickClick={() => handlePickClick(card.id)}
                     onBanClick={() => handleBanClick(card.id)}
                     onUnpickClick={() => handleUnpickClick(card.id)}
@@ -370,7 +423,16 @@ const GameSubmission = () => {
                   />
                 ))}
               </div>
-
+              <StreetViewModal
+                isOpen={isModalOpen}
+                onClose={() => setModalOpen(false)}
+                generatedLink={generateStreetViewSubmissionLink(
+                  selectedCoords.lat.toString(),
+                  selectedCoords.lng.toString(),
+                  selectedCoords.heading.toString(),
+                  selectedCoords.pitch.toString()
+                )}
+              />
               <div className="w-full flex justify-center p-4">
                 <SubmitButton voteData={mergeDataForSubmission()} gameId={gameId} setSubmissionDone={setSubmissionDone} />
               </div>

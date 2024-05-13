@@ -9,6 +9,10 @@ interface SubmissionCardProps {
   cityName: string;
   quest: string;
   anonymousName: string;
+  lat: string;
+  lng: string;
+  pitch: string;
+  heading: string;
   imageUrl?: string;
   onImageClick: () => void;
   onPickClick: () => void;

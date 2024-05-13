@@ -18,6 +18,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ErrorMessageModal from "components/ui/ErrorMessageModal";
 
+
 const Lobby = () => {
   const [quests, setQuests] = React.useState(["", "", "", ""]);
   const [players, setPlayers] = useState([]);
@@ -30,12 +31,12 @@ const Lobby = () => {
   const [lng, setLng] = useState("");
   const [cityName, setCityName] = useState("");
   const [settingsConfirmed, setSettingsConfirmed] = useState(false);
+
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   let timerId;
   const [errorModalOpen, setErrorModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  
   interface InputQuestsProps {
     disabled: boolean;
   }
@@ -55,7 +56,10 @@ const Lobby = () => {
   }
 
   const openNotification = (message: string) => {
-    toast.info(message, {autoClose: 3000});
+    notification.open({
+      message: message,
+      duration: 2,
+    });
   };
 
   const addPlayer = (newPlayer: String) => {
@@ -67,6 +71,7 @@ const Lobby = () => {
   };
 
   useEffect(() => {
+
     async function fetchData() {
       const headers = {
         "Authorization": localStorage.getItem("token"),
@@ -94,10 +99,6 @@ const Lobby = () => {
           setLng("0");
         }
         setSettingsConfirmed(response.data.quests && response.data.quests.length > 0 && response.data.gameLocation);
-        // Set the total number of quests in localStorage
-        const filteredQuests = quests.filter(quest => quest.trim() !== "");
-        // Set currentQuest to 1
-        localStorage.setItem("currentQuest", String(1));
       } catch (error) {
         console.log("Error caught:", error.response.data.message);
         setErrorMessage(error.response.data.message);
@@ -141,7 +142,6 @@ const Lobby = () => {
   function stopInactivityTimer() {
     clearInterval(timerId);
   }
-
 
   useEffect(() => {
     let client = new Client();
@@ -221,7 +221,6 @@ const Lobby = () => {
     setQuests(updatedQuests);
   };
 
-
   localStorage.setItem("totalQuests", String(quests.length-1));
   const total = localStorage.getItem("totalQuests")
   console.log("total quests " + total)
@@ -246,21 +245,19 @@ const Lobby = () => {
       }
     }
 
-
     return (
       <Button
         disabled={!admin}
         radius="full"
         size="lg"
         color="default"
-        className="items-center bg-gradient-to-tr from-gray-400 to-gray-300 text-black shadow-lg"
-        startContent={<UpdateSettingsIcon size={40}/>}
+        className="shadow-lg"
         onClick={() => {
           console.log("Saving settings");
           save();
         }}
       >
-        Update
+        Save Settings
       </Button>
     );
   };
@@ -289,14 +286,13 @@ const Lobby = () => {
         radius="full"
         size="lg"
         color="default"
-        className="items-center bg-gradient-to-tr from-gray-400 to-gray-300 text-black shadow-lg"
-        startContent={<BackIcon />}
+        className="shadow-lg"
         onClick={() => {
           console.log("Leaving lobby");
           leave();
         }}
       >
-        Leave
+        Leave Lobby
       </Button>
     );
   };
@@ -312,7 +308,7 @@ const Lobby = () => {
     return (
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
         <div style={{ height: "25px" }}></div>
-        <div style={{ borderRadius: "50%", overflow: "hidden", width: "480px", height: "480px", boxShadow: "0 4px 8px rgba(0,0,0,0.3)", border: "5px solid white", marginBottom: "130px" }}>
+        <div style={{ borderRadius: "50%", overflow: "hidden", width: "550px", height: "550px" }}>
           <img src={imageUrl} alt="Google Map" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         </div>
       </div>
