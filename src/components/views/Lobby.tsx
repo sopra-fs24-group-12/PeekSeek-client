@@ -7,6 +7,8 @@ import StartButton from "../ui/StartButton";
 import PlayerTable from "../ui/PlayerTable";
 import { Button, Input, useDisclosure } from "@nextui-org/react";
 import ContentWrapper from "components/ui/ContentWrapper";
+import FlexWrapper from "components/ui/FlexWrapper";
+import CityInputWrapper from "components/ui/CityInputWrapper";
 import ScrollableContentWrapper from "components/ui/ScrollableContentWrapper";
 import TimeButtons from "../ui/TimeButtons";
 import { getWebsocketDomain } from "helpers/getDomain";
@@ -236,8 +238,8 @@ const Lobby = () => {
 
     return (
       <ScrollableContentWrapper>
-        <h6 className="font-bold mt-2 mb-2">Your Quests</h6>
-        <p className="text-left text-sm mt-0 mb-4 font-semibold">Find a...</p>
+        <h6 className="text-center font-bold mt-2 mb-2">Your Quests</h6>
+          <p className="text-left text-sm mt-0 mb-4 ml-2 font-semibold">Find a...</p>
         <div style={{ overflowY: "auto", maxHeight: "500px", width: "100%" }}>
           {localQuests.map((quest, index) => (
             <Input
@@ -257,7 +259,7 @@ const Lobby = () => {
         <Button
           radius="md"
           size="sm"
-          style={{ marginTop: "10px" }}
+          style={{ paddingLeft: "20px", paddingRight: "20px", marginTop: "10px" }}
           disabled={disabled}
           onClick={saveQuestsToGlobal}>
           Save Quests
@@ -282,24 +284,26 @@ const Lobby = () => {
     };
 
     return (
-      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-        <Input
-          disabled={!admin}
-          type="text"
-          label="Your Destination"
-          title="city name"
-          placeholder="Enter city name"
-          value={localCityName}
-          onChange={handleCityNameChange}
-          style={{ width: "300px" }}
-        />
-        <Button
-          disabled={!admin}
-          radius="md"
-          size="sm"
-          style={{ paddingLeft: "20px", paddingRight: "20px" }}
-          onClick={saveCityNameToGlobal}>Save Destination</Button>
-      </div>
+      <CityInputWrapper>
+        <div style={{ display: "flex", alignItems: "center", gap: "5px", width: "100%" }}>
+          <Input
+            disabled={!admin}
+            type="text"
+            label="Your Destination"
+            title="city name"
+            placeholder="Enter city name"
+            value={localCityName}
+            onChange={handleCityNameChange}
+            height="80%"
+          />
+          <Button
+            disabled={!admin}
+            radius="md"
+            size="sm"
+            style={{ paddingLeft: "20px", paddingRight: "20px" }}
+            onClick={saveCityNameToGlobal}>Save Destination</Button>
+        </div>
+      </CityInputWrapper>
     );
   };
 
@@ -334,7 +338,7 @@ const Lobby = () => {
         radius="full"
         size="lg"
         color="default"
-        className="items-center bg-gradient-to-tr from-gray-400 to-gray-300 text-black shadow-lg"
+        className="mr-16 bg-gradient-to-tr from-gray-400 to-gray-300 text-black shadow-lg"
         startContent={<UpdateSettingsIcon size={40}/>}
         onClick={() => {
           console.log("Saving settings");
@@ -370,7 +374,7 @@ const Lobby = () => {
         radius="full"
         size="lg"
         color="default"
-        className="items-center bg-gradient-to-tr from-gray-400 to-gray-300 text-black shadow-lg"
+        className="flex-end items-center bg-gradient-to-tr from-gray-400 to-gray-300 text-black shadow-lg"
         startContent={<BackIcon />}
         onClick={() => {
           console.log("Leaving lobby");
@@ -391,9 +395,21 @@ const Lobby = () => {
     const imageUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${latitude},${longitude}&zoom=${zoom}&size=400x400&maptype=roadmap&key=${apiKey}`;
 
     return (
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-        <div style={{ height: "25px" }}></div>
-        <div style={{ borderRadius: "50%", overflow: "hidden", width: "480px", height: "480px", boxShadow: "0 4px 8px rgba(0,0,0,0.3)", border: "5px solid white", marginBottom: "130px" }}>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>       
+        <div
+          style={{
+            borderRadius: "50%",
+            overflow: "hidden",
+            width: "120%",
+            maxWidth: "500px",
+            maxHeight: "500px",
+            boxShadow: "0 4px 8px rgba(0,0,0,0.3)",
+            border: "5px solid white",
+            marginTop: "15px",
+            marginBottom: "15px",
+            aspectRatio: "1",
+          }}
+        >
           <img src={imageUrl} alt="Google Map" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         </div>
       </div>
@@ -401,14 +417,14 @@ const Lobby = () => {
   };
 
   return (
-    <BaseContainer size="large" className="flex flex-col items-center p-2">
+    <BaseContainer size="large" className="flex flex-col items-center overflow-hidden min-h-screen max-w-full">
       <ToastContainer
         pauseOnFocusLoss={false}
-        pauseOnHover={false}
+        pauseOnHover={false} 
       />
-      <h1 className="text-3xl font-bold text-gray-700 my-4 text-center">{lobbyName}</h1>
-      <div className="flex w-full">
-        <div className="flex flex-col w-full items-start gap-4 ml-6">
+      <h1 className="text-3xl font-bold text-gray-700 my-0 text-center">{lobbyName}</h1>
+      <div className="flex flex-col md:flex-row w-full justify-between space-y-6 md:space-y-0 md:space-x-6 overflow-auto">
+        <div className="md:w-1/3 p-4 gap-4 flex flex-col">
           <TimeButtons
             disabled={!admin}
             selectedDuration={roundDurationSeconds}
@@ -417,18 +433,16 @@ const Lobby = () => {
           <PlayerTable
             players={players} />
         </div>
-        <div className="flex-1 items-center justify-center px-16">
-          <ContentWrapper>
-            <CityInputField
-              disabled={!admin} />
-          </ContentWrapper>
+        <div className="md:w-1/3 p-4">
+          <CityInputField
+            disabled={!admin} />
           <GoogleMapStaticImage />
         </div>
-        <div className="flex flex-col w-full items-end mr-8">
+        <div className="md:w-1/3 p-4">
           <InputQuests
             disabled={!admin} />
         </div>
-        <div className="fixed bottom-0 left-0 right-0 flex justify-between items-center p-4">
+        <div className="w-full flex flex-col md:flex-row justify-between mt-auto" style={{ position: "absolute", bottom: "16px" }}>
           <LeaveButton />
           {!admin ?
             (<p className="text-xl font-bold">Waiting for the admin to configure and start the game...</p>) : (
@@ -442,10 +456,9 @@ const Lobby = () => {
             )}
         </div>
       </div>
-      {/* {!admin && <InteractionDisabledOverlay />} */}
       <Button
         onPress={onOpen}
-        className="absolute bottom-2 right-2 p-2 sm rounded-full bg-transparent"
+        className="absolute bottom-0 right-0 sm rounded-full bg-transparent"
         isIconOnly
       >
         <InfoCircleTwoTone style={{ fontSize: "20px"}}/>

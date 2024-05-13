@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import HowToPlayModal from "components/ui/HowToPlayModal";
 import { InfoCircleTwoTone } from "@ant-design/icons";
 import { Button, useDisclosure } from "@nextui-org/react";
+import MediaDisplay from "../ui/MediaDisplay";
 
 
 const LandingPage = () => {
@@ -34,18 +35,19 @@ const LandingPage = () => {
           className="text-7xl text-center"
           style={{
             fontFamily: "'Permanent Marker', cursive",
-            fontSize: "4rem", // Adjust this value for a larger base size
-            maxWidth: "90vw", // Limits the width of the text to the viewport
-            whiteSpace: "nowrap", // Prevents the text from wrapping
+            fontSize: "4rem", 
+            maxWidth: "90vw", 
+            whiteSpace: "nowrap", 
             overflow: "hidden",
-            textOverflow: "ellipsis", // Prevent overflow issues
+            textOverflow: "ellipsis",
           }}
         >
           PeekSeek
         </h1>
       </div>
-      <div className="flex-grow flex items-center justify-center">
-        <img
+      <div className="flex-grow flex items-center justify-center mt-4 mb-32">
+        <MediaDisplay />
+        {/* <img
           src="/images/PeekSeeklogo.jpg"
           alt="PeekSeek Logo"
           style={{
@@ -54,7 +56,7 @@ const LandingPage = () => {
             height: "auto", // Adjusts height based on the width
             objectFit: "contain", // Ensures image retains its aspect ratio
             marginBottom: "120px"
-          }} />
+          }} /> */}
       </div>
       <div className="absolute bottom-2 w-full flex flex-col items-center mt-auto gap-2">
         <JoinButton onClick={handleClick}/>
