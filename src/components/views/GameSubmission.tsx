@@ -16,9 +16,8 @@ import SubmissionCard from "../ui/SubmissionCard";
 import SubmitButton from "../ui/SubmitButton";
 import StreetViewModal from "../ui/StreetViewModal"; //TODO: Get this working
 import Timer from "../ui/Timer";
-import { ThreeDots } from "react-loader-spinner";
+import { ThreeDots, MagnifyingGlass, TailSpin } from "react-loader-spinner";
 import { set } from "lodash";
-import { MagnifyingGlass, TailSpin } from "react-loader-spinner";
 
 const google = window.google;
 
