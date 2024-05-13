@@ -13,7 +13,7 @@ import { notification } from "antd";
 const CreateLobby = () => {
   const navigate = useNavigate();
   const [name, setLobbyname] = useState<string>("");
-  const [username, setUsername] = useState<string>(null);
+  const [username, setUsername] = useState<string>("");
   const [password, setLobbypassword] = useState<string>("");
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [usernameNotificationShown, setUsernameNotificationShown] = useState(false);
@@ -55,10 +55,10 @@ const CreateLobby = () => {
 
   const handleClick = () => {
     console.log("Button clicked!");
-    if (!username){
+    if (!username.trim()){
       alert("Username required!");
     }
-    else if (!name){
+    else if (!name.trim()){
       alert("Name required!");
     }
     else{
@@ -111,7 +111,7 @@ const CreateLobby = () => {
           <div className="w-full flex justify-center mt-auto mb-4">
             <CreateLo 
               onClick={handleClick} 
-              isDisabled={!username || !name}
+              isDisabled={!username.trim() || !name.trim()}
             />
           </div>
           <Button

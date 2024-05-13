@@ -14,7 +14,7 @@ const GameButton: React.FC<GameButtonProps> = ({ onClick }) => {
       className="bg-gradient-to-tr from-brown-500 to-brown-200 text-black shadow-lg"
       onClick={onClick}
     >
-      Cannot find it!
+      Can&apos;t find it!
     </Button>
   );
 };

@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Button, ButtonGroup } from "@nextui-org/react";
-import ContentWrapper from "./ContentWrapper";
+import FlexWrapper from "./FlexWrapper";
 
 const TimeButtons = ({ selectedDuration, setRoundDurationSeconds, disabled }) => {
   const durations = [
@@ -12,16 +12,23 @@ const TimeButtons = ({ selectedDuration, setRoundDurationSeconds, disabled }) =>
   ];
 
   return (
-    <ContentWrapper>
+    <FlexWrapper>
       <h6 className="font-bold text-center mt-2 mb-4">Time per round</h6>
-      <ButtonGroup>
+      <ButtonGroup className="mb-2">
         {durations.map(time => (
           <Button
             key={time.value}
             disabled={disabled}
-            className={`bg-gradient-to-tr from-orange-500 to-orange-200 text-black shadow-lg ${selectedDuration === time.value ? "border-4 border-green-500 bg-orange-700" : ""}`}
+            className={`text-black font-semibold text-small shadow-lg ${selectedDuration === time.value ? "border-4 border-green-500 bg-orange-700" : ""}`}
+            style={{
+              margin: "1px",
+              background: "linear-gradient(to bottom, #fbcf9d 0%, #f8c480 20%, #e59455 50%, #e07738 80%, #fbcf9d 100%)",
+              boxShadow: "5px 5px 15px rgba(0, 0, 0, 0.6)", 
+              transform: "perspective(1px) translateZ(0)", 
+              transition: "box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out",
+            }}
             onClick={() => {
-              if (!disabled) {  // Prevent action if disabled
+              if (!disabled) { 
                 setRoundDurationSeconds(time.value);
               }
             }}
@@ -30,7 +37,7 @@ const TimeButtons = ({ selectedDuration, setRoundDurationSeconds, disabled }) =>
           </Button>
         ))}
       </ButtonGroup>
-    </ContentWrapper>
+    </FlexWrapper>
   );
 };
 

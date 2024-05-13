@@ -1,3 +1,30 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@keyframes pulseRedWhite {
+    0%, 100% {
+        stroke: red;
+    }
+    50% {
+        stroke: white;
+    }
+}
+
+.pulse-animation {
+    animation: pulseRedWhite 250ms infinite;
+}
+.slow-pulse-animation {
+    animation: pulseRedWhite 1000ms infinite;
+}
+.red-color {
+    stroke: red;
+}
+
+.valueAnimation {
+    transition: color 0.3s ease-in-out;
+}
+
+.customStroke {
+    stroke: rgb(59, 68, 77);
+}

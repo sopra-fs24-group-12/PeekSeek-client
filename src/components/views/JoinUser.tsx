@@ -9,7 +9,7 @@ import { api, handleError } from "helpers/api";
 import HowToPlayModal from "components/ui/HowToPlayModal";
 import { InfoCircleTwoTone } from "@ant-design/icons";
 import { notification } from "antd";
-
+import ErrorMessageModal from "components/ui/ErrorMessageModal";
 
 const JoinUser = () => {
   const navigate = useNavigate();
@@ -23,6 +23,8 @@ const JoinUser = () => {
   const [usernameError, setUsernameError] = useState("");
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [usernameNotificationShown, setUsernameNotificationShown] = useState(false);
+  const [errorModalOpen, setErrorModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleBackClick = () => {
     console.log("Button clicked!");
@@ -36,10 +38,9 @@ const JoinUser = () => {
           setLobbyRequiresPassword(true);
         }
       } catch (error) {
-        alert(
-          `An error occured because you tried using the new method. \n${handleError(error)}`,
-        );
-        navigate("/landing");
+        console.log("Error caught:", error.response.data.message);
+        setErrorMessage(error.response.data.message);
+        setErrorModalOpen(true);
       }
     };
     sendRequest();
@@ -66,9 +67,9 @@ const JoinUser = () => {
       }
 
     } catch (error) {
-      alert(
-        `Something went wrong during joining: \n${handleError(error)}`,
-      );
+      console.log("Error caught:", error.response.data.message);
+      setErrorMessage(error.response.data.message);
+      setErrorModalOpen(true);
     }
 
   };
@@ -88,59 +89,63 @@ const JoinUser = () => {
       setUsernameNotificationShown(false);
     }
   };
+  console.log("Error Modal Open:", errorModalOpen, "Message:", errorMessage);
 
   return (
-    <div className="relative min-h-screen w-screen">
-      <div className="absolute top-4 left-4 z-50">
-        <BackButton />
+    <>
+      {errorModalOpen && <ErrorMessageModal isOpen={errorModalOpen} onClose={() => setErrorModalOpen(false)} errorMessage={errorMessage} />}
+      <div className="relative min-h-screen w-screen">
+        <div className="absolute top-4 left-4 z-50">
+          <BackButton />
+        </div>
+        <div className="flex justify-center items-center h-full">
+          <BaseContainer
+            size="small"
+            className="flex flex-col items-center">
+            <div className="flex-row flex-wrap md:flex-nowrap mt-16 mb-16 mr-16 ml-16 gap-4">
+              <text>Username</text>
+              <Input
+                className="mb-8 shadow-lg"
+                isRequired
+                isClearable
+                radius={"sm"}
+                type="username"
+                label="required "
+                placeholder="..."
+                value={username}
+                onChange={handleUsernameChange}
+              />
+              <text>Lobby Password</text>
+              <Input
+                className="mb-8 shadow-lg"
+                isDisabled= {!lobbyRequiresPassword}
+                isClearable
+                value={lobbyPassword}
+                type="password"
+                label="  "
+                placeholder="..."
+                onChange={(e) => setLobbyPassword(e.target.value)} />
+            </div>
+            <div className="w-full flex justify-center mt-auto mb-4">
+              <JoinButton
+                isDisabled={!username || (lobbyRequiresPassword && !lobbyPassword)}
+                onClick={handleJoinClick} />
+            </div>
+            <Button
+              onPress={onOpen}
+              className="absolute bottom-2 right-2 p-2 sm rounded-full bg-transparent"
+              isIconOnly
+            >
+              <InfoCircleTwoTone style={{ fontSize: "20px"}}/>
+            </Button>
+            <HowToPlayModal
+              isOpen={isOpen}
+              onOpenChange={onOpenChange}
+              context="joinUser"  />
+          </BaseContainer>
+        </div>
       </div>
-      <div className="flex justify-center items-center h-full">
-        <BaseContainer
-          size="small"
-          className="flex flex-col items-center">
-          <div className="flex-row flex-wrap md:flex-nowrap mt-16 mb-16 mr-16 ml-16 gap-4">
-            <text>Username</text>
-            <Input
-              className="mb-8 shadow-lg"
-              isRequired
-              isClearable
-              radius={"sm"}
-              type="username"
-              label="required "
-              placeholder="..."
-              value={username}
-              onChange={handleUsernameChange}
-            />
-            <text>Lobby Password</text>
-            <Input
-              className="mb-8 shadow-lg"
-              isDisabled= {!lobbyRequiresPassword}
-              isClearable
-              value={lobbyPassword}
-              type="password"
-              label="  "
-              placeholder="..."
-              onChange={(e) => setLobbyPassword(e.target.value)} />
-          </div>
-          <div className="w-full flex justify-center mt-auto mb-4">
-            <JoinButton
-              isDisabled={!username || (lobbyRequiresPassword && !lobbyPassword)}
-              onClick={handleJoinClick} />
-          </div>
-          <Button
-            onPress={onOpen}
-            className="absolute bottom-2 right-2 p-2 sm rounded-full bg-transparent"
-            isIconOnly
-          >
-            <InfoCircleTwoTone style={{ fontSize: "20px"}}/>
-          </Button>
-          <HowToPlayModal 
-            isOpen={isOpen} 
-            onOpenChange={onOpenChange}
-            context="joinUser"  />
-        </BaseContainer>
-      </div>
-    </div>
+    </>
   );
 
 };

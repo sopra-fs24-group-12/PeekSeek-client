@@ -6,7 +6,9 @@ import { getWebsocketDomain } from "helpers/getDomain";
 import { notification } from "antd";
 import HowToPlayModal from "components/ui/HowToPlayModal";
 import { InfoCircleTwoTone } from "@ant-design/icons";
-import { Input, Button, useDisclosure, Progress } from "@nextui-org/react";
+import { Input, Button, useDisclosure, Progress, CircularProgress, Chip } from "@nextui-org/react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 //import UI elements
 import BaseContainer from "../ui/BaseContainer";
@@ -16,9 +18,9 @@ import StreetViewModal from "../ui/StreetViewModal"; //TODO: Get this working
 import Timer from "../ui/Timer";
 import { ThreeDots } from "react-loader-spinner";
 import { set } from "lodash";
+import { MagnifyingGlass, TailSpin } from "react-loader-spinner";
 
 const google = window.google;
-
 
 interface CardData {
   id: number;
@@ -70,12 +72,13 @@ const GameSubmission = () => {
   const [remainingSeconds, setRemainingSeconds] = useState(0);
   const navigate = useNavigate();
   const [cardsData, setCardsData] = useState<CardData[]>([]);
-  const [notificationApi, contextHolder] = notification.useNotification();
   const [submissionDone, setSubmissionDone] = useState((localStorage.getItem("submissionDone") !== "false"));
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [showImages, setShowImages] = useState(false);
-  let loadedImages = 0;
   const [currQuestNr, setQuestNr] = useState(parseInt(localStorage.getItem("currentQuest")));
+  const [pageLoading, setPageLoading] = useState(true);
+  const [remainingTime, setRemainingTime] = useState(0);
+  const [roundDurationSeconds, setRoundDurationSeconds] = useState(0);
+  let timerId;
 
   const mergeDataForSubmission = (): ExtendedDictionary => {
     const updatedBanned = new ExtendedDictionary();
@@ -88,40 +91,48 @@ const GameSubmission = () => {
   };
 
   const openNotification = (message: string) => {
-    notificationApi.open({
-      message: message,
-      duration: 2,
-    });
+    toast.info(message, {autoClose: 3000});
   };
 
   useEffect(() => {
-    const sendRequest = async () => {
-      const headers = {
-        "Authorization": localStorage.getItem("token"),
-      };
-
-      try {
-        await api.put(`/games/${gameId}/active`, null, { headers });
-      } catch (error) {
-        alert(
-          `You were kicked due to inactivity. \n${handleError(error)}`,
-        );
-        localStorage.clear();
-        //setModalOpen(false);
-        navigate("/landing");
-      }
-    };
-
-    sendRequest();
-
-    const intervalId = setInterval(() => {
-      sendRequest();
-    }, 1000);
+    let tempId = startInactivityTimer();
 
     return () => {
-      clearInterval(intervalId);
+      clearInterval(tempId);
     };
   }, []);
+
+  useEffect(() => {
+    setInterval(() => {
+      setPageLoading(false);
+    }, 2000
+    )
+  }, []);
+
+  function startInactivityTimer() {
+    const headers = {
+      "Authorization": localStorage.getItem("token"),
+    };
+
+    timerId = setInterval(async () => {
+      try {
+        await api.put(`/games/${gameId}/active`, null, { headers });
+        console.log("sent active message")
+      } catch (error) {
+        alert(
+          `Something went wrong while sending active ping: \n${handleError(error)}`,
+        );
+        localStorage.clear();
+        navigate("/landing");
+      }
+    }, 2000);
+
+    return timerId;
+  }
+
+  function stopInactivityTimer() {
+    clearInterval(timerId);
+  }
 
   function generateStreetViewImageLink(lat: string, long: string, heading: string, pitch: string): string {
     const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
@@ -139,30 +150,25 @@ const GameSubmission = () => {
     return `${baseUrl}?${params}`;
   }
 
-  // const animalNames = ["Koala", "Bear", "Giraffe", "Zebra", "Gazelle", "Elephant"];
-  // const shuffledAnimalNames = [...animalNames].sort(() => Math.random() - 0.5);
-
   useEffect(() => {
     let client = new Client();
     const websocketUrl = getWebsocketDomain();
     client.configure({
       brokerURL: websocketUrl,
-      debug: function(str) {
-        console.log(str);
-      },
       onConnect: () => {
         const destination = "/topic/games/" + gameId;
         const timerDestination = "/topic/games/" + gameId + "/timer";
         client && client.subscribe(destination, (message) => {
           let messageParsed = JSON.parse(message.body);
-          console.log("Received message:", messageParsed);
           if (messageParsed.status === "summary") {
+            stopInactivityTimer();
             localStorage.setItem("submissionDone", "false");
             //setModalOpen(false);
             navigate(`/voting/${gameId}/`);
           } else if (messageParsed.status === "left") {
             openNotification(messageParsed.username + " left");
           } else if (messageParsed.status === "game_over") {
+            stopInactivityTimer();
             localStorage.setItem("submissionDone", "false");
             //setModalOpen(false);
             navigate("/gamesummary/" + messageParsed.summaryId);
@@ -170,7 +176,7 @@ const GameSubmission = () => {
         });
         client && client.subscribe(timerDestination, (message) => {
           let messageParsed = JSON.parse(message.body);
-          setRemainingSeconds(messageParsed.secondsRemaining);
+          setRemainingTime(messageParsed.secondsRemaining);
         });
       },
 
@@ -190,12 +196,28 @@ const GameSubmission = () => {
       };
 
       try {
+        const response1 = await api.get("/games/" + gameId + "/round", { headers });
+        console.log("API Response 2:", response1.data);
+        setRoundDurationSeconds(response1.data.roundTime)
+
+        const roundStatus = response1.data.roundStatus;
+        if (roundStatus !== "VOTING") {
+          if (roundStatus === "PLAYING") {
+            stopInactivityTimer();
+            navigate("/game/" + gameId);
+
+            return
+          } else if (roundStatus === "SUMMARY") {
+            stopInactivityTimer();
+            navigate("/voting/" + gameId);
+
+            return
+          }
+        }
+
         const response = await api.get("/games/" + gameId + "/submissions", { headers });
         const animalNames = ["Koala", "Bear", "Giraffe", "Zebra", "Gazelle", "Elephant"];
         console.log("API Response 1:", response.data);
-
-        const response1 = await api.get("/games/" + gameId + "/round", { headers });
-        console.log("API Response 2:", response1.data);
 
         const transformedData: CardData[] = [];
         response.data.forEach((item: any, index: number) => {
@@ -224,11 +246,6 @@ const GameSubmission = () => {
             transformedData.push(transformedItem);
           }
         });
-
-        console.log(localStorage.getItem("username"))
-        console.log("Before filtering:", transformedData);
-        const filteredData = transformedData.filter((item) => !item.ownSubmission);
-        console.log("After filtering:", filteredData);
 
         setCardsData(transformedData);
       } catch (error) {
@@ -317,14 +334,17 @@ const GameSubmission = () => {
   const totalQuests = parseInt(localStorage.getItem("totalQuests"), 10)
   const questProgress = ( currentQuest/ totalQuests) * 100;
 
-  const imageLoaded = () => {
-    loadedImages += 1;
-    if (loadedImages === cardsData.length) {
-      setTimeout(() => {
-        setShowImages(true);
-      }, 1000);
-    }
-  }
+
+  const calculateProgressValue = () => {
+
+    return (remainingTime / roundDurationSeconds) * 100;
+  };
+  const circularProgressStyles = {
+    svg: "w-368 h-36 drop-shadow-md",
+    indicator: "stroke-white",
+    track: "stroke-white/10",
+    value: "text-2xl font-semibold text-white",
+  };
 
 
   return (
@@ -332,17 +352,30 @@ const GameSubmission = () => {
       {submissionDone ? (
         <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50">
           <div className="flex flex-col items-center">
-            <ThreeDots
+            <MagnifyingGlass
               visible={true}
               height={80}
               width={80}
               color="white"
-              radius={9}
               ariaLabel="three-dots-loading"
               wrapperStyle={{}}
               wrapperClass=""
             />
-            <div className="text-white mt-4">Waiting for participants to vote...</div>
+            <div className="text-white mt-4">Waiting for participants to submit...</div>
+          </div>
+        </div>
+      ) : pageLoading ? (
+        <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50">
+          <div className="flex flex-col items-center">
+            <TailSpin
+              visible={true}
+              height={80}
+              width={80}
+              color="white"
+              ariaLabel="three-dots-loading"
+              wrapperStyle={{}}
+              wrapperClass=""
+            />
           </div>
         </div>
       ) : (
@@ -350,6 +383,10 @@ const GameSubmission = () => {
           size="large"
           className="flex flex-col items-center"
         >
+          <ToastContainer
+            pauseOnFocusLoss={false}
+            pauseOnHover={false}
+          />
           <Progress
             aria-label="Progress"
             disableAnimation
@@ -357,7 +394,6 @@ const GameSubmission = () => {
             value={currQuestNr-1}
             color="success"
             className="absolute right-0 top-0 w-full" />
-          {contextHolder}
           <div className="order-first text-center p-4">
             <h1 className="text-3xl font-bold text-gray-700">Choose your Favourite Pick</h1>
           </div>
@@ -384,9 +420,6 @@ const GameSubmission = () => {
                     isPicked={pickedCardId === card.id}
                     isBanned={banned.hasKey(card.id)}
                     noSubmission={card.noSubmission}
-                    ownSubmission={card.ownSubmission}
-                    imageLoaded={imageLoaded}
-                    showImage={showImages}
                   />
                 ))}
               </div>
@@ -406,8 +439,38 @@ const GameSubmission = () => {
             </div>
 
             {/* Chat Component */}
-            <div className="md:w-1/4 w-full p-4 lg:order-none flex justify-center items-center mt-[-120px]">
-              <Timer initialTimeInSeconds={10} timeInSeconds={remainingSeconds} title={"RESULTS IN:"} />
+            <div className="md:w-1/4 w-full p-2 lg:order-none flex justify-center items-center mt-auto mb-1">
+              <div className="flex-1 flex justify-start">
+
+              </div>
+              <div className="flex-1 flex justify-center">
+
+              </div>
+              <div className="flex-1 flex flex-col items-center justify-center">
+                <Chip
+                  classNames={{
+                    base: "border-1 customStroke",
+                    content: "text-xs text-customStroke font-semibold"
+                  }}
+                  variant="bordered"
+                >
+                  RESULTS IN:
+                </Chip>
+                <CircularProgress
+                  classNames={{
+                    svg: "w-36 h-36 drop-shadow-md",
+                    indicator: "customStroke",
+                    track: "stroke-white/20",
+                    value: "text-2xl font-semibold customStroke",
+                  }}
+                  size="md"
+                  value={calculateProgressValue()}
+                  valueLabel={`${remainingTime}s`}
+                  strokeWidth={3}
+                  showValueLabel={true}
+                />
+              </div>
+
             </div>
           </div>
           <Button
@@ -417,8 +480,8 @@ const GameSubmission = () => {
           >
             <InfoCircleTwoTone style={{ fontSize: "20px"}}/>
           </Button>
-          <HowToPlayModal 
-            isOpen={isOpen} 
+          <HowToPlayModal
+            isOpen={isOpen}
             onOpenChange={onOpenChange}
             context="gamesubmission"  />
         </BaseContainer>
@@ -428,4 +491,3 @@ const GameSubmission = () => {
 };
 
 export default GameSubmission;
-//TODO: Close modal

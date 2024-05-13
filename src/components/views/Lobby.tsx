@@ -9,15 +9,14 @@ import { Button, Input, useDisclosure } from "@nextui-org/react";
 import ContentWrapper from "components/ui/ContentWrapper";
 import ScrollableContentWrapper from "components/ui/ScrollableContentWrapper";
 import TimeButtons from "../ui/TimeButtons";
-import { notification } from "antd";
 import { getWebsocketDomain } from "helpers/getDomain";
 import HowToPlayModal from "components/ui/HowToPlayModal";
 import { InfoCircleTwoTone } from "@ant-design/icons";
 import BackIcon from "../ui/BackIcon";
 import UpdateSettingsIcon from "../ui/UpdateSettingsIcon";
-import BackDashboardButton from "../ui/BackDashboardButton";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ErrorMessageModal from "components/ui/ErrorMessageModal";
 
 
 const Lobby = () => {
@@ -34,6 +33,9 @@ const Lobby = () => {
   const [settingsConfirmed, setSettingsConfirmed] = useState(false);
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  let timerId;
+  const [errorModalOpen, setErrorModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   interface InputQuestsProps {
     disabled: boolean;
@@ -68,7 +70,6 @@ const Lobby = () => {
     setPlayers(prevPlayers => prevPlayers.filter(player => player !== usernameToRemove));
   };
 
-
   useEffect(() => {
 
     async function fetchData() {
@@ -99,11 +100,10 @@ const Lobby = () => {
         }
         setSettingsConfirmed(response.data.quests && response.data.quests.length > 0 && response.data.gameLocation);
       } catch (error) {
-        alert(
-          `Something went wrong while fetching lobby information: \n${handleError(error)}`,
-        );
+        console.log("Error caught:", error.response.data.message);
+        setErrorMessage(error.response.data.message);
+        setErrorModalOpen(true);
         localStorage.clear();
-        navigate("/landing");
       }
     }
 
@@ -111,31 +111,37 @@ const Lobby = () => {
   }, []);
 
   useEffect(() => {
-    const sendRequest = async () => {
-      const headers = {
-        "Authorization": localStorage.getItem("token"),
-      };
+    let tempId = startInactivityTimer();
 
+    return () => {
+      clearInterval(tempId);
+    };
+  }, []);
+
+  function startInactivityTimer() {
+    const headers = {
+      "Authorization": localStorage.getItem("token"),
+    };
+
+    timerId = setInterval(async () => {
       try {
         await api.put(`/lobbies/${lobbyId}/active`, null, { headers });
         console.log("sent active message")
       } catch (error) {
-        alert(
-          `Something went wrong while sending active ping: \n${handleError(error)}`,
-        );
+        console.log("Error caught:", error.response.data.message);
+        setErrorMessage(error.response.data.message);
+        setErrorModalOpen(true);
+        localStorage.clear();
+        navigate("/landing");
       }
-    };
+    }, 2000);
 
-    sendRequest();
+    return timerId;
+  }
 
-    const intervalId = setInterval(() => {
-      sendRequest();
-    }, 1000);
-
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, []);
+  function stopInactivityTimer() {
+    clearInterval(timerId);
+  }
 
   useEffect(() => {
     let client = new Client();
@@ -180,6 +186,7 @@ const Lobby = () => {
             }
             openNotification("Lobby settings have been updated");
           } else if (messageParsed.status === "started") {
+            stopInactivityTimer();
             const gameId = messageParsed.gameId;
             navigate("/game/" + gameId);
           }
@@ -193,103 +200,30 @@ const Lobby = () => {
     };
   }, []);
 
-  const InputQuests: React.FC<InputQuestsProps> = ({ disabled }) => {
-    const [localQuests, setLocalQuests] = useState(quests);
+  const handleQuestChange = (index, value) => {
+    const updatedQuests = [...quests];
+    updatedQuests[index] = value;
 
-    useEffect(() => {
-      setLocalQuests([...quests]);
-    }, [quests]);
+    if (index === updatedQuests.length - 1 && value.trim() !== "") {
+      updatedQuests.push("");
+    }
 
-    const handleQuestChange = (index, value) => {
-      const updatedQuests = [...localQuests];
-      updatedQuests[index] = value;
-
-      if (index === updatedQuests.length - 1 && value.trim() !== "") {
-        updatedQuests.push("");
-      }
-
-      setLocalQuests(updatedQuests);
-    };
-
-
-    const deleteQuest = (index) => {
-      const updatedQuests = [...localQuests];
-      updatedQuests.splice(index, 1);
-      setLocalQuests(updatedQuests);
-    };
-
-    const saveQuestsToGlobal = () => {
-      setQuests(localQuests.filter(quest => quest.trim() !== ""));
-    };
-
-    return (
-      <ScrollableContentWrapper>
-        <h6 className="font-bold mt-2 mb-2">Your Quests</h6>
-        <p className="text-left text-sm mt-0 mb-4 font-semibold">Find a...</p>
-        <div style={{ overflowY: "auto", maxHeight: "500px", width: "100%" }}>
-          {localQuests.map((quest, index) => (
-            <Input
-              isClearable
-              key={`quest-${index}`}  // Unique key for each input
-              //key={index}
-              placeholder={`Quest #${index + 1}`}
-              value={quest}
-              onChange={(e) => handleQuestChange(index, e.target.value)}
-              className="mb-2"
-              onClear={() => deleteQuest(index)}
-              fullWidth
-              style={{ boxSizing: "border-box" }}
-              disabled={disabled}
-            />
-          ))}
-        </div>
-        <Button
-          radius="md"
-          size="sm"
-          style={{ marginTop: "10px" }}
-          disabled={disabled}
-          onClick={saveQuestsToGlobal}>
-          Save Quests
-        </Button>
-      </ScrollableContentWrapper>
-    );
+    setQuests(updatedQuests);
   };
 
-  const CityInputField: React.FC<CityInputFieldProps> = ({ disabled }) => {
-    const [localCityName, setLocalCityName] = useState(cityName);
-
-    useEffect(() => {
-      setLocalCityName(cityName);
-    }, [cityName]);
-
-    const handleCityNameChange = (event) => {
-      setLocalCityName(event.target.value);
-    };
-
-    const saveCityNameToGlobal = () => {
-      setCityName(localCityName);
-    };
-
-    return (
-      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-        <Input
-          type="text"
-          label="Your Destination"
-          title="city name"
-          placeholder="Enter city name"
-          value={localCityName}
-          onChange={handleCityNameChange}
-          style={{ width: "300px" }}
-          disabled={!admin}
-        />
-        <Button
-          radius="md"
-          size="sm"
-          style={{ paddingLeft: "20px", paddingRight: "20px" }}
-          onClick={saveCityNameToGlobal}>Save Destination</Button>
-      </div>
-    );
+  const deleteQuest = (index) => {
+    const updatedQuests = [...quests];
+    updatedQuests.splice(index, 1);
+    // Ensure there is always at least one input field
+    if (updatedQuests.length === 0) {
+      updatedQuests.push("");
+    }
+    setQuests(updatedQuests);
   };
+
+  localStorage.setItem("totalQuests", String(quests.length-1));
+  const total = localStorage.getItem("totalQuests")
+  console.log("total quests " + total)
 
   const SaveButton: React.FC = () => {
     async function save() {
@@ -305,9 +239,9 @@ const Lobby = () => {
         await api.put("/lobbies/" + lobbyId, body, { headers });
         setSettingsConfirmed(true);
       } catch (error) {
-        alert(
-          `Something went wrong while saving lobby settings: \n${handleError(error)}`,
-        );
+        console.log("Error caught:", error.response.data.message);
+        setErrorMessage(error.response.data.message);
+        setErrorModalOpen(true);
       }
     }
 
@@ -336,13 +270,14 @@ const Lobby = () => {
         "Authorization": localStorage.getItem("token"),
       };
       try {
+        stopInactivityTimer();
         const response = await api.delete("/lobbies/" + lobbyId + "/leave/", { headers });
         localStorage.clear();
         navigate("/landing");
       } catch (error) {
-        alert(
-          `Something went wrong when leaving the lobby: \n${handleError(error)}`,
-        );
+        console.log("Error caught:", error.response.data.message);
+        setErrorMessage(error.response.data.message);
+        setErrorModalOpen(true);
       }
     }
 
@@ -380,58 +315,111 @@ const Lobby = () => {
     );
   };
 
-  const InteractionDisabledOverlay = () => (
-    <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
-      <p className="text-white text-xl">Waiting for the admin to configure and start the game...</p>
-    </div>
-  );
-
   return (
-    <BaseContainer size="large" className="flex flex-col items-center p-4">
-      {}
-      <h1 className="text-3xl font-bold text-gray-700 my-4 text-center">{lobbyName}</h1>
-      <div className="flex w-full">
-        <div className="flex flex-col w-full items-start gap-4 ml-6">
-          <TimeButtons
-            selectedDuration={roundDurationSeconds}
-            setRoundDurationSeconds={setRoundDurationSeconds}
-            disabled={!admin} />
-          <PlayerTable
-            players={players} />
+    <>
+      {errorModalOpen && <ErrorMessageModal isOpen={errorModalOpen} onClose={() => setErrorModalOpen(false)} errorMessage={errorMessage} />}
+      <BaseContainer size="large" className="flex flex-col items-center p-2">
+        <ToastContainer
+          pauseOnFocusLoss={false}
+          pauseOnHover={false}
+        />
+        <h1 className="text-3xl font-bold text-gray-700 my-4 text-center">{lobbyName}</h1>
+        <div className="flex w-full">
+          <div className="flex flex-col w-full items-start gap-4 ml-6">
+            <TimeButtons
+              disabled={!admin}
+              selectedDuration={roundDurationSeconds}
+              setRoundDurationSeconds={setRoundDurationSeconds}
+            />
+            <PlayerTable
+              players={players} />
+          </div>
+          <div className="flex-1 items-center justify-center px-16">
+            <ContentWrapper>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <Input
+                  disabled={!admin}
+                  type="text"
+                  label="Your Destination"
+                  title="city name"
+                  placeholder="Enter city name"
+                  value={cityName}
+                  onChange={(e) => setCityName(e.target.value)}
+                  style={admin ? { width: "300px" } : { width: "300px", cursor: "not-allowed",}}
+                />
+              </div>
+            </ContentWrapper>
+            <GoogleMapStaticImage />
+          </div>
+          <div className="flex flex-col w-full items-end mr-8">
+            {admin ? (<ScrollableContentWrapper>
+              <h6 className="font-bold mt-2 mb-2">Your Quests</h6>
+              <p className="text-left text-sm mt-0 mb-4 font-semibold">Find a...</p>
+              <div style={{ overflowY: "auto", maxHeight: "500px", width: "100%" }}>
+                {quests.map((quest, index) => (
+                  <Input
+                    disabled={!admin}
+                    isClearable
+                    key={`quest-${index}`}  // Unique key for each input
+                    placeholder={`Quest #${index + 1}`}
+                    value={quest}
+                    onChange={(e) => handleQuestChange(index, e.target.value)}
+                    className="mb-2"
+                    onClear={() => deleteQuest(index)}
+                    fullWidth
+                    style={{ boxSizing: "border-box" }}
+                  />
+                ))}
+              </div>
+            </ScrollableContentWrapper>): <ScrollableContentWrapper>
+              <h6 className="font-bold mt-2 mb-2">Your Quests</h6>
+              <p className="text-left text-sm mt-0 mb-4 font-semibold">Find a...</p>
+              <div style={{ overflowY: "auto", maxHeight: "500px", width: "100%" }}>
+                {quests.filter(item => item !== "").map((quest, index) => (
+                  <Input
+                    disabled
+                    key={`quest-${index}`}  // Unique key for each input
+                    placeholder={`Quest #${index + 1}`}
+                    value={quest}
+                    className="mb-2"
+                    fullWidth
+                    style={{
+                      boxSizing: "border-box",
+                      cursor: "not-allowed",
+                    }}
+                  />
+                ))}
+              </div>
+            </ScrollableContentWrapper>}
+          </div>
+          <div className="fixed bottom-0 left-0 right-0 flex justify-between items-center p-4">
+            <LeaveButton />
+            {!admin ?
+              (<p className="text-xl font-bold">Waiting for the admin to configure and start the game...</p>) : (
+                <>
+                  <StartButton
+                    disabled={!settingsConfirmed}
+                    lobbyId={lobbyId}
+                  />
+                  <SaveButton />
+                </>
+              )}
+          </div>
         </div>
-        <div className="flex-1 items-center justify-center px-16">
-          <ContentWrapper>
-            <CityInputField
-              disabled={!admin} />
-          </ContentWrapper>
-          <GoogleMapStaticImage />
-        </div>
-        <div className="flex flex-col w-full items-end mr-8">
-          <InputQuests
-            disabled={!admin} />
-        </div>
-        <div className="w-full flex justify-between px-12 absolute bottom-8">
-          <LeaveButton />
-          <StartButton
-            disabled={!settingsConfirmed}
-            lobbyId={lobbyId}
-          />
-          <SaveButton />
-        </div>
-      </div>
-      {/* {!admin && <InteractionDisabledOverlay />} */}
-      <Button
-        onPress={onOpen}
-        className="absolute bottom-2 right-2 p-2 sm rounded-full bg-transparent"
-        isIconOnly
-      >
-        <InfoCircleTwoTone style={{ fontSize: "20px"}}/>
-      </Button>
-      <HowToPlayModal 
-        isOpen={isOpen} 
-        onOpenChange={onOpenChange}
-        context="lobby"  />
-    </BaseContainer>
+        {/* {!admin && <InteractionDisabledOverlay />} */}
+        <Button
+          onPress={onOpen}
+          className="absolute bottom-2 right-2 p-2 sm rounded-full bg-transparent"
+          isIconOnly
+        >
+          <InfoCircleTwoTone style={{ fontSize: "20px"}}/>
+        </Button>
+        <HowToPlayModal
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          context="lobby"  />
+      </BaseContainer>
+    </>
   );
 };
 
