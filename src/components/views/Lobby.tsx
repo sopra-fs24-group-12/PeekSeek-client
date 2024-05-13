@@ -349,21 +349,21 @@ const Lobby = () => {
                   placeholder="Enter city name"
                   value={cityName}
                   onChange={(e) => setCityName(e.target.value)}
-                  style={{ width: "300px" }}
+                  style={admin ? { width: "300px" } : { width: "300px", cursor: "not-allowed",}}
                 />
               </div>
             </ContentWrapper>
             <GoogleMapStaticImage />
           </div>
           <div className="flex flex-col w-full items-end mr-8">
-            <ScrollableContentWrapper>
+            {admin ? (<ScrollableContentWrapper>
               <h6 className="font-bold mt-2 mb-2">Your Quests</h6>
               <p className="text-left text-sm mt-0 mb-4 font-semibold">Find a...</p>
               <div style={{ overflowY: "auto", maxHeight: "500px", width: "100%" }}>
                 {quests.map((quest, index) => (
                   <Input
                     disabled={!admin}
-                    isClearable={admin}
+                    isClearable
                     key={`quest-${index}`}  // Unique key for each input
                     placeholder={`Quest #${index + 1}`}
                     value={quest}
@@ -375,7 +375,26 @@ const Lobby = () => {
                   />
                 ))}
               </div>
-            </ScrollableContentWrapper>
+            </ScrollableContentWrapper>): <ScrollableContentWrapper>
+              <h6 className="font-bold mt-2 mb-2">Your Quests</h6>
+              <p className="text-left text-sm mt-0 mb-4 font-semibold">Find a...</p>
+              <div style={{ overflowY: "auto", maxHeight: "500px", width: "100%" }}>
+                {quests.filter(item => item !== "").map((quest, index) => (
+                  <Input
+                    disabled
+                    key={`quest-${index}`}  // Unique key for each input
+                    placeholder={`Quest #${index + 1}`}
+                    value={quest}
+                    className="mb-2"
+                    fullWidth
+                    style={{
+                      boxSizing: "border-box",
+                      cursor: "not-allowed",
+                    }}
+                  />
+                ))}
+              </div>
+            </ScrollableContentWrapper>}
           </div>
           <div className="fixed bottom-0 left-0 right-0 flex justify-between items-center p-4">
             <LeaveButton />
