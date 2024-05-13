@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import HowToPlayModal from "components/ui/HowToPlayModal";
 import { InfoCircleTwoTone } from "@ant-design/icons";
 import { Button, useDisclosure } from "@nextui-org/react";
+import MediaDisplay from "components/ui/MediaDisplay";
 
 
 const LandingPage = () => {
@@ -40,7 +41,8 @@ const LandingPage = () => {
         PeekSeek
       </h1>
       <div className="flex-grow flex items-center justify-center">
-        <img
+        <MediaDisplay/>
+        {/* <img
           src="/images/PeekSeeklogo.jpg"
           alt="PeekSeek Logo"
           style={{
@@ -48,7 +50,7 @@ const LandingPage = () => {
             maxWidth: "100%", // Prevents overflow from the container
             height: "auto", // Adjusts height based on the width
             objectFit: "contain" // Ensures image retains its aspect ratio
-          }} />
+          }} /> */}
       </div>
       <div className="w-full flex justify-center mb-4">
         <JoinButton onClick={handleClick}/>
