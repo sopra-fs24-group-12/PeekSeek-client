@@ -90,6 +90,7 @@ const JoinUser = () => {
     }
   };
   console.log("Error Modal Open:", errorModalOpen, "Message:", errorMessage);
+
   return (
     <>
       {errorModalOpen && <ErrorMessageModal isOpen={errorModalOpen} onClose={() => setErrorModalOpen(false)} errorMessage={errorMessage} />}
