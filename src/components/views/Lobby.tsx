@@ -200,111 +200,27 @@ const Lobby = () => {
     };
   }, []);
 
-  const InputQuests: React.FC<InputQuestsProps> = ({ disabled }) => {
-    const [localQuests, setLocalQuests] = useState(quests);
+  const handleQuestChange = (index, value) => {
+    const updatedQuests = [...quests];
+    updatedQuests[index] = value;
 
-    useEffect(() => {
-      setLocalQuests([...quests]);
-    }, [quests]);
+    if (index === updatedQuests.length - 1 && value.trim() !== "") {
+      updatedQuests.push("");
+    }
 
-    const handleQuestChange = (index, value) => {
-      const updatedQuests = [...localQuests];
-      updatedQuests[index] = value;
-
-      if (index === updatedQuests.length - 1 && value.trim() !== "") {
-        updatedQuests.push("");
-      }
-
-      setLocalQuests(updatedQuests);
-    };
-
-    const deleteQuest = (index) => {
-      if (!disabled) {
-        const updatedQuests = [...localQuests];
-        updatedQuests.splice(index, 1);
-        // Ensure there is always at least one input field
-        if (updatedQuests.length === 0) {
-          updatedQuests.push("");
-        }
-        setLocalQuests(updatedQuests);
-      }
-    };
-
-    const saveQuestsToGlobal = () => {
-      // Filter out empty quests but ensure one empty field at the end for new entries
-      const filteredQuests = localQuests.filter(quest => quest.trim() !== "");
-      filteredQuests.push("");
-      setQuests(filteredQuests);
-    };
-
-    return (
-      <ScrollableContentWrapper>
-        <h6 className="font-bold mt-2 mb-2">Your Quests</h6>
-        <p className="text-left text-sm mt-0 mb-4 font-semibold">Find a...</p>
-        <div style={{ overflowY: "auto", maxHeight: "500px", width: "100%" }}>
-          {localQuests.map((quest, index) => (
-            <Input
-              isClearable={!disabled}
-              key={`quest-${index}`}  // Unique key for each input
-              placeholder={`Quest #${index + 1}`}
-              value={quest}
-              onChange={(e) => handleQuestChange(index, e.target.value)}
-              className="mb-2"
-              onClear={() => deleteQuest(index)}
-              fullWidth
-              style={{ boxSizing: "border-box" }}
-              disabled={disabled}
-            />
-          ))}
-        </div>
-        <Button
-          radius="md"
-          size="sm"
-          style={{ marginTop: "10px" }}
-          disabled={disabled}
-          onClick={saveQuestsToGlobal}>
-          Save Quests
-        </Button>
-      </ScrollableContentWrapper>
-    );
+    setQuests(updatedQuests);
   };
 
-  const CityInputField: React.FC<CityInputFieldProps> = ({ disabled }) => {
-    const [localCityName, setLocalCityName] = useState(cityName);
-
-    useEffect(() => {
-      setLocalCityName(cityName);
-    }, [cityName]);
-
-    const handleCityNameChange = (event) => {
-      setLocalCityName(event.target.value);
-    };
-
-    const saveCityNameToGlobal = () => {
-      setCityName(localCityName);
-    };
-
-    return (
-      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-        <Input
-          disabled={!admin}
-          type="text"
-          label="Your Destination"
-          title="city name"
-          placeholder="Enter city name"
-          value={localCityName}
-          onChange={handleCityNameChange}
-          style={{ width: "300px" }}
-        />
-        <Button
-          disabled={!admin}
-          radius="md"
-          size="sm"
-          style={{ paddingLeft: "20px", paddingRight: "20px" }}
-          onClick={saveCityNameToGlobal}>Save Destination</Button>
-      </div>
-    );
+  const deleteQuest = (index) => {
+    const updatedQuests = [...quests];
+    updatedQuests.splice(index, 1);
+    // Ensure there is always at least one input field
+    if (updatedQuests.length === 0) {
+      updatedQuests.push("");
+    }
+    setQuests(updatedQuests);
   };
+
 
   localStorage.setItem("totalQuests", String(quests.length-1));
   const total = localStorage.getItem("totalQuests")
@@ -424,14 +340,42 @@ const Lobby = () => {
           </div>
           <div className="flex-1 items-center justify-center px-16">
             <ContentWrapper>
-              <CityInputField
-                disabled={!admin} />
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <Input
+                  disabled={!admin}
+                  type="text"
+                  label="Your Destination"
+                  title="city name"
+                  placeholder="Enter city name"
+                  value={cityName}
+                  onChange={(e) => setCityName(e.target.value)}
+                  style={{ width: "300px" }}
+                />
+              </div>
             </ContentWrapper>
             <GoogleMapStaticImage />
           </div>
           <div className="flex flex-col w-full items-end mr-8">
-            <InputQuests
-              disabled={!admin} />
+            <ScrollableContentWrapper>
+              <h6 className="font-bold mt-2 mb-2">Your Quests</h6>
+              <p className="text-left text-sm mt-0 mb-4 font-semibold">Find a...</p>
+              <div style={{ overflowY: "auto", maxHeight: "500px", width: "100%" }}>
+                {quests.map((quest, index) => (
+                  <Input
+                    disabled={!admin}
+                    isClearable={admin}
+                    key={`quest-${index}`}  // Unique key for each input
+                    placeholder={`Quest #${index + 1}`}
+                    value={quest}
+                    onChange={(e) => handleQuestChange(index, e.target.value)}
+                    className="mb-2"
+                    onClear={() => deleteQuest(index)}
+                    fullWidth
+                    style={{ boxSizing: "border-box" }}
+                  />
+                ))}
+              </div>
+            </ScrollableContentWrapper>
           </div>
           <div className="fixed bottom-0 left-0 right-0 flex justify-between items-center p-4">
             <LeaveButton />
