@@ -13,7 +13,7 @@ import Game from "../../views/Game";
 import VotingResults from "../../views/VotingResults";
 import GameSummary from "../../views/GameSummary";
 import Waiting from "../../views/Waiting";
-
+import RedirectWithMessage from "../../ui/RedirectWithMessage";
 /**
  * Main router of your application.
  * In the following class, different routes are rendered. In our case, there is a Login Route with matches the path "/login"
@@ -28,8 +28,6 @@ const AppRouter = () => {
     <BrowserRouter>
       <Routes>
 
-        <Route path="/game/*" element={<GameRouter base="/game" />} />
-
         <Route path="/landing" element={<Landing />} />
 
         <Route path="/join" element={<JoinLobby />} />
@@ -38,17 +36,33 @@ const AppRouter = () => {
 
         <Route path="/create" element={<CreateLobby />} />
 
-        <Route path="/submissions/:gameId" element={<GameSubmission />} />
+        <Route path="/lobby/:lobbyId" element={<GameGuard />} >
+          <Route path="/lobby/:lobbyId" element={<Lobby />} />
+        </Route>
 
-        <Route path="/lobby/:lobbyId" element={<Lobby />} />
+        <Route path="/game/*" element={<GameGuard />}>
+          <Route path="/game/*" element={<GameRouter base="/game" />} />
+        </Route>
+
+        <Route path="/game/:gameId" element={<GameGuard />}>
+          <Route path="/game/:gameId" element={<Game />} />
+        </Route>
+
+        <Route path="/submissions/:gameId" element={<GameGuard />} >
+          <Route path="/submissions/:gameId" element={<GameSubmission />} />
+        </Route>
+
+        <Route path="/voting/:gameId" element={<GameGuard />} >
+          <Route path="/voting/:gameId" element={<VotingResults />} />
+        </Route>
+
+        <Route path="/waiting/:gameId" element={<GameGuard />} >
+          <Route path="/waiting/:gameId" element={<Waiting />} />
+        </Route>
 
         <Route path="/gamesummary/:summaryId" element={<GameSummary />} />
 
-        <Route path="/game/:gameId" element={<Game />} />
-
-        <Route path="/voting/:gameId" element={<VotingResults />} />
-
-        <Route path="/waiting/:gameId" element={<Waiting />} />
+        <Route path="*" element={<RedirectWithMessage message="This page doesn't exist. You are redirected back to PeekSeek" redirectTo="/landing" />} />
 
         <Route path="/" element={
           <Navigate to="/landing" replace />
@@ -59,7 +73,4 @@ const AppRouter = () => {
   );
 };
 
-/*
-* Don't forget to export your component!
- */
 export default AppRouter;

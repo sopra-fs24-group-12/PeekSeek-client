@@ -16,6 +16,7 @@ import BackIcon from "../ui/BackIcon";
 import UpdateSettingsIcon from "../ui/UpdateSettingsIcon";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ErrorMessageModal from "components/ui/ErrorMessageModal";
 
 const Lobby = () => {
   const [quests, setQuests] = React.useState(["", "", "", ""]);
@@ -31,6 +32,8 @@ const Lobby = () => {
   const [settingsConfirmed, setSettingsConfirmed] = useState(false);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   let timerId;
+  const [errorModalOpen, setErrorModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   
   interface InputQuestsProps {
@@ -96,11 +99,10 @@ const Lobby = () => {
         // Set currentQuest to 1
         localStorage.setItem("currentQuest", String(1));
       } catch (error) {
-        alert(
-          `Something went wrong while fetching lobby information: \n${handleError(error)}`,
-        );
+        console.log("Error caught:", error.response.data.message);
+        setErrorMessage(error.response.data.message);
+        setErrorModalOpen(true);
         localStorage.clear();
-        navigate("/landing");
       }
     }
 
@@ -125,9 +127,10 @@ const Lobby = () => {
         await api.put(`/lobbies/${lobbyId}/active`, null, { headers });
         console.log("sent active message")
       } catch (error) {
-        alert(
-          `Something went wrong while sending active ping: \n${handleError(error)}`,
-        );
+        console.log("Error caught:", error.response.data.message);
+        setErrorMessage(error.response.data.message);
+        setErrorModalOpen(true);
+        localStorage.clear();
         navigate("/landing");
       }
     }, 2000);
@@ -321,9 +324,9 @@ const Lobby = () => {
         await api.put("/lobbies/" + lobbyId, body, { headers });
         setSettingsConfirmed(true);
       } catch (error) {
-        alert(
-          `Something went wrong while saving lobby settings: \n${handleError(error)}`,
-        );
+        console.log("Error caught:", error.response.data.message);
+        setErrorMessage(error.response.data.message);
+        setErrorModalOpen(true);
       }
     }
 
@@ -359,9 +362,9 @@ const Lobby = () => {
         localStorage.clear();
         navigate("/landing");
       } catch (error) {
-        alert(
-          `Something went wrong when leaving the lobby: \n${handleError(error)}`,
-        );
+        console.log("Error caught:", error.response.data.message);
+        setErrorMessage(error.response.data.message);
+        setErrorModalOpen(true);
       }
     }
 
@@ -401,60 +404,63 @@ const Lobby = () => {
   };
 
   return (
-    <BaseContainer size="large" className="flex flex-col items-center p-2">
-      <ToastContainer
-        pauseOnFocusLoss={false}
-        pauseOnHover={false}
-      />
-      <h1 className="text-3xl font-bold text-gray-700 my-4 text-center">{lobbyName}</h1>
-      <div className="flex w-full">
-        <div className="flex flex-col w-full items-start gap-4 ml-6">
-          <TimeButtons
-            disabled={!admin}
-            selectedDuration={roundDurationSeconds}
-            setRoundDurationSeconds={setRoundDurationSeconds}
-          />
-          <PlayerTable
-            players={players} />
-        </div>
-        <div className="flex-1 items-center justify-center px-16">
-          <ContentWrapper>
-            <CityInputField
+    <>
+      {errorModalOpen && <ErrorMessageModal isOpen={errorModalOpen} onClose={() => setErrorModalOpen(false)} errorMessage={errorMessage} />}
+      <BaseContainer size="large" className="flex flex-col items-center p-2">
+        <ToastContainer
+          pauseOnFocusLoss={false}
+          pauseOnHover={false}
+        />
+        <h1 className="text-3xl font-bold text-gray-700 my-4 text-center">{lobbyName}</h1>
+        <div className="flex w-full">
+          <div className="flex flex-col w-full items-start gap-4 ml-6">
+            <TimeButtons
+              disabled={!admin}
+              selectedDuration={roundDurationSeconds}
+              setRoundDurationSeconds={setRoundDurationSeconds}
+            />
+            <PlayerTable
+              players={players} />
+          </div>
+          <div className="flex-1 items-center justify-center px-16">
+            <ContentWrapper>
+              <CityInputField
+                disabled={!admin} />
+            </ContentWrapper>
+            <GoogleMapStaticImage />
+          </div>
+          <div className="flex flex-col w-full items-end mr-8">
+            <InputQuests
               disabled={!admin} />
-          </ContentWrapper>
-          <GoogleMapStaticImage />
+          </div>
+          <div className="fixed bottom-0 left-0 right-0 flex justify-between items-center p-4">
+            <LeaveButton />
+            {!admin ?
+              (<p className="text-xl font-bold">Waiting for the admin to configure and start the game...</p>) : (
+                <>
+                  <StartButton
+                    disabled={!settingsConfirmed}
+                    lobbyId={lobbyId}
+                  />
+                  <SaveButton />
+                </>
+              )}
+          </div>
         </div>
-        <div className="flex flex-col w-full items-end mr-8">
-          <InputQuests
-            disabled={!admin} />
-        </div>
-        <div className="fixed bottom-0 left-0 right-0 flex justify-between items-center p-4">
-          <LeaveButton />
-          {!admin ?
-            (<p className="text-xl font-bold">Waiting for the admin to configure and start the game...</p>) : (
-              <>
-                <StartButton
-                  disabled={!settingsConfirmed}
-                  lobbyId={lobbyId}
-                />
-                <SaveButton />
-              </>
-            )}
-        </div>
-      </div>
-      {/* {!admin && <InteractionDisabledOverlay />} */}
-      <Button
-        onPress={onOpen}
-        className="absolute bottom-2 right-2 p-2 sm rounded-full bg-transparent"
-        isIconOnly
-      >
-        <InfoCircleTwoTone style={{ fontSize: "20px"}}/>
-      </Button>
-      <HowToPlayModal 
-        isOpen={isOpen} 
-        onOpenChange={onOpenChange}
-        context="lobby"  />
-    </BaseContainer>
+        {/* {!admin && <InteractionDisabledOverlay />} */}
+        <Button
+          onPress={onOpen}
+          className="absolute bottom-2 right-2 p-2 sm rounded-full bg-transparent"
+          isIconOnly
+        >
+          <InfoCircleTwoTone style={{ fontSize: "20px"}}/>
+        </Button>
+        <HowToPlayModal
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          context="lobby"  />
+      </BaseContainer>
+    </>
   );
 };
 
