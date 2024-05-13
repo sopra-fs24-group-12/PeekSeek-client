@@ -18,7 +18,7 @@ export const GameGuard = () => {
   }
   //TODO: Change to game for testing
 
-  return <Navigate to="/landing" replace />;
+  return <Navigate to="/join" replace />;
 };
 
 GameGuard.propTypes = {
