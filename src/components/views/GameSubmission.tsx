@@ -12,10 +12,9 @@ import { Input, Button, useDisclosure, Progress } from "@nextui-org/react";
 import BaseContainer from "../ui/BaseContainer";
 import SubmissionCard from "../ui/SubmissionCard";
 import SubmitButton from "../ui/SubmitButton";
-//import StreetViewModal from "../ui/StreetViewModal"; //TODO: Get this working
+import StreetViewModal from "../ui/StreetViewModal"; //TODO: Get this working
 import Timer from "../ui/Timer";
 import { ThreeDots } from "react-loader-spinner";
-import { Progress} from "@nextui-org/react";
 import { set } from "lodash";
 
 const google = window.google;
@@ -206,10 +205,10 @@ const GameSubmission = () => {
             quest: response1.data.quest,
             anonymousName: `Anonymous ${animalNames[index]}`,
             lat: item.submittedLocation.lat,
-          lng: item.submittedLocation.lng,
-          heading: item.submittedLocation.heading,
-          pitch: item.submittedLocation.pitch,
-          imageUrl: !item.noSubmission
+            lng: item.submittedLocation.lng,
+            heading: item.submittedLocation.heading,
+            pitch: item.submittedLocation.pitch,
+            imageUrl: !item.noSubmission
               ? generateStreetViewImageLink(
                 item.submittedLocation.lat,
                 item.submittedLocation.lng,
@@ -241,7 +240,22 @@ const GameSubmission = () => {
 
     fetchData();
   }, []);
-  /*
+
+  function generateStreetViewSubmissionLink(lat: string, long: string, heading: string, pitch: string): string {
+    const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
+
+    const baseUrl = "https://www.google.com/maps/embed/v1/streetview/";
+
+    const params = new URLSearchParams({
+      key: apiKey,
+      location: `${lat},${long}`,
+      heading: heading,
+      pitch: pitch,
+    });
+
+    return `${baseUrl}?${params}`;
+  }
+
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedCoords, setSelectedCoords] = useState({ lat: 0, lng: 0, heading: 0, pitch: 0 });
 
@@ -256,6 +270,7 @@ const GameSubmission = () => {
       };
       setSelectedCoords(newCoords);
     }
+    setModalOpen(true);
   }
 
   useEffect(() => {
@@ -263,11 +278,6 @@ const GameSubmission = () => {
       setModalOpen(true);
     }
   }, [selectedCoords]);
-  */
-
-  const handleImageClick = (index) => {
-    console.log("IMAGE CLICKED");
-  };
 
   const handlePickClick = (index) => {
     if (banned.hasKey(index)) {
@@ -380,8 +390,16 @@ const GameSubmission = () => {
                   />
                 ))}
               </div>
-              
-              
+              <StreetViewModal
+                isOpen={isModalOpen}
+                onClose={() => setModalOpen(false)}
+                generatedLink={generateStreetViewSubmissionLink(
+                  selectedCoords.lat.toString(),
+                  selectedCoords.lng.toString(),
+                  selectedCoords.heading.toString(),
+                  selectedCoords.pitch.toString()
+                )}
+              />
               <div className="w-full flex justify-center p-4">
                 <SubmitButton voteData={mergeDataForSubmission()} gameId={gameId} setSubmissionDone={setSubmissionDone} />
               </div>
@@ -411,13 +429,3 @@ const GameSubmission = () => {
 
 export default GameSubmission;
 //TODO: Close modal
-/*<StreetViewModal
-                isOpen={isModalOpen}
-                onClose={() => setModalOpen(false)}
-                coords={{
-                  lat: selectedCoords.lat,
-                  lng: selectedCoords.lng,
-                  heading: selectedCoords.heading,
-                  pitch: selectedCoords.pitch
-                }}
-              /> */

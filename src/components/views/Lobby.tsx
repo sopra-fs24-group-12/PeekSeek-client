@@ -19,6 +19,7 @@ import BackDashboardButton from "../ui/BackDashboardButton";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+
 const Lobby = () => {
   const [quests, setQuests] = React.useState(["", "", "", ""]);
   const [players, setPlayers] = useState([]);
@@ -31,6 +32,8 @@ const Lobby = () => {
   const [lng, setLng] = useState("");
   const [cityName, setCityName] = useState("");
   const [settingsConfirmed, setSettingsConfirmed] = useState(false);
+
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   interface InputQuestsProps {
     disabled: boolean;
@@ -51,7 +54,7 @@ const Lobby = () => {
   }
 
   const openNotification = (message: string) => {
-    notificationApi.open({
+    notification.open({
       message: message,
       duration: 2,
     });
@@ -288,54 +291,6 @@ const Lobby = () => {
     );
   };
 
-  /*  const CityInputField: React.FC<CityInputFieldProps> = ({ disabled }) => {
-    const cityNameRef = useRef(cityName);
-
-    useEffect(() => {
-      cityNameRef.current = cityName;
-    }, [cityName]);
-
-    const handleCityNameChange = useCallback(debounce((value) => {
-      setCityName(value);
-      console.log("City name changed to:", value);
-      save();
-    }, 1000), []);
-
-    async function save() {
-      const headers = {
-        "Authorization": localStorage.getItem("token"),
-      };
-      const body = JSON.stringify({
-        gameLocation: cityNameRef.current
-      });
-      try {
-        await api.put("/lobbies/" + lobbyId, body, { headers });
-        setSettingsConfirmed(true);
-      } catch (error) {
-        alert(
-          `Something went wrong while saving lobby settings: \n${handleError(error)}`,
-        );
-      }
-    }
-
-    return (
-      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-        <Input
-          type="text"
-          label="Your Destination"
-          title="city name"
-          placeholder="Enter city name"
-          value={cityName}
-          onChange={(event) => handleCityNameChange(event.target.value)}
-          style={{ width: "300px" }}
-          disabled={!admin}
-        />
-      </div>
-    );
-  };
-*/
-
-
   const SaveButton: React.FC = () => {
     async function save() {
       const headers = {
@@ -433,7 +388,7 @@ const Lobby = () => {
 
   return (
     <BaseContainer size="large" className="flex flex-col items-center p-4">
-      {contextHolder}
+      {}
       <h1 className="text-3xl font-bold text-gray-700 my-4 text-center">{lobbyName}</h1>
       <div className="flex w-full">
         <div className="flex flex-col w-full items-start gap-4 ml-6">
