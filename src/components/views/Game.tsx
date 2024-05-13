@@ -64,52 +64,6 @@ function MyGoogleMap() {
   };
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const headers = {
-          "Authorization": localStorage.getItem("token"),
-        };
-        console.log("Game ID:", headers.Authorization);
-        const response = await api.get("/games/" + gameId + "/round", { headers });
-        console.log("API Response:", response.data);
-
-        const roundStatus = response.data.roundStatus;
-        if (roundStatus !== "PLAYING") {
-          if (roundStatus === "VOTING") {
-            navigate("/submissions/" + gameId);
-
-            return
-          } else if (roundStatus === "SUMMARY") {
-            navigate("/voting/" + gameId);
-
-            return
-          }
-        }
-
-        setQuest(response.data.quest);
-        setCityName(response.data.geoCodingData.formAddress);
-        setRoundDurationSeconds(response.data.roundTime);
-        setLat(response.data.geoCodingData.lat);
-        setLng(response.data.geoCodingData.lng);
-        setResLatNe(response.data.geoCodingData.resLatNe);
-        setResLngNe(response.data.geoCodingData.resLngNe);
-        setResLatSw(response.data.geoCodingData.resLatSw);
-        setResLngSw(response.data.geoCodingData.resLngSw);
-        setMapCenter({ lat, lng });
-        setQuestNr(parseInt(localStorage.getItem("currentQuest"), 10))
-      } catch (error) {
-        alert(
-          `Something went wrong while fetching round information: \n${handleError(error)}`,
-        );
-        localStorage.clear();
-        navigate("/landing");
-      }
-    }
-
-    fetchData();
-  }, []);
-
-  useEffect(() => {
     let tempId = startInactivityTimer();
 
     return () => {
@@ -134,6 +88,7 @@ function MyGoogleMap() {
         await api.put(`/games/${gameId}/active`, null, { headers });
         console.log("sent active message")
       } catch (error) {
+        stopInactivityTimer();
         alert(
           `Something went wrong while sending active ping: \n${handleError(error)}`,
         );
@@ -148,6 +103,55 @@ function MyGoogleMap() {
   function stopInactivityTimer() {
     clearInterval(timerId);
   }
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const headers = {
+          "Authorization": localStorage.getItem("token"),
+        };
+        console.log("Game ID:", headers.Authorization);
+        const response = await api.get("/games/" + gameId + "/round", { headers });
+        console.log("API Response:", response.data);
+
+        const roundStatus = response.data.roundStatus;
+        if (roundStatus !== "PLAYING") {
+          if (roundStatus === "VOTING") {
+            stopInactivityTimer();
+            navigate("/submissions/" + gameId);
+
+            return
+          } else if (roundStatus === "SUMMARY") {
+            stopInactivityTimer();
+            navigate("/voting/" + gameId);
+
+            return
+          }
+        }
+
+        setQuest(response.data.quest);
+        setCityName(response.data.geoCodingData.formAddress);
+        setRoundDurationSeconds(response.data.roundTime);
+        setLat(response.data.geoCodingData.lat);
+        setLng(response.data.geoCodingData.lng);
+        setResLatNe(response.data.geoCodingData.resLatNe);
+        setResLngNe(response.data.geoCodingData.resLngNe);
+        setResLatSw(response.data.geoCodingData.resLatSw);
+        setResLngSw(response.data.geoCodingData.resLngSw);
+        setMapCenter({ lat, lng });
+        setQuestNr(parseInt(localStorage.getItem("currentQuest"), 10))
+      } catch (error) {
+        stopInactivityTimer();
+        alert(
+          `Something went wrong while fetching round information: \n${handleError(error)}`,
+        );
+        localStorage.clear();
+        navigate("/landing");
+      }
+    }
+
+    fetchData();
+  }, []);
 
   useEffect(() => {
     let client = new Client();

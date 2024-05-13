@@ -191,10 +191,12 @@ const GameSubmission = () => {
         const roundStatus = response1.data.roundStatus;
         if (roundStatus !== "VOTING") {
           if (roundStatus === "PLAYING") {
+            stopInactivityTimer();
             navigate("/game/" + gameId);
 
             return
           } else if (roundStatus === "SUMMARY") {
+            stopInactivityTimer();
             navigate("/voting/" + gameId);
 
             return

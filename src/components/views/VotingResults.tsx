@@ -82,10 +82,12 @@ const VotingResults = () => {
         const roundStatus = response2.data.roundStatus;
         if (roundStatus !== "SUMMARY") {
           if (roundStatus === "VOTING") {
+            stopInactivityTimer();
             navigate("/submissions/" + gameId);
 
             return
           } else if (roundStatus === "PLAYING") {
+            stopInactivityTimer();
             navigate("/game/" + gameId);
 
             return
@@ -109,6 +111,7 @@ const VotingResults = () => {
         );
 
       } catch (error) {
+        stopInactivityTimer();
         alert(
           `Something went wrong while fetching information: \n${handleError(error)}`,
         );
@@ -137,6 +140,7 @@ const VotingResults = () => {
           console.log("Invalid or empty response data");
         }
       } catch (error) {
+        stopInactivityTimer();
         alert(
           `Something went wrong while fetching information: \n${handleError(error)}`,
         );
