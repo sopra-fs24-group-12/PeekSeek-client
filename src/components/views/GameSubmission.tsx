@@ -184,13 +184,26 @@ const GameSubmission = () => {
       };
 
       try {
-        const response = await api.get("/games/" + gameId + "/submissions", { headers });
-        const animalNames = ["Koala", "Bear", "Giraffe", "Zebra", "Gazelle", "Elephant"];
-        console.log("API Response 1:", response.data);
-
         const response1 = await api.get("/games/" + gameId + "/round", { headers });
         console.log("API Response 2:", response1.data);
         setRoundDurationSeconds(response1.data.roundTime)
+
+        const roundStatus = response1.data.roundStatus;
+        if (roundStatus !== "VOTING") {
+          if (roundStatus === "PLAYING") {
+            navigate("/game/" + gameId);
+
+            return
+          } else if (roundStatus === "SUMMARY") {
+            navigate("/voting/" + gameId);
+
+            return
+          }
+        }
+
+        const response = await api.get("/games/" + gameId + "/submissions", { headers });
+        const animalNames = ["Koala", "Bear", "Giraffe", "Zebra", "Gazelle", "Elephant"];
+        console.log("API Response 1:", response.data);
 
         const transformedData: CardData[] = [];
         response.data.forEach((item: any, index: number) => {

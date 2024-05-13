@@ -72,6 +72,20 @@ function MyGoogleMap() {
         console.log("Game ID:", headers.Authorization);
         const response = await api.get("/games/" + gameId + "/round", { headers });
         console.log("API Response:", response.data);
+
+        const roundStatus = response.data.roundStatus;
+        if (roundStatus !== "PLAYING") {
+          if (roundStatus === "VOTING") {
+            navigate("/submissions/" + gameId);
+
+            return
+          } else if (roundStatus === "SUMMARY") {
+            navigate("/voting/" + gameId);
+
+            return
+          }
+        }
+
         setQuest(response.data.quest);
         setCityName(response.data.geoCodingData.formAddress);
         setRoundDurationSeconds(response.data.roundTime);

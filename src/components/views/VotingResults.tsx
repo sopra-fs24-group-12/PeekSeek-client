@@ -76,6 +76,47 @@ const VotingResults = () => {
         "Authorization": localStorage.getItem("token"),
       };
       try {
+        const response2 = await api.get("/games/" + gameId + "/round", { headers });
+        console.log("API Response:", response2.data);
+
+        const roundStatus = response2.data.roundStatus;
+        if (roundStatus !== "SUMMARY") {
+          if (roundStatus === "VOTING") {
+            navigate("/submissions/" + gameId);
+
+            return
+          } else if (roundStatus === "PLAYING") {
+            navigate("/game/" + gameId);
+
+            return
+          }
+        }
+
+        const response1 = await api.get("/games/" + gameId + "/winningSubmission", { headers });
+        console.log("API Response:", response1.data);
+
+        const noSubmission = response1.data.noSubmission;
+
+        setWinningSubmission(
+          {
+            id: response1.data.id.toString(),
+            cityName: !noSubmission ? response2.data.geoCodingData.formAddress : "",
+            quest: !noSubmission ? response2.data.quest : "",
+            anonymousName: response1.data.username,
+            imageUrl: !noSubmission ? generateStreetViewImageLink(response1.data.submittedLocation.lat, response1.data.submittedLocation.lng, response1.data.submittedLocation.heading, response1.data.submittedLocation.pitch) : "",
+            noSubmission: noSubmission,
+          },
+        );
+
+      } catch (error) {
+        alert(
+          `Something went wrong while fetching information: \n${handleError(error)}`,
+        );
+        localStorage.clear();
+        navigate("/landing");
+      }
+
+      try {
         const response = await api.get("/games/" + gameId + "/leaderboard", { headers });
         if (response && response.data && Array.isArray(response.data)) {
           const sortedLeaderboard = [...response.data];
@@ -95,34 +136,6 @@ const VotingResults = () => {
         } else {
           console.log("Invalid or empty response data");
         }
-      } catch (error) {
-        alert(
-          `Something went wrong while fetching information: \n${handleError(error)}`,
-        );
-        localStorage.clear();
-        navigate("/landing");
-      }
-
-      try {
-        const response1 = await api.get("/games/" + gameId + "/winningSubmission", { headers });
-        console.log("API Response:", response1.data);
-
-        const response2 = await api.get("/games/" + gameId + "/round", { headers });
-        console.log("API Response:", response2.data);
-
-        const noSubmission = response1.data.noSubmission;
-
-        setWinningSubmission(
-          {
-            id: response1.data.id.toString(),
-            cityName: !noSubmission ? response2.data.geoCodingData.formAddress : "",
-            quest: !noSubmission ? response2.data.quest : "",
-            anonymousName: response1.data.username,
-            imageUrl: !noSubmission ? generateStreetViewImageLink(response1.data.submittedLocation.lat, response1.data.submittedLocation.lng, response1.data.submittedLocation.heading, response1.data.submittedLocation.pitch) : "",
-            noSubmission: noSubmission,
-          },
-        );
-
       } catch (error) {
         alert(
           `Something went wrong while fetching information: \n${handleError(error)}`,
@@ -234,8 +247,8 @@ const VotingResults = () => {
           <Progress
             aria-label="Progress"
             disableAnimation
-            maxValue= {parseInt(localStorage.getItem("totalQuests"), 10)}
-            value={currQuestNr-1}
+            maxValue={parseInt(localStorage.getItem("totalQuests"), 10)}
+            value={currQuestNr - 1}
             color="success"
             className="absolute right-0 top-0 w-full" />
           <div className="flex flex-col items-center justify-center w-full h-full">
