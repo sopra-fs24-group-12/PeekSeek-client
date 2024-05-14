@@ -24,7 +24,7 @@ const LeaveButton: React.FC<LeaveButtonProps> = ({lobbyId}) => {
       radius="full"
       size = "lg"
       color = "default"
-      className="shadow-lg"
+      className="shadow-lg flex-start"
       onClick={() => {
         console.log("Leaving lobby");
         leave();

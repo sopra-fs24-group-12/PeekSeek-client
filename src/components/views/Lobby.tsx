@@ -8,6 +8,8 @@ import PlayerTable from "../ui/PlayerTable";
 import { Button, Input, useDisclosure } from "@nextui-org/react";
 import ContentWrapper from "components/ui/ContentWrapper";
 import ScrollableContentWrapper from "components/ui/ScrollableContentWrapper";
+import FlexWrapper from "components/ui/FlexWrapper";
+import CityInputWrapper from "components/ui/CityInputWrapper";
 import TimeButtons from "../ui/TimeButtons";
 import { getWebsocketDomain } from "helpers/getDomain";
 import HowToPlayModal from "components/ui/HowToPlayModal";
@@ -305,9 +307,21 @@ const Lobby = () => {
     const imageUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${latitude},${longitude}&zoom=${zoom}&size=400x400&maptype=roadmap&key=${apiKey}`;
 
     return (
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-        <div style={{ height: "25px" }}></div>
-        <div style={{ borderRadius: "50%", overflow: "hidden", width: "550px", height: "550px" }}>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>       
+        <div
+          style={{
+            borderRadius: "50%",
+            overflow: "hidden",
+            width: "120%",
+            maxWidth: "500px",
+            maxHeight: "500px",
+            boxShadow: "0 4px 8px rgba(0,0,0,0.3)",
+            border: "5px solid white",
+            marginTop: "15px",
+            marginBottom: "15px",
+            aspectRatio: "1",
+          }}
+        >
           <img src={imageUrl} alt="Google Map" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         </div>
       </div>
@@ -324,14 +338,14 @@ const Lobby = () => {
   return (
     <>
       {errorModalOpen && <ErrorMessageModal isOpen={errorModalOpen} onClose={() => handleErrorInLobby()} errorMessage={errorMessage} />}
-      <BaseContainer size="large" className="flex flex-col items-center p-2">
+      <BaseContainer size="large" className="flex flex-col items-center overflow-hidden min-h-screen max-w-full">
         <ToastContainer
           pauseOnFocusLoss={false}
           pauseOnHover={false}
         />
-        <h1 className="text-3xl font-bold text-gray-700 my-4 text-center">{lobbyName}</h1>
-        <div className="flex w-full">
-          <div className="flex flex-col w-full items-start gap-4 ml-6">
+        <h1 className="text-3xl font-bold text-gray-700 my-0 text-center">{lobbyName}</h1>
+          <div className="flex flex-col md:flex-row w-full justify-between space-y-6 md:space-y-0 md:space-x-6 overflow-auto">
+            <div className="md:w-1/3 p-4 gap-4 flex flex-col">
             <TimeButtons
               disabled={!admin}
               selectedDuration={roundDurationSeconds}
@@ -341,8 +355,8 @@ const Lobby = () => {
               players={players} />
           </div>
           <div className="flex-1 items-center justify-center px-16">
-            <ContentWrapper>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <CityInputWrapper>
+              <div style={{ display: "flex", alignItems: "center", gap: "5px", width: "100%" }}>
                 <Input
                   disabled={!admin}
                   type="text"
@@ -354,13 +368,13 @@ const Lobby = () => {
                   style={admin ? { width: "300px" } : { width: "300px", cursor: "not-allowed",}}
                 />
               </div>
-            </ContentWrapper>
+            </CityInputWrapper>
             <GoogleMapStaticImage />
           </div>
           <div className="flex flex-col w-full items-end mr-8">
             {admin ? (<ScrollableContentWrapper>
-              <h6 className="font-bold mt-2 mb-2">Your Quests</h6>
-              <p className="text-left text-sm mt-0 mb-4 font-semibold">Find a...</p>
+              <h6 className="text-center font-bold mt-2 mb-2">Your Quests</h6>
+              <p className="text-left text-sm mt-0 mb-4 ml-2 font-semibold">Find a...</p>
               <div style={{ overflowY: "auto", maxHeight: "500px", width: "100%" }}>
                 {quests.map((quest, index) => (
                   <Input
@@ -415,7 +429,7 @@ const Lobby = () => {
         {/* {!admin && <InteractionDisabledOverlay />} */}
         <Button
           onPress={onOpen}
-          className="absolute bottom-2 right-2 p-2 sm rounded-full bg-transparent"
+          className="absolute bottom-0 right-0 sm rounded-full bg-transparent"
           isIconOnly
         >
           <InfoCircleTwoTone style={{ fontSize: "20px"}}/>
