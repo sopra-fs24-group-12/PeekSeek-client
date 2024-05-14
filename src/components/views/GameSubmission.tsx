@@ -444,7 +444,7 @@ const GameSubmission = () => {
                   selectedCoords.pitch.toString()
                 )}
               />
-              <div className="w-full flex justify-center p-4">
+              <div className="absolute bottom-2 w-full flex flex-col items-center mt-auto">
                 <SubmitButton voteData={mergeDataForSubmission()} gameId={gameId} setSubmissionDone={setSubmissionDone} />
               </div>
             </div>
