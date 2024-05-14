@@ -35,6 +35,7 @@ const Lobby = () => {
   let timerId;
   const [errorModalOpen, setErrorModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  let client = new Client();
 
   interface InputQuestsProps {
     disabled: boolean;
@@ -143,7 +144,6 @@ const Lobby = () => {
   }
 
   useEffect(() => {
-    let client = new Client();
     const websocketUrl = getWebsocketDomain();
     client.configure({
       brokerURL: websocketUrl,
@@ -314,9 +314,16 @@ const Lobby = () => {
     );
   };
 
+  function handleErrorInLobby() {
+    client && client.deactivate();
+    setErrorModalOpen(false);
+    localStorage.clear();
+    navigate("/landing");
+  }
+
   return (
     <>
-      {errorModalOpen && <ErrorMessageModal isOpen={errorModalOpen} onClose={() => setErrorModalOpen(false)} errorMessage={errorMessage} />}
+      {errorModalOpen && <ErrorMessageModal isOpen={errorModalOpen} onClose={() => handleErrorInLobby()} errorMessage={errorMessage} />}
       <BaseContainer size="large" className="flex flex-col items-center p-2">
         <ToastContainer
           pauseOnFocusLoss={false}

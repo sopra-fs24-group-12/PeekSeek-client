@@ -72,9 +72,14 @@ const JoinLobby = () => {
     }
   }
 
+  function handleErrorOnJoinLobbyPage() {
+    setErrorModalOpen(false);
+    navigate("/landing/");
+  }
+
   return (
     <>
-      {errorModalOpen && <ErrorMessageModal isOpen={errorModalOpen} onClose={() => setErrorModalOpen(false)} errorMessage={errorMessage} />}
+      {errorModalOpen && <ErrorMessageModal isOpen={errorModalOpen} onClose={() => handleErrorOnJoinLobbyPage()} errorMessage={errorMessage} />}
       <div className="relative min-h-screen w-screen">
         <div className="absolute top-4 left-4 z-50">
           <BackButton />

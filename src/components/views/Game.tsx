@@ -7,6 +7,7 @@ import { getWebsocketDomain } from "helpers/getDomain";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { MagnifyingGlass, TailSpin, ThreeDots } from "react-loader-spinner";
+import ErrorMessageModal from "components/ui/ErrorMessageModal";
 
 
 //imports for UI
@@ -58,6 +59,10 @@ function MyGoogleMap() {
   const [currQuestNr, setQuestNr] = useState(parseInt(localStorage.getItem("currentQuest"))-1);
   const [pageLoading, setPageLoading] = useState(true);
   let timerId;
+  const [errorModalOpen, setErrorModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [summaryId, setSummaryId] = useState(null);
+  let client = new Client();
 
   const openNotification = (message: string) => {
     toast.info(message, {autoClose: 3000});
@@ -154,7 +159,6 @@ function MyGoogleMap() {
   }, []);
 
   useEffect(() => {
-    let client = new Client();
     const websocketUrl = getWebsocketDomain();
     client.configure({
       brokerURL: websocketUrl,
@@ -171,8 +175,12 @@ function MyGoogleMap() {
             openNotification(messageParsed.username + " left");
           } else if (messageParsed.status === "game_over") {
             stopInactivityTimer();
+            client && client.deactivate();
             localStorage.setItem("submissionDone", "false");
-            navigate("/gamesummary/" + messageParsed.summaryId);
+            console.log("Game ended prematurely");
+            setErrorMessage("The game ended prematurely since less than three participants are remaining. You are being transferred to the summary page to see all completed rounds.");
+            setErrorModalOpen(true);
+            setSummaryId(messageParsed.summaryId);
           }
         });
         client && client.subscribe(timerDestination, (message) => {
@@ -250,6 +258,12 @@ function MyGoogleMap() {
     }
   }
 
+  function handlePrematureGameEnd() {
+    setErrorModalOpen(false)
+    localStorage.clear();
+    navigate("/gamesummary/" + summaryId);
+  }
+
   const submitNow = () => {
     console.log("Successfully submitted");
     console.log("Latitude: " + lat);
@@ -274,6 +288,7 @@ function MyGoogleMap() {
 
   return (
     <div className="relative min-h-screen w-screen flex flex-col items-center">
+      {errorModalOpen && <ErrorMessageModal isOpen={errorModalOpen} onClose={() => handlePrematureGameEnd()} errorMessage={errorMessage} />}
       <ToastContainer
         pauseOnFocusLoss={false}
         pauseOnHover={false}

@@ -8,7 +8,7 @@ import BaseContainer from "../ui/BaseContainer";
 import Leaderboard from "../ui/Leaderboard";
 import ExternalLinkButton from "../ui/ExternalLinkButton";
 import BackDashboardButton from "../ui/BackDashboardButton";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import StartButton from "../ui/StartButton";
 import { MutatingDots, ThreeDots, DNA, BallTriangle, TailSpin } from "react-loader-spinner";
 
@@ -27,6 +27,7 @@ const GameSummary = () => {
   const [errorModalOpen, setErrorModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [pageLoading, setPageLoading] = useState(true);
+  const navigate = useNavigate();
 
   async function generateStaticMapUrl(latitudes: string[], longitudes: string[]): Promise<string> {
     const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
@@ -80,6 +81,11 @@ const GameSummary = () => {
     )
   }, []);
 
+  function handleErrorOnSummaryPage() {
+    setErrorModalOpen(false);
+    navigate("/landing/");
+  }
+
   return (
     <div className="relative min-h-screen w-screen flex flex-col items-center">
       {pageLoading ? (
@@ -97,7 +103,7 @@ const GameSummary = () => {
           </div>
         </div>
       ) : (<>
-        {errorModalOpen && <ErrorMessageModal isOpen={errorModalOpen} onClose={() => setErrorModalOpen(false)} errorMessage={errorMessage} />}
+        {errorModalOpen && <ErrorMessageModal isOpen={errorModalOpen} onClose={() => handleErrorOnSummaryPage()} errorMessage={errorMessage} />}
         <BaseContainer size="large" className="flex flex-col items-center">
           <Progress
             aria-label="Progress"

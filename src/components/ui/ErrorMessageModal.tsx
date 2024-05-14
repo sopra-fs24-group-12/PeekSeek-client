@@ -14,7 +14,6 @@ const ErrorMessageModal: React.FC<ErrorMessageModalProps> = ({ errorMessage, onC
 
   const handleOkClick = () => {
     onClose();
-    navigate("/landing");
   };
 
   return (

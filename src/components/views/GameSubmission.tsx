@@ -15,9 +15,8 @@ import BaseContainer from "../ui/BaseContainer";
 import SubmissionCard from "../ui/SubmissionCard";
 import SubmitButton from "../ui/SubmitButton";
 import StreetViewModal from "../ui/StreetViewModal"; //TODO: Get this working
-import Timer from "../ui/Timer";
-import { ThreeDots, MagnifyingGlass, TailSpin } from "react-loader-spinner";
-import { set } from "lodash";
+import ErrorMessageModal from "components/ui/ErrorMessageModal";
+import { MagnifyingGlass, TailSpin } from "react-loader-spinner";
 
 const google = window.google;
 
@@ -78,6 +77,10 @@ const GameSubmission = () => {
   const [remainingTime, setRemainingTime] = useState(0);
   const [roundDurationSeconds, setRoundDurationSeconds] = useState(0);
   let timerId;
+  const [errorModalOpen, setErrorModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [summaryId, setSummaryId] = useState(null);
+  let client = new Client();
 
   const mergeDataForSubmission = (): ExtendedDictionary => {
     const updatedBanned = new ExtendedDictionary();
@@ -150,7 +153,6 @@ const GameSubmission = () => {
   }
 
   useEffect(() => {
-    let client = new Client();
     const websocketUrl = getWebsocketDomain();
     client.configure({
       brokerURL: websocketUrl,
@@ -168,9 +170,12 @@ const GameSubmission = () => {
             openNotification(messageParsed.username + " left");
           } else if (messageParsed.status === "game_over") {
             stopInactivityTimer();
+            client && client.deactivate();
             localStorage.setItem("submissionDone", "false");
-            //setModalOpen(false);
-            navigate("/gamesummary/" + messageParsed.summaryId);
+            console.log("Game ended prematurely");
+            setErrorMessage("The game ended prematurely since less than three participants are remaining. You are being transferred to the summary page to see all completed rounds.");
+            setErrorModalOpen(true);
+            setSummaryId(messageParsed.summaryId);
           }
         });
         client && client.subscribe(timerDestination, (message) => {
@@ -320,6 +325,12 @@ const GameSubmission = () => {
 
   };
 
+  function handlePrematureGameEnd() {
+    setErrorModalOpen(false)
+    localStorage.clear();
+    navigate("/gamesummary/" + summaryId);
+  }
+
   const handleUnbanClick = (index) => {
     const updatedBanned = new ExtendedDictionary();
     updatedBanned.data = { ...banned.data };
@@ -348,6 +359,11 @@ const GameSubmission = () => {
 
   return (
     <div className="relative min-h-screen w-screen flex flex-col items-center">
+      {errorModalOpen && <ErrorMessageModal isOpen={errorModalOpen} onClose={() => handlePrematureGameEnd()} errorMessage={errorMessage} />}
+      <ToastContainer
+        pauseOnFocusLoss={false}
+        pauseOnHover={false}
+      />
       {submissionDone ? (
         <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50">
           <div className="flex flex-col items-center">
@@ -382,10 +398,6 @@ const GameSubmission = () => {
           size="large"
           className="flex flex-col items-center"
         >
-          <ToastContainer
-            pauseOnFocusLoss={false}
-            pauseOnHover={false}
-          />
           <Progress
             aria-label="Progress"
             disableAnimation
