@@ -178,7 +178,8 @@ const VotingResults = () => {
             stopInactivityTimer();
             navigate(`/game/${gameId}/`);
           } else if (messageParsed.status === "game_over") {
-            if (currQuestNr !== totalQuests || remainingTime > 2) {
+            console.log("remainingTime: ", remainingTime)
+            if ((currQuestNr - 1) !== totalQuests) {
               stopInactivityTimer();
               client && client.deactivate();
               localStorage.setItem("submissionDone", "false");
