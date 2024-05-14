@@ -93,7 +93,7 @@ const HowToPlayModal: React.FC<HowToPlayModalProps> = ({ isOpen, onOpenChange, c
               <li className="mb-2">2. Drop the Pegman on the map to switch to Street View.</li>
               <li className="mb-4">3. Found the location? Click Submit!</li>
             </ul>
-            If you cannot find the location within the round duration, you can click the Cannot find it! button to pass this round. If the time runs out before you make a submission, you will be automatically making an empty submission. Remember, time counts! Fastest submission gets the speed bonus.
+            If you cannot find the location within the round duration, you can click the Can&apos;t find it! button to pass this round. If the time runs out before you make a submission, you will be automatically making an empty submission. Remember, time counts! Fastest submission gets the speed bonus.
           </div>
         </>
       );

@@ -252,7 +252,7 @@ const Lobby = () => {
         radius="full"
         size="lg"
         color="default"
-        className="shadow-lg"
+        className="flex-end mr-4 shadow-lg"
         onClick={() => {
           console.log("Saving settings");
           save();
@@ -313,8 +313,8 @@ const Lobby = () => {
             borderRadius: "50%",
             overflow: "hidden",
             width: "120%",
-            maxWidth: "500px",
-            maxHeight: "500px",
+            maxWidth: "480px",
+            maxHeight: "480px",
             boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
             border: "5px solid white",
             marginTop: "15px",
@@ -354,7 +354,7 @@ const Lobby = () => {
             <PlayerTable
               players={players} />
           </div>
-          <div className="md:w-1/3 p-4">
+          <div className="md:w-1/3 p-4 gap-4">
             <CityInputWrapper>
               <div style={{ display: "flex", alignItems: "center", gap: "5px", width: "100%" }}>
                 <Input
