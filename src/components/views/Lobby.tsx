@@ -315,7 +315,7 @@ const Lobby = () => {
             width: "120%",
             maxWidth: "500px",
             maxHeight: "500px",
-            boxShadow: "0 4px 8px rgba(0,0,0,0.3)",
+            boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
             border: "5px solid white",
             marginTop: "15px",
             marginBottom: "15px",
@@ -354,7 +354,7 @@ const Lobby = () => {
             <PlayerTable
               players={players} />
           </div>
-          <div className="flex-1 items-center justify-center px-16">
+          <div className="md:w-1/3 p-4">
             <CityInputWrapper>
               <div style={{ display: "flex", alignItems: "center", gap: "5px", width: "100%" }}>
                 <Input
@@ -371,7 +371,7 @@ const Lobby = () => {
             </CityInputWrapper>
             <GoogleMapStaticImage />
           </div>
-          <div className="flex flex-col w-full items-end mr-8">
+          <div className="md:w-1/3 p-4">
             {admin ? (<ScrollableContentWrapper>
               <h6 className="text-center font-bold mt-2 mb-2">Your Quests</h6>
               <p className="text-left text-sm mt-0 mb-4 ml-2 font-semibold">Find a...</p>

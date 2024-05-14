@@ -332,7 +332,7 @@ function MyGoogleMap() {
         <BackButton />
       </div>*/}
           <div className="w-3/4 flex flex-col items-center">
-            <BaseContainer size="medium" className="flex flex-col items-center mb-32">
+            <BaseContainer size="large" className="flex flex-col items-center mb-32">
               <Progress
                 aria-label="Progress"
                 // disableAnimation

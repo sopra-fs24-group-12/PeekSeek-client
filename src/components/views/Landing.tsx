@@ -59,8 +59,6 @@ const LandingPage = () => {
       </div>
       <div className="absolute bottom-2 w-full flex flex-col items-center mt-auto gap-2">
         <JoinButton onClick={handleClick}/>
-      </div>
-      <div className="w-full flex justify-center mb-4">
         <CreateButton />
       </div>
       <Button

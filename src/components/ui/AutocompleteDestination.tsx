@@ -15,7 +15,7 @@ export default function InputDestination() {
     async load({signal}) {
       if (!inputValue.trim()) return { items: [] };
 
-      try {
+      try { //TODO: api key variable instead of clear code
         let res = await fetch(`https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${inputValue}&key=AIzaSyDY0TuMQClRDLGCRtCDCmrse_UZNlar7iY`, { signal });
         let json = await res.json();
         console.log({items: json.predictions.map((city: any) => ({ name: city.description }))})
