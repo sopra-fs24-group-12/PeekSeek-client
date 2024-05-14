@@ -309,7 +309,7 @@ function MyGoogleMap() {
           </div>
         </div>
       ) : pageLoading ? (
-        <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50">
+        <div className="absolute w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50">
           <div className="flex flex-col items-center">
             <TailSpin
               visible={true}
@@ -331,8 +331,8 @@ function MyGoogleMap() {
           {/*<div className="absolute top-4 left-4">
         <BackButton />
       </div>*/}
-          <div className="w-3/4 flex flex-col items-center">
-            <BaseContainer size="large" className="flex flex-col items-center mb-32">
+          <div className="w-3/4 flex flex-col">
+            <BaseContainer size="game" className="flex flex-col items-center overflow-hidden max-w-full mb-32">
               <Progress
                 aria-label="Progress"
                 // disableAnimation
@@ -340,7 +340,7 @@ function MyGoogleMap() {
                 value={currQuestNr}
                 color="success"
                 className="absolute right-0 top-0 w-full" />
-              <h3 className="text-xl font-bold my-4">Find a {quest} in {cityName}!</h3>
+              <h3 className="text-xl font-bold my-2">Find a {quest} in {cityName}!</h3>
               {lat && lng && (
                 <LoadScript googleMapsApiKey={API_Key} libraries={libs}>
                   <ReactGoogleMap
@@ -394,14 +394,14 @@ function MyGoogleMap() {
                 </LoadScript>
               )}
             </BaseContainer>
-            <div className="w-3/4 flex items-center justify-between px-4 absolute bottom-16" style={{ minHeight: "10vh"}}>
+            <div className="w-3/4 flex items-center justify-between px-4 fixed bottom-8" style={{ minHeight: "10vh" }}>
               <div className="flex-1 flex justify-start">
                 <GameButton onClick={submitEmptyNow} />
               </div>
               <div className="flex-1 flex justify-center">
                 <CircularProgress
                   classNames={circularProgressStyles}
-                  size="md"
+                  size="lg"
                   value={calculateProgressValue()}
                   valueLabel={`${remainingTime}s`}
                   strokeWidth={3}
