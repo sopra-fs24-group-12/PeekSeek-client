@@ -143,7 +143,7 @@ const GameSummary = () => {
             isOpen={isOpen}
             onOpenChange={onOpenChange}
             context="gamesummary"  />
-          <div className="w-full flex justify-between px-4 bottom-8 mb-4 mt-auto" style={{ bottom: "16px" }}>
+          <div className="absolute w-full flex justify-between px-4 bottom-2 mt-4" style={{ bottom: "16px" }}>
             <BackDashboardButton/>
           </div>
         </BaseContainer>
