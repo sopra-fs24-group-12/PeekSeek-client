@@ -31,6 +31,7 @@ const LobbySaveButton: React.FC<SaveButtonProps> = ({lobbyId, quests, cityName, 
       radius="full"
       size = "lg"
       color = "default"
+      className="flex-center"
       onClick={() => {
         console.log("Saving settings");
         save();
