@@ -130,19 +130,19 @@ const JoinLobby = () => {
                 </TableBody>
               </Table>
             </div>
-          <div className="absolute bottom-2 w-full flex flex-col items-center mt-auto gap-2">
-            <JoinButton
-              onClick={handleClickList}
-              isDisabled={!selectedLobbyId}
-            />
-            <CreateButton />
-          </div>
-          <Button
-            onPress={onOpen}
-            className="absolute bottom-2 right-2 p-2 sm rounded-full bg-transparent mt-auto"
-            isIconOnly
-          >
-            <InfoCircleTwoTone style={{ fontSize: "20px"}}/>
+            <div className="absolute bottom-2 w-full flex flex-col items-center mt-auto gap-2">
+              <JoinButton
+                onClick={handleClickList}
+                isDisabled={!selectedLobbyId}
+              />
+              <CreateButton />
+            </div>
+            <Button
+              onPress={onOpen}
+              className="absolute bottom-2 right-2 p-2 sm rounded-full bg-transparent mt-auto"
+              isIconOnly
+            >
+              <InfoCircleTwoTone style={{ fontSize: "20px"}}/>
             </Button>
             <HowToPlayModal
               isOpen={isOpen}

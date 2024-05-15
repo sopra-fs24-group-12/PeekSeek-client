@@ -56,13 +56,14 @@ function MyGoogleMap() {
   const [noSubmission, setNoSubmission] = useState<boolean>(false);
   const [remainingTime, setRemainingTime] = useState(0);
   const [submissionDone, setSubmissionDone] = useState((localStorage.getItem("submissionDone") !== "false"));
-  const [currQuestNr, setQuestNr] = useState(parseInt(localStorage.getItem("currentQuest"))-1);
   const [pageLoading, setPageLoading] = useState(true);
   let timerId;
   const [errorModalOpen, setErrorModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [summaryId, setSummaryId] = useState(null);
   let client = new Client();
+  const [currentQuest, setCurrentQuest] = useState(1);
+  const [totalQuests, setTotalQuests] = useState(1);
 
   const openNotification = (message: string) => {
     toast.info(message, {autoClose: 3000});
@@ -91,7 +92,7 @@ function MyGoogleMap() {
     timerId = setInterval(async () => {
       try {
         await api.put(`/games/${gameId}/active`, null, { headers });
-        console.log("sent active message")
+        console.log("sent active message");
       } catch (error) {
         stopInactivityTimer();
         alert(
@@ -115,7 +116,6 @@ function MyGoogleMap() {
         const headers = {
           "Authorization": localStorage.getItem("token"),
         };
-        console.log("Game ID:", headers.Authorization);
         const response = await api.get("/games/" + gameId + "/round", { headers });
         console.log("API Response:", response.data);
 
@@ -134,9 +134,12 @@ function MyGoogleMap() {
           }
         }
 
+        setCurrentQuest(response.data.currentRound);
+        setTotalQuests(response.data.numberRounds);
+
         setQuest(response.data.quest);
         setCityName(response.data.geoCodingData.formAddress);
-        setRoundDurationSeconds(response.data.roundTime);
+        setRoundDurationSeconds(response.data.roundTime - 2);
         setLat(response.data.geoCodingData.lat);
         setLng(response.data.geoCodingData.lng);
         setResLatNe(response.data.geoCodingData.resLatNe);
@@ -144,7 +147,6 @@ function MyGoogleMap() {
         setResLatSw(response.data.geoCodingData.resLatSw);
         setResLngSw(response.data.geoCodingData.resLngSw);
         setMapCenter({ lat, lng });
-        setQuestNr(parseInt(localStorage.getItem("currentQuest"), 10))
       } catch (error) {
         stopInactivityTimer();
         alert(
@@ -220,8 +222,6 @@ function MyGoogleMap() {
     value: "text-xl font-semibold text-white",
   };
 
-
-  console.log("rounddurationseconds: ", roundDurationSeconds);
   const handleCenterChanged = (map) => {
     if (map) {
       // Get the new center of the map
@@ -246,7 +246,6 @@ function MyGoogleMap() {
     };
     const body = JSON.stringify({ lat, lng, heading, pitch, noSubmission });
     try {
-      localStorage.setItem("currentQuest", String(currQuestNr+1))
       const response = await api.post("games/" + gameId + "/submission", body, { headers });
       console.log("API Response:", response.data);
       localStorage.setItem("submissionDone", "true");
@@ -336,8 +335,8 @@ function MyGoogleMap() {
               <Progress
                 aria-label="Progress"
                 // disableAnimation
-                maxValue= {parseInt(localStorage.getItem("totalQuests"), 10)}
-                value={currQuestNr}
+                maxValue= {totalQuests}
+                value={currentQuest}
                 color="success"
                 className="absolute right-0 top-0 w-full" />
               <h3 className="text-xl font-bold my-2">Find a {quest} in {cityName}!</h3>

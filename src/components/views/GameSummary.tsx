@@ -39,9 +39,6 @@ const GameSummary = () => {
   }
 
   useEffect(() => {
-    //localStorage.setItem("token", "eb47db3a-d291-4a93-8dc3-d71d5742031d");
-    //localStorage.setItem("username", "a");
-
     async function fetchData() {
       try {
         const response = await api.get("/summaries/" + summaryId);
@@ -143,7 +140,7 @@ const GameSummary = () => {
             isOpen={isOpen}
             onOpenChange={onOpenChange}
             context="gamesummary"  />
-          <div className="w-full flex justify-between px-4 bottom-8 mb-4 mt-auto" style={{ bottom: "16px" }}>
+          <div className="absolute w-full flex justify-between px-4 bottom-2 mt-4" style={{ bottom: "16px" }}>
             <BackDashboardButton/>
           </div>
         </BaseContainer>
