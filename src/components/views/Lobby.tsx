@@ -410,7 +410,7 @@ const Lobby = () => {
               (<p className="text-xl font-bold">Waiting for the admin to configure and start the game...</p>) : (
                 <>
                   <StartButton
-                    disabled={!settingsConfirmed}
+                    disabled={!settingsConfirmed || players.length < 3}
                     lobbyId={lobbyId}
                   />
                   <SaveButton />
