@@ -394,7 +394,7 @@ const Lobby = () => {
               <div style={{ overflowY: "auto", maxHeight: "500px", width: "100%" }}>
                 {emptyQ ? (
     // Render this message if quests is empty
-    <p className="text-center font-bold mt-2 mb-2">Currently the admin did not setup quests quests</p>
+    <p className="text-center text-sm mt-2 mb-2" style={{ color: '#888888' }}>Currently the admin did not setup quests</p>
   ) : ( <> {quests.filter(item => item !== "").map((quest, index) => (
                   <Input
                     disabled
