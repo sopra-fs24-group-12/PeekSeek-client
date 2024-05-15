@@ -395,12 +395,12 @@ const GameSubmission = () => {
             value={currentQuest}
             color="success"
             className="absolute right-0 top-0 w-full" />
-          <div className="order-first text-center p-4">
+          <div className="order-first text-center p-2">
             <h1 className="text-3xl font-bold text-gray-700">Choose your Favourite Pick</h1>
           </div>
           <div className="flex flex-col md:flex-row w-full h-full">
             {/* Container for the submission cards */}
-            <div className="md:w-3/4 w-full p-4 flex flex-col">
+            <div className="md:w-3/4 w-full flex flex-col">
               <div className="grid lg:grid-cols-3 grid-cols-1 gap-4">
                 {cardsData.map((card, index) => (
                   <SubmissionCard
