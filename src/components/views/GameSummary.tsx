@@ -39,9 +39,6 @@ const GameSummary = () => {
   }
 
   useEffect(() => {
-    //localStorage.setItem("token", "eb47db3a-d291-4a93-8dc3-d71d5742031d");
-    //localStorage.setItem("username", "a");
-
     async function fetchData() {
       try {
         const response = await api.get("/summaries/" + summaryId);

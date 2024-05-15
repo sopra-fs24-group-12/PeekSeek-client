@@ -97,10 +97,6 @@ const Lobby = () => {
           setLng("0");
         }
         setSettingsConfirmed(response.data.quests && response.data.quests.length > 0 && response.data.gameLocation);
-        // Set the total number of quests in localStorage
-        const filteredQuests = quests.filter(quest => quest.trim() !== "");
-        // Set currentQuest to 1
-        localStorage.setItem("currentQuest", String(1));
       } catch (error) {
         console.log("Error caught:", error.response.data.message);
         setErrorMessage(error.response.data.message);
@@ -177,7 +173,7 @@ const Lobby = () => {
             } else {
               setQuests([...messageParsed.quests, ""]);
             }
-            setRoundDurationSeconds(messageParsed.roundDurationSeconds);
+            setRoundDurationSeconds(messageParsed.roundDurationSeconds - 2);
             if (messageParsed.gameLocationCoordinates !== null) {
               setLat(messageParsed.gameLocationCoordinates.lat);
               setLng(messageParsed.gameLocationCoordinates.lng);
@@ -221,10 +217,6 @@ const Lobby = () => {
     }
     setQuests(updatedQuests);
   };
-
-  localStorage.setItem("totalQuests", String(quests.length-1));
-  const total = localStorage.getItem("totalQuests")
-  console.log("total quests " + total)
 
   const SaveButton: React.FC = () => {
     async function save() {
