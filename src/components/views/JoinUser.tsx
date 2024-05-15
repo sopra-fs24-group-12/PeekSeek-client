@@ -75,7 +75,7 @@ const JoinUser = () => {
   };
 
   const handleUsernameChange = (e) => {
-    const newUsername = e.target.value.trim().slice(0, 20);
+    const newUsername = e.target.value.slice(0, 20);
     setUsername(newUsername);
 
     if (e.target.value.trim().length === 20 && !usernameNotificationShown) {
@@ -128,7 +128,7 @@ const JoinUser = () => {
             </div>
             <div className="absolute bottom-2 w-full flex flex-col items-center mt-auto gap-2">
               <JoinButton
-                isDisabled={!username || (lobbyRequiresPassword && !lobbyPassword)}
+                isDisabled={!username.trim() || (lobbyRequiresPassword && !lobbyPassword)}
                 onClick={handleJoinClick} />
             </div>
             <Button
