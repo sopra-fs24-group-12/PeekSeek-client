@@ -37,6 +37,7 @@ const Lobby = () => {
   let timerId;
   const [errorModalOpen, setErrorModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [emptyQ, setEmptyQ] = useState(true);
   let client = new Client();
 
   interface InputQuestsProps {
@@ -83,8 +84,10 @@ const Lobby = () => {
         setPlayers(response.data.participants);
         if (response.data.quests === null || response.data.quests.length === 0) {
           setQuests(["", "", "", ""]);
+          setEmptyQ(true);
         } else {
           setQuests([...response.data.quests, ""]);
+          setEmptyQ(false);
         }
         setRoundDurationSeconds(response.data.roundDurationSeconds - 2 || 120);
         setCityName(response.data.gameLocation);
@@ -170,8 +173,10 @@ const Lobby = () => {
             setCityName(messageParsed.gameLocation);
             if (messageParsed.quests === null || messageParsed.quests.length === 0) {
               setQuests(["", "", "", ""]);
+              setEmptyQ(true);
             } else {
               setQuests([...messageParsed.quests, ""]);
+              setEmptyQ(false);
             }
             setRoundDurationSeconds(messageParsed.roundDurationSeconds - 2);
             if (messageParsed.gameLocationCoordinates !== null) {
@@ -387,7 +392,10 @@ const Lobby = () => {
               <h6 className="font-bold mt-2 mb-2">Your Quests</h6>
               <p className="text-left text-sm mt-0 mb-4 font-semibold">Find a...</p>
               <div style={{ overflowY: "auto", maxHeight: "500px", width: "100%" }}>
-                {quests.filter(item => item !== "").map((quest, index) => (
+                {emptyQ ? (
+    // Render this message if quests is empty
+    <p className="text-center font-bold mt-2 mb-2">Currently the admin did not setup quests quests</p>
+  ) : ( <> {quests.filter(item => item !== "").map((quest, index) => (
                   <Input
                     disabled
                     key={`quest-${index}`}  // Unique key for each input
@@ -400,7 +408,7 @@ const Lobby = () => {
                       cursor: "not-allowed",
                     }}
                   />
-                ))}
+                ))} </>)}
               </div>
             </ScrollableContentWrapper>}
           </div>
