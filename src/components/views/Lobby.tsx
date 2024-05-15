@@ -86,7 +86,7 @@ const Lobby = () => {
         } else {
           setQuests([...response.data.quests, ""]);
         }
-        setRoundDurationSeconds(response.data.roundDurationSeconds || 120);
+        setRoundDurationSeconds(response.data.roundDurationSeconds - 2 || 120);
         setCityName(response.data.gameLocation);
         setAdmin(response.data.adminUsername === localStorage.getItem("username"));
         if (response.data.gameLocationCoordinates) {
