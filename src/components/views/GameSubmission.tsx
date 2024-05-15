@@ -387,8 +387,7 @@ const GameSubmission = () => {
       ) : (
         <BaseContainer
           size="large"
-          className="flex flex-col items-center"
-        >
+          className="flex flex-col items-center overflow-hidden min-h-screen max-w-full">
           <Progress
             aria-label="Progress"
             disableAnimation
@@ -435,7 +434,7 @@ const GameSubmission = () => {
                   selectedCoords.pitch.toString()
                 )}
               />
-              <div className="absolute bottom-2 w-full flex flex-col items-center mt-auto">
+              <div className="absolute bottom-8 w-full flex justify-center p-4">
                 <SubmitButton voteData={mergeDataForSubmission()} gameId={gameId} setSubmissionDone={setSubmissionDone} />
               </div>
             </div>
@@ -448,7 +447,7 @@ const GameSubmission = () => {
               <div className="flex-1 flex justify-center">
 
               </div>
-              <div className="flex-1 flex flex-col items-center justify-center">
+              <div className="absolute bottom-8 flex-1 flex flex-col items-center justify-center">
                 <Chip
                   classNames={{
                     base: "border-1 customStroke",
