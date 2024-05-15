@@ -394,8 +394,8 @@ const Lobby = () => {
               <div style={{ overflowY: "auto", maxHeight: "500px", width: "100%" }}>
                 {emptyQ ? (
           
-            <p className="text-center text-sm mt-2 mb-2" style={{ color: "#888888" }}>Currently the admin did not setup quests</p>
-          ) : ( <> {quests.filter(item => item !== "").map((quest, index) => (
+                  <p className="text-center text-sm mt-2 mb-2" style={{ color: "#888888" }}>Currently the admin did not setup quests</p>
+                ) : ( <> {quests.filter(item => item !== "").map((quest, index) => (
                   <Input
                     disabled
                     key={`quest-${index}`}  // Unique key for each input
