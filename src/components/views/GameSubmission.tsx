@@ -76,6 +76,8 @@ const GameSubmission = () => {
   const [remainingTime, setRemainingTime] = useState(0);
   const [roundDurationSeconds, setRoundDurationSeconds] = useState(0);
   let timerId;
+  const [gameEndModalOpen, setGameEndModalOpen] = useState(false);
+  const [gameEndMessage, setGameEndMessage] = useState("");
   const [errorModalOpen, setErrorModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [summaryId, setSummaryId] = useState(null);
@@ -122,11 +124,12 @@ const GameSubmission = () => {
         await api.put(`/games/${gameId}/active`, null, { headers });
         console.log("sent active message")
       } catch (error) {
-        alert(
-          `Something went wrong while sending active ping: \n${handleError(error)}`,
-        );
-        localStorage.clear();
-        navigate("/landing");
+        console.log("Error caught:", error.response.data.message);
+        stopInactivityTimer();
+        client && client.deactivate();
+        localStorage.setItem("submissionDone", "false");
+        setErrorMessage("You were kicked due to inactivity!");
+        setErrorModalOpen(true);
       }
     }, 2000);
 
@@ -174,8 +177,8 @@ const GameSubmission = () => {
             client && client.deactivate();
             localStorage.setItem("submissionDone", "false");
             console.log("Game ended prematurely");
-            setErrorMessage("The game ended prematurely since less than three participants are remaining. You are being transferred to the summary page to see all completed rounds.");
-            setErrorModalOpen(true);
+            setGameEndMessage("The game ended prematurely since less than three participants are remaining. You are being transferred to the summary page to see all completed rounds.");
+            setGameEndModalOpen(true);
             setSummaryId(messageParsed.summaryId);
           }
         });
@@ -256,9 +259,12 @@ const GameSubmission = () => {
 
         setCardsData(transformedData);
       } catch (error) {
-        alert(
-          `Something went wrong while fetching submission information: \n${handleError(error)}`,
-        );
+        console.log("Error caught:", error.response.data.message);
+        stopInactivityTimer();
+        client && client.deactivate();
+        localStorage.setItem("submissionDone", "false");
+        setErrorMessage(error.response.data.message);
+        setErrorModalOpen(true);
       }
     }
 
@@ -329,9 +335,15 @@ const GameSubmission = () => {
   };
 
   function handlePrematureGameEnd() {
-    setErrorModalOpen(false)
+    setGameEndModalOpen(false)
     localStorage.clear();
     navigate("/gamesummary/" + summaryId);
+  }
+
+  function handleGameError() {
+    setErrorModalOpen(false)
+    localStorage.clear();
+    navigate("/landing/");
   }
 
   const handleUnbanClick = (index) => {
@@ -350,7 +362,8 @@ const GameSubmission = () => {
 
   return (
     <div className="relative min-h-screen w-screen flex flex-col items-center">
-      {errorModalOpen && <ErrorMessageModal isOpen={errorModalOpen} onClose={() => handlePrematureGameEnd()} errorMessage={errorMessage} />}
+      {gameEndModalOpen && <ErrorMessageModal isOpen={gameEndModalOpen} onClose={() => handlePrematureGameEnd()} errorMessage={gameEndMessage} />}
+      {errorModalOpen && <ErrorMessageModal isOpen={errorModalOpen} onClose={() => handleGameError()} errorMessage={errorMessage} />}
       <ToastContainer
         pauseOnFocusLoss={false}
         pauseOnHover={false}

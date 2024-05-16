@@ -102,9 +102,10 @@ const Lobby = () => {
         setSettingsConfirmed(response.data.quests && response.data.quests.length > 0 && response.data.gameLocation);
       } catch (error) {
         console.log("Error caught:", error.response.data.message);
+        stopInactivityTimer();
+        client && client.deactivate();
         setErrorMessage(error.response.data.message);
         setErrorModalOpen(true);
-        localStorage.clear();
       }
     }
 
@@ -130,10 +131,10 @@ const Lobby = () => {
         console.log("sent active message")
       } catch (error) {
         console.log("Error caught:", error.response.data.message);
-        setErrorMessage(error.response.data.message);
+        stopInactivityTimer();
+        client && client.deactivate();
+        setErrorMessage("You were kicked due to inactivity!");
         setErrorModalOpen(true);
-        localStorage.clear();
-        navigate("/landing");
       }
     }, 2000);
 
@@ -238,6 +239,8 @@ const Lobby = () => {
         setSettingsConfirmed(true);
       } catch (error) {
         console.log("Error caught:", error.response.data.message);
+        stopInactivityTimer();
+        client && client.deactivate();
         setErrorMessage(error.response.data.message);
         setErrorModalOpen(true);
       }
@@ -274,6 +277,8 @@ const Lobby = () => {
         navigate("/landing");
       } catch (error) {
         console.log("Error caught:", error.response.data.message);
+        stopInactivityTimer();
+        client && client.deactivate();
         setErrorMessage(error.response.data.message);
         setErrorModalOpen(true);
       }
@@ -326,7 +331,6 @@ const Lobby = () => {
   };
 
   function handleErrorInLobby() {
-    client && client.deactivate();
     setErrorModalOpen(false);
     localStorage.clear();
     navigate("/landing");
