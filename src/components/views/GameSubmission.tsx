@@ -175,7 +175,7 @@ const GameSubmission = () => {
           } else if (messageParsed.status === "game_over") {
             stopInactivityTimer();
             client && client.deactivate();
-            localStorage.setItem("submissionDone", "false");
+            localStorage.clear();
             console.log("Game ended prematurely");
             setGameEndMessage("The game ended prematurely since less than three participants are remaining. You are being transferred to the summary page to see all completed rounds.");
             setGameEndModalOpen(true);
