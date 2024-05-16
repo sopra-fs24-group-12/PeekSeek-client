@@ -10,7 +10,7 @@ import ContentWrapper from "components/ui/ContentWrapper";
 import ScrollableContentWrapper from "components/ui/ScrollableContentWrapper";
 import FlexWrapper from "components/ui/FlexWrapper";
 import CityInputWrapper from "components/ui/CityInputWrapper";
-import TimeButtons from "../ui/TimeButtons";
+import TimeSlider from "../ui/TimeSlider";
 import { getWebsocketDomain } from "helpers/getDomain";
 import HowToPlayModal from "components/ui/HowToPlayModal";
 import { InfoCircleTwoTone } from "@ant-design/icons";
@@ -102,9 +102,10 @@ const Lobby = () => {
         setSettingsConfirmed(response.data.quests && response.data.quests.length > 0 && response.data.gameLocation);
       } catch (error) {
         console.log("Error caught:", error.response.data.message);
+        stopInactivityTimer();
+        client && client.deactivate();
         setErrorMessage(error.response.data.message);
         setErrorModalOpen(true);
-        localStorage.clear();
       }
     }
 
@@ -130,10 +131,10 @@ const Lobby = () => {
         console.log("sent active message")
       } catch (error) {
         console.log("Error caught:", error.response.data.message);
-        setErrorMessage(error.response.data.message);
+        stopInactivityTimer();
+        client && client.deactivate();
+        setErrorMessage("You were kicked due to inactivity!");
         setErrorModalOpen(true);
-        localStorage.clear();
-        navigate("/landing");
       }
     }, 2000);
 
@@ -238,6 +239,8 @@ const Lobby = () => {
         setSettingsConfirmed(true);
       } catch (error) {
         console.log("Error caught:", error.response.data.message);
+        stopInactivityTimer();
+        client && client.deactivate();
         setErrorMessage(error.response.data.message);
         setErrorModalOpen(true);
       }
@@ -274,6 +277,8 @@ const Lobby = () => {
         navigate("/landing");
       } catch (error) {
         console.log("Error caught:", error.response.data.message);
+        stopInactivityTimer();
+        client && client.deactivate();
         setErrorMessage(error.response.data.message);
         setErrorModalOpen(true);
       }
@@ -326,7 +331,6 @@ const Lobby = () => {
   };
 
   function handleErrorInLobby() {
-    client && client.deactivate();
     setErrorModalOpen(false);
     localStorage.clear();
     navigate("/landing");
@@ -343,7 +347,7 @@ const Lobby = () => {
         <h1 className="text-3xl font-bold text-gray-700 my-0 text-center">{lobbyName}</h1>
         <div className="flex flex-col md:flex-row w-full justify-between space-y-6 md:space-y-0 md:space-x-6 overflow-auto">
           <div className="md:w-1/3 p-4 gap-4 flex flex-col">
-            <TimeButtons
+            <TimeSlider
               disabled={!admin}
               selectedDuration={roundDurationSeconds}
               setRoundDurationSeconds={setRoundDurationSeconds}

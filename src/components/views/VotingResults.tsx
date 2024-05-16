@@ -33,6 +33,8 @@ const VotingResults = () => {
   const [roundDurationSeconds, setRoundDurationSeconds] = useState(20);
   const [pageLoading, setPageLoading] = useState(true);
   let timerId;
+  const [gameEndModalOpen, setGameEndModalOpen] = useState(false);
+  const [gameEndMessage, setGameEndMessage] = useState("");
   const [errorModalOpen, setErrorModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [summaryId, setSummaryId] = useState(null);
@@ -60,12 +62,14 @@ const VotingResults = () => {
     timerId = setInterval(async () => {
       try {
         await api.put(`/games/${gameId}/active`, null, { headers });
-        console.log("sent active message")
+        console.log("sent active message");
       } catch (error) {
-        alert(
-          `Something went wrong while sending active ping: \n${handleError(error)}`,
-        );
-        navigate("/landing");
+        console.log("Error caught:", error.response.data.message);
+        stopInactivityTimer();
+        client && client.deactivate();
+        localStorage.setItem("submissionDone", "false");
+        setErrorMessage("You were kicked due to inactivity!");
+        setErrorModalOpen(true);
       }
     }, 2000);
 
@@ -120,12 +124,12 @@ const VotingResults = () => {
         );
 
       } catch (error) {
+        console.log("Error caught:", error.response.data.message);
         stopInactivityTimer();
-        alert(
-          `Something went wrong while fetching information: \n${handleError(error)}`,
-        );
-        localStorage.clear();
-        navigate("/landing");
+        client && client.deactivate();
+        localStorage.setItem("submissionDone", "false");
+        setErrorMessage(error.response.data.message);
+        setErrorModalOpen(true);
       }
 
       try {
@@ -149,12 +153,12 @@ const VotingResults = () => {
           console.log("Invalid or empty response data");
         }
       } catch (error) {
+        console.log("Error caught:", error.response.data.message);
         stopInactivityTimer();
-        alert(
-          `Something went wrong while fetching information: \n${handleError(error)}`,
-        );
-        localStorage.clear();
-        navigate("/landing");
+        client && client.deactivate();
+        localStorage.setItem("submissionDone", "false");
+        setErrorMessage(error.response.data.message);
+        setErrorModalOpen(true);
       }
 
     }
@@ -185,10 +189,10 @@ const VotingResults = () => {
             if (currentQuest !== totalQuests) {
               stopInactivityTimer();
               client && client.deactivate();
-              localStorage.setItem("submissionDone", "false");
+              localStorage.clear();
               console.log("Game ended prematurely");
-              setErrorMessage("The game ended prematurely since less than three participants are remaining. You are being transferred to the summary page to see all completed rounds.");
-              setErrorModalOpen(true);
+              setGameEndMessage("The game ended prematurely since less than three participants are remaining. You are being transferred to the summary page to see all completed rounds.");
+              setGameEndModalOpen(true);
               setSummaryId(messageParsed.summaryId);
             } else {
               stopInactivityTimer();
@@ -235,9 +239,15 @@ const VotingResults = () => {
   };
 
   function handlePrematureGameEnd() {
-    setErrorModalOpen(false)
+    setGameEndModalOpen(false)
     localStorage.clear();
     navigate("/gamesummary/" + summaryId);
+  }
+
+  function handleGameError() {
+    setErrorModalOpen(false)
+    localStorage.clear();
+    navigate("/landing/");
   }
 
   const circularProgressStyles = {
@@ -250,7 +260,8 @@ const VotingResults = () => {
 
   return (
     <div className="relative min-h-screen w-screen flex flex-col items-center">
-      {errorModalOpen && <ErrorMessageModal isOpen={errorModalOpen} onClose={() => handlePrematureGameEnd()} errorMessage={errorMessage} />}
+      {gameEndModalOpen && <ErrorMessageModal isOpen={gameEndModalOpen} onClose={() => handlePrematureGameEnd()} errorMessage={gameEndMessage} />}
+      {errorModalOpen && <ErrorMessageModal isOpen={errorModalOpen} onClose={() => handleGameError()} errorMessage={errorMessage} />}
       <ToastContainer
         pauseOnFocusLoss={false}
         pauseOnHover={false}

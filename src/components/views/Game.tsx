@@ -58,6 +58,8 @@ function MyGoogleMap() {
   const [submissionDone, setSubmissionDone] = useState((localStorage.getItem("submissionDone") !== "false"));
   const [pageLoading, setPageLoading] = useState(true);
   let timerId;
+  const [gameEndModalOpen, setGameEndModalOpen] = useState(false);
+  const [gameEndMessage, setGameEndMessage] = useState("");
   const [errorModalOpen, setErrorModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [summaryId, setSummaryId] = useState(null);
@@ -94,12 +96,12 @@ function MyGoogleMap() {
         await api.put(`/games/${gameId}/active`, null, { headers });
         console.log("sent active message");
       } catch (error) {
+        console.log("Error caught:", error.response.data.message);
         stopInactivityTimer();
-        alert(
-          `Something went wrong while sending active ping: \n${handleError(error)}`,
-        );
-        localStorage.clear();
-        navigate("/landing");
+        client && client.deactivate();
+        localStorage.setItem("submissionDone", "false");
+        setErrorMessage("You were kicked due to inactivity!");
+        setErrorModalOpen(true);
       }
     }, 2000);
 
@@ -148,12 +150,12 @@ function MyGoogleMap() {
         setResLngSw(response.data.geoCodingData.resLngSw);
         setMapCenter({ lat, lng });
       } catch (error) {
+        console.log("Error caught:", error.response.data.message);
         stopInactivityTimer();
-        alert(
-          `Something went wrong while fetching round information: \n${handleError(error)}`,
-        );
-        localStorage.clear();
-        navigate("/landing");
+        client && client.deactivate();
+        localStorage.setItem("submissionDone", "false");
+        setErrorMessage(error.response.data.message);
+        setErrorModalOpen(true);
       }
     }
 
@@ -178,10 +180,10 @@ function MyGoogleMap() {
           } else if (messageParsed.status === "game_over") {
             stopInactivityTimer();
             client && client.deactivate();
-            localStorage.setItem("submissionDone", "false");
+            localStorage.clear();
             console.log("Game ended prematurely");
-            setErrorMessage("The game ended prematurely since less than three participants are remaining. You are being transferred to the summary page to see all completed rounds.");
-            setErrorModalOpen(true);
+            setGameEndMessage("The game ended prematurely since less than three participants are remaining. You are being transferred to the summary page to see all completed rounds.");
+            setGameEndModalOpen(true);
             setSummaryId(messageParsed.summaryId);
           }
         });
@@ -251,16 +253,25 @@ function MyGoogleMap() {
       localStorage.setItem("submissionDone", "true");
       setSubmissionDone(true);
     } catch (error) {
-      alert(
-        `There was an error during the submission. \n${handleError(error)}`,
-      );
+      console.log("Error caught:", error.response.data.message);
+      stopInactivityTimer();
+      client && client.deactivate();
+      localStorage.setItem("submissionDone", "false");
+      setErrorMessage(error.response.data.message);
+      setErrorModalOpen(true);
     }
   }
 
   function handlePrematureGameEnd() {
-    setErrorModalOpen(false)
+    setGameEndModalOpen(false)
     localStorage.clear();
     navigate("/gamesummary/" + summaryId);
+  }
+
+  function handleGameError() {
+    setErrorModalOpen(false)
+    localStorage.clear();
+    navigate("/landing/");
   }
 
   const submitNow = () => {
@@ -287,7 +298,8 @@ function MyGoogleMap() {
 
   return (
     <div className="relative min-h-screen w-screen flex flex-col items-center">
-      {errorModalOpen && <ErrorMessageModal isOpen={errorModalOpen} onClose={() => handlePrematureGameEnd()} errorMessage={errorMessage} />}
+      {gameEndModalOpen && <ErrorMessageModal isOpen={gameEndModalOpen} onClose={() => handlePrematureGameEnd()} errorMessage={gameEndMessage} />}
+      {errorModalOpen && <ErrorMessageModal isOpen={errorModalOpen} onClose={() => handleGameError()} errorMessage={errorMessage} />}
       <ToastContainer
         pauseOnFocusLoss={false}
         pauseOnHover={false}
