@@ -112,7 +112,7 @@ const GameSummary = () => {
 
     directionsService.route({
       origin: markers[0].position,
-      destination: markers[waypoints.length - 1].position,
+      destination: markers[markers.length - 1].position,
       waypoints: waypoints,
       optimizeWaypoints: true,
       travelMode: "WALKING",
