@@ -58,6 +58,7 @@ const StartButton: React.FC<StartButtonProps> = ({ disabled, lobbyId }) => {
   async function doStart() {
     if (disabled) {
       toast.info("Peeking requires 3-6 players.", { autoClose: 3000 });
+      
       return;
     }
 
