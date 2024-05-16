@@ -14,6 +14,8 @@ import VotingResults from "../../views/VotingResults";
 import GameSummary from "../../views/GameSummary";
 import Waiting from "../../views/Waiting";
 import RedirectWithMessage from "../../ui/RedirectWithMessage";
+import PrivacyPolicy from "../../views/PrivacyPolicy";
+import About from "../../views/About";
 /**
  * Main router of your application.
  * In the following class, different routes are rendered. In our case, there is a Login Route with matches the path "/login"
@@ -27,6 +29,9 @@ const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+
+        <Route path="/about" element={<About />} />
 
         <Route path="/landing" element={<Landing />} />
 
