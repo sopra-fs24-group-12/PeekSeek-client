@@ -104,7 +104,7 @@ const JoinLobby = () => {
                 </TableHeader>
                 <TableBody
                   isLoading={isLoading}
-                  emptyContent={!isLoading && lobbies.length === 0 ? "No Lobbies there yet. Create one below 👇🏻" : <Spinner size="md" color="default" />}
+                  emptyContent={!isLoading && lobbies.length === 0 ? "No Lobbies exist yet. Create one below 👇🏻" : <Spinner size="md" color="default" />}
                 >
                   {lobbies.map((lobby: Lobby) => (
                     <TableRow
