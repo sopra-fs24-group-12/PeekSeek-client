@@ -29,6 +29,10 @@ const LobbySaveButton: React.FC<SaveButtonProps> = ({lobbyId, quests, cityName, 
   return (
     <Button
       radius="full"
+      style={{
+        fontFamily: "'Lato'",
+        fontWeight: 400,
+      }}
       size = "lg"
       color = "default"
       className="flex-end"

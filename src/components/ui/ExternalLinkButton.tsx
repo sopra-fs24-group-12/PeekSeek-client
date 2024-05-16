@@ -9,15 +9,20 @@ interface ExternalLinkButtonProps {
 const ExternalLinkButton: React.FC<ExternalLinkButtonProps> = ({ url, label }) => {
   return (
     <Button
+      size={"md"}
       href={url}
       as={Link}
       target="_blank"
       rel="noopener noreferrer"
-      className="w-[300px] bg-gradient-to-tr from-yellow-500 to-yellow-200 text-black shadow-lg"
+      className="w-[300px] shadow-md"
       showAnchorIcon
-      variant="solid"
-      radius="lg"
-
+      variant="flat"
+      radius="md"
+      color="warning"
+      style={{
+        fontFamily: "'Lato'",
+        fontWeight: 400,
+      }}
     >
       {label}
     </Button>

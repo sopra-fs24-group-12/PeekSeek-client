@@ -70,6 +70,10 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({voteData, gameId, setSubmiss
     <Button
       className="items-center bg-gradient-to-tr from-yellow-500 to-yellow-200 text-black shadow-lg"
       radius="full"
+      style={{
+        fontFamily: "'Lato'",
+        fontWeight: 400,
+      }}
       size = "lg"
       color = "warning"
       onClick={onClick}

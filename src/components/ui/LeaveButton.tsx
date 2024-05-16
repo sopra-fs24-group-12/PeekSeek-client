@@ -23,6 +23,10 @@ const LeaveButton: React.FC<LeaveButtonProps> = ({lobbyId}) => {
     <Button
       radius="full"
       size = "lg"
+      style={{
+        fontFamily: "'Lato'",
+        fontWeight: 400,
+      }}
       color = "default"
       className="shadow-lg flex-start"
       onClick={() => {

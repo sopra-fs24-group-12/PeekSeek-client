@@ -11,6 +11,10 @@ const GameButton: React.FC<GameButtonProps> = ({ onClick }) => {
     <Button
       radius="full"
       size = "lg"
+      style={{
+        fontFamily: "'Lato'",
+        fontWeight: 400,
+      }}
       className="bg-gradient-to-tr from-brown-500 to-brown-200 text-black shadow-lg"
       onClick={onClick}
     >

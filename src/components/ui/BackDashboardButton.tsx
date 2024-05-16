@@ -10,6 +10,10 @@ const BackDashboardButton: React.FC = () => {
     <Button
       className="items-center bg-gradient-to-tr from-gray-400 to-gray-300 text-black shadow-lg"
       radius="full"
+      style={{
+        fontFamily: "'Lato'",
+        fontWeight: 400,
+      }}
       size = "lg"
       color = "default"
       startContent={<BackIcon />}

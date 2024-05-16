@@ -3,7 +3,7 @@ import { api, handleError } from "helpers/api";
 import HowToPlayModal from "components/ui/HowToPlayModal";
 import ErrorMessageModal from "components/ui/ErrorMessageModal";
 import { InfoCircleTwoTone } from "@ant-design/icons";
-import { Input, Button, useDisclosure, Progress } from "@nextui-org/react";
+import { Input, Button, useDisclosure, Progress, Chip } from "@nextui-org/react";
 import BaseContainer from "../ui/BaseContainer";
 import Leaderboard from "../ui/Leaderboard";
 import ExternalLinkButton from "../ui/ExternalLinkButton";
@@ -14,6 +14,7 @@ import { MutatingDots, ThreeDots, DNA, BallTriangle, TailSpin } from "react-load
 import { LoadScript, Marker, DirectionsService, DirectionsRenderer, GoogleMap as ReactGoogleMap} from "@react-google-maps/api";
 import { Library } from "@googlemaps/js-api-loader";
 import { set } from "lodash";
+import MapsRouteButton from "../ui/MapsRouteButton";
 
 const API_Key = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
@@ -208,12 +209,33 @@ const GameSummary = () => {
             </div>
           </div>
           <div className="flex w-full">
-            <div className="w-1/3 p-4 flex flex-col items-center h-full space-y-4">
+            <div className="w-1/3 p-4 flex flex-col items-center h-screen space-y-4">
+              <Chip
+                classNames={{
+                  base: "border-1 customStroke",
+                  content: "text-xs text-customStroke font-semibold",
+                }}
+                variant="dot"
+                color="warning"
+              >
+                WINNING SUBMISSIONS
+              </Chip>
               {externalLinks.map(link => (
                 <ExternalLinkButton key={link.url} url={link.url} label={link.label} />
               ))}
-              <ExternalLinkButton label={"Open Directions (shortest distance)"} url={markersURL}/>
-              <ExternalLinkButton label={"Open Directions (ordered by rounds)"} url={markersURLunordered}/>
+              <div className="absolute bottom-28 w-full flex flex-col items-center mt-auto space-y-4">
+                <Chip
+                  classNames={{
+                    base: "border-1 customStroke",
+                    content: "text-xs text-customStroke font-semibold",
+                  }}
+                  variant="dot"
+                  color="warning"
+                >
+                  ROUTE DIRECTIONS
+                </Chip>
+                <MapsRouteButton normal_order_link={markersURLunordered} shortest_path_link={markersURL}/>
+              </div>
             </div>
             <div className="w-2/3 flex flex-col flex-center p-4 h-screen">
               {lat && lng && markers && (
