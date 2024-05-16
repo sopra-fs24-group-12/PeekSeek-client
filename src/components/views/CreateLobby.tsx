@@ -96,7 +96,7 @@ const CreateLobby = () => {
       <div className="flex justify-center items-center h-full">
         <BaseContainer
           size="small"
-          className="flex flex-col items-center">
+          className="flex flex-col items-center overflow-hidden max-w-full">
           <div className="flex-row flex-wrap md:flex-nowrap mt-16 mb-16 mr-16 ml-16 gap-4">
             <text>Admin Username</text>
             <Input className="mb-8 shadow-lg" isRequired onChange={handleLobbyAdminChange} radius={"sm"} type="username" label="required " placeholder="..." maxLength={20}
@@ -108,7 +108,7 @@ const CreateLobby = () => {
             <Input className="mb-8 shadow-lg" onChange={handleLobbyPasswordChange} type="password" label="(optional)" placeholder="..." 
             />
           </div>
-          <div className="w-full flex justify-center mt-auto mb-4">
+          <div className="absolute bottom-2 w-full flex flex-col items-center mt-auto gap-2">
             <CreateLo 
               onClick={handleClick} 
               isDisabled={!username.trim() || !name.trim()}

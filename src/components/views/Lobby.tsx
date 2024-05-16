@@ -8,6 +8,8 @@ import PlayerTable from "../ui/PlayerTable";
 import { Button, Input, useDisclosure } from "@nextui-org/react";
 import ContentWrapper from "components/ui/ContentWrapper";
 import ScrollableContentWrapper from "components/ui/ScrollableContentWrapper";
+import FlexWrapper from "components/ui/FlexWrapper";
+import CityInputWrapper from "components/ui/CityInputWrapper";
 import TimeButtons from "../ui/TimeButtons";
 import { getWebsocketDomain } from "helpers/getDomain";
 import HowToPlayModal from "components/ui/HowToPlayModal";
@@ -35,6 +37,8 @@ const Lobby = () => {
   let timerId;
   const [errorModalOpen, setErrorModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [emptyQ, setEmptyQ] = useState(true);
+  let client = new Client();
 
   interface InputQuestsProps {
     disabled: boolean;
@@ -80,10 +84,12 @@ const Lobby = () => {
         setPlayers(response.data.participants);
         if (response.data.quests === null || response.data.quests.length === 0) {
           setQuests(["", "", "", ""]);
+          setEmptyQ(true);
         } else {
           setQuests([...response.data.quests, ""]);
+          setEmptyQ(false);
         }
-        setRoundDurationSeconds(response.data.roundDurationSeconds || 120);
+        setRoundDurationSeconds(response.data.roundDurationSeconds - 2 || 120);
         setCityName(response.data.gameLocation);
         setAdmin(response.data.adminUsername === localStorage.getItem("username"));
         if (response.data.gameLocationCoordinates) {
@@ -94,10 +100,6 @@ const Lobby = () => {
           setLng("0");
         }
         setSettingsConfirmed(response.data.quests && response.data.quests.length > 0 && response.data.gameLocation);
-        // Set the total number of quests in localStorage
-        const filteredQuests = quests.filter(quest => quest.trim() !== "");
-        // Set currentQuest to 1
-        localStorage.setItem("currentQuest", String(1));
       } catch (error) {
         console.log("Error caught:", error.response.data.message);
         setErrorMessage(error.response.data.message);
@@ -143,7 +145,6 @@ const Lobby = () => {
   }
 
   useEffect(() => {
-    let client = new Client();
     const websocketUrl = getWebsocketDomain();
     client.configure({
       brokerURL: websocketUrl,
@@ -172,10 +173,12 @@ const Lobby = () => {
             setCityName(messageParsed.gameLocation);
             if (messageParsed.quests === null || messageParsed.quests.length === 0) {
               setQuests(["", "", "", ""]);
+              setEmptyQ(true);
             } else {
               setQuests([...messageParsed.quests, ""]);
+              setEmptyQ(false);
             }
-            setRoundDurationSeconds(messageParsed.roundDurationSeconds);
+            setRoundDurationSeconds(messageParsed.roundDurationSeconds - 2);
             if (messageParsed.gameLocationCoordinates !== null) {
               setLat(messageParsed.gameLocationCoordinates.lat);
               setLng(messageParsed.gameLocationCoordinates.lng);
@@ -220,10 +223,6 @@ const Lobby = () => {
     setQuests(updatedQuests);
   };
 
-  localStorage.setItem("totalQuests", String(quests.length-1));
-  const total = localStorage.getItem("totalQuests")
-  console.log("total quests " + total)
-
   const SaveButton: React.FC = () => {
     async function save() {
       const headers = {
@@ -250,7 +249,7 @@ const Lobby = () => {
         radius="full"
         size="lg"
         color="default"
-        className="shadow-lg"
+        className="flex-end mr-4 shadow-lg"
         onClick={() => {
           console.log("Saving settings");
           save();
@@ -305,26 +304,45 @@ const Lobby = () => {
     const imageUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${latitude},${longitude}&zoom=${zoom}&size=400x400&maptype=roadmap&key=${apiKey}`;
 
     return (
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-        <div style={{ height: "25px" }}></div>
-        <div style={{ borderRadius: "50%", overflow: "hidden", width: "550px", height: "550px" }}>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>       
+        <div
+          style={{
+            borderRadius: "50%",
+            overflow: "hidden",
+            width: "120%",
+            maxWidth: "480px",
+            maxHeight: "480px",
+            boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
+            border: "5px solid white",
+            marginTop: "15px",
+            marginBottom: "15px",
+            aspectRatio: "1",
+          }}
+        >
           <img src={imageUrl} alt="Google Map" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         </div>
       </div>
     );
   };
 
+  function handleErrorInLobby() {
+    client && client.deactivate();
+    setErrorModalOpen(false);
+    localStorage.clear();
+    navigate("/landing");
+  }
+
   return (
     <>
-      {errorModalOpen && <ErrorMessageModal isOpen={errorModalOpen} onClose={() => setErrorModalOpen(false)} errorMessage={errorMessage} />}
-      <BaseContainer size="large" className="flex flex-col items-center p-2">
+      {errorModalOpen && <ErrorMessageModal isOpen={errorModalOpen} onClose={() => handleErrorInLobby()} errorMessage={errorMessage} />}
+      <BaseContainer size="large" className="flex flex-col items-center overflow-hidden min-h-screen max-w-full">
         <ToastContainer
           pauseOnFocusLoss={false}
           pauseOnHover={false}
         />
-        <h1 className="text-3xl font-bold text-gray-700 my-4 text-center">{lobbyName}</h1>
-        <div className="flex w-full">
-          <div className="flex flex-col w-full items-start gap-4 ml-6">
+        <h1 className="text-3xl font-bold text-gray-700 my-0 text-center">{lobbyName}</h1>
+        <div className="flex flex-col md:flex-row w-full justify-between space-y-6 md:space-y-0 md:space-x-6 overflow-auto">
+          <div className="md:w-1/3 p-4 gap-4 flex flex-col">
             <TimeButtons
               disabled={!admin}
               selectedDuration={roundDurationSeconds}
@@ -333,9 +351,9 @@ const Lobby = () => {
             <PlayerTable
               players={players} />
           </div>
-          <div className="flex-1 items-center justify-center px-16">
-            <ContentWrapper>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <div className="md:w-1/3 p-4 gap-4">
+            <CityInputWrapper>
+              <div style={{ display: "flex", alignItems: "center", gap: "5px", width: "100%" }}>
                 <Input
                   disabled={!admin}
                   type="text"
@@ -347,13 +365,13 @@ const Lobby = () => {
                   style={admin ? { width: "300px" } : { width: "300px", cursor: "not-allowed",}}
                 />
               </div>
-            </ContentWrapper>
+            </CityInputWrapper>
             <GoogleMapStaticImage />
           </div>
-          <div className="flex flex-col w-full items-end mr-8">
+          <div className="md:w-1/3 p-4">
             {admin ? (<ScrollableContentWrapper>
-              <h6 className="font-bold mt-2 mb-2">Your Quests</h6>
-              <p className="text-left text-sm mt-0 mb-4 font-semibold">Find a...</p>
+              <h6 className="text-center font-bold mt-2 mb-2">Your Quests</h6>
+              <p className="text-left text-sm mt-0 mb-4 ml-2 font-semibold">Find a...</p>
               <div style={{ overflowY: "auto", maxHeight: "500px", width: "100%" }}>
                 {quests.map((quest, index) => (
                   <Input
@@ -374,7 +392,10 @@ const Lobby = () => {
               <h6 className="font-bold mt-2 mb-2">Your Quests</h6>
               <p className="text-left text-sm mt-0 mb-4 font-semibold">Find a...</p>
               <div style={{ overflowY: "auto", maxHeight: "500px", width: "100%" }}>
-                {quests.filter(item => item !== "").map((quest, index) => (
+                {emptyQ ? (
+          
+                  <p className="text-center text-sm mt-2 mb-2" style={{ color: "#888888" }}>Currently the admin did not setup quests</p>
+                ) : ( <> {quests.filter(item => item !== "").map((quest, index) => (
                   <Input
                     disabled
                     key={`quest-${index}`}  // Unique key for each input
@@ -387,7 +408,7 @@ const Lobby = () => {
                       cursor: "not-allowed",
                     }}
                   />
-                ))}
+                ))} </>)}
               </div>
             </ScrollableContentWrapper>}
           </div>
@@ -397,7 +418,7 @@ const Lobby = () => {
               (<p className="text-xl font-bold">Waiting for the admin to configure and start the game...</p>) : (
                 <>
                   <StartButton
-                    disabled={!settingsConfirmed}
+                    disabled={!settingsConfirmed || players.length < 3}
                     lobbyId={lobbyId}
                   />
                   <SaveButton />
@@ -408,7 +429,7 @@ const Lobby = () => {
         {/* {!admin && <InteractionDisabledOverlay />} */}
         <Button
           onPress={onOpen}
-          className="absolute bottom-2 right-2 p-2 sm rounded-full bg-transparent"
+          className="absolute bottom-0 right-0 sm rounded-full bg-transparent"
           isIconOnly
         >
           <InfoCircleTwoTone style={{ fontSize: "20px"}}/>

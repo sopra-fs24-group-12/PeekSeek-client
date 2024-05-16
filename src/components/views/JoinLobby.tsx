@@ -72,23 +72,28 @@ const JoinLobby = () => {
     }
   }
 
+  function handleErrorOnJoinLobbyPage() {
+    setErrorModalOpen(false);
+    navigate("/landing/");
+  }
+
   return (
     <>
-      {errorModalOpen && <ErrorMessageModal isOpen={errorModalOpen} onClose={() => setErrorModalOpen(false)} errorMessage={errorMessage} />}
+      {errorModalOpen && <ErrorMessageModal isOpen={errorModalOpen} onClose={() => handleErrorOnJoinLobbyPage()} errorMessage={errorMessage} />}
       <div className="relative min-h-screen w-screen">
         <div className="absolute top-4 left-4 z-50">
           <BackButton />
         </div>
         <div className="flex justify-center items-center h-full">
-          <BaseContainer size="small" className="flex flex-col items-center">
-            <div className="flex-grow w-full overflow-hidden rounded-lg mb-4" style={{ maxHeight: "85%" }}>
+          <BaseContainer size="small" className="flex flex-col items-center overflow-hidden max-w-full">
+            <div className="flex-grow w-full overflow-hidden rounded-lg mb-4" style={{ maxHeight: "65%" }}>
               <Table
                 isHeaderSticky
                 color={"primary"}
                 selectionMode="single"
                 aria-label="Lobby Table"
                 classNames={{
-                  base: "overflow-y-auto h-[530px] min-h-[530px]",
+                  base: "overflow-auto h-full min-h-[200px] max-h-[80vh]",
                 }}
               >
                 <TableHeader>
@@ -125,18 +130,16 @@ const JoinLobby = () => {
                 </TableBody>
               </Table>
             </div>
-            <div className="w-full flex justify-center mt-auto mb-4">
+            <div className="absolute bottom-2 w-full flex flex-col items-center mt-auto gap-2">
               <JoinButton
                 onClick={handleClickList}
                 isDisabled={!selectedLobbyId}
               />
-            </div>
-            <div className="w-full flex justify-center mb-4">
               <CreateButton />
             </div>
             <Button
               onPress={onOpen}
-              className="absolute bottom-2 right-2 p-2 sm rounded-full bg-transparent"
+              className="absolute bottom-2 right-2 p-2 sm rounded-full bg-transparent mt-auto"
               isIconOnly
             >
               <InfoCircleTwoTone style={{ fontSize: "20px"}}/>

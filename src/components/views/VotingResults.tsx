@@ -14,13 +14,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Client } from "@stomp/stompjs";
 import { Chip, CircularProgress, Progress } from "@nextui-org/react";
 import { TailSpin, ThreeDots } from "react-loader-spinner";
+import ErrorMessageModal from "components/ui/ErrorMessageModal";
 
 const VotingResults = () => {
   const { gameId, setGameId } = useParams();
   const [formattedLeaderboard, setFormattedLeaderboard] = useState([]);
   const [timeRemaining, setTimeRemaining] = useState(0);
   const navigate = useNavigate();
-  const [currQuestNr, setQuestNr] = useState(parseInt(localStorage.getItem("currentQuest")));
   const [winningSubmission, setWinningSubmission] = useState({
     id: "1",
     cityName: "",
@@ -33,6 +33,12 @@ const VotingResults = () => {
   const [roundDurationSeconds, setRoundDurationSeconds] = useState(20);
   const [pageLoading, setPageLoading] = useState(true);
   let timerId;
+  const [errorModalOpen, setErrorModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [summaryId, setSummaryId] = useState(null);
+  let client = new Client();
+  const [currentQuest, setCurrentQuest] = useState(1);
+  const [totalQuests, setTotalQuests] = useState(1);
 
   const openNotification = (message: string) => {
     toast.info(message, {autoClose: 3000});
@@ -93,6 +99,9 @@ const VotingResults = () => {
             return
           }
         }
+
+        setCurrentQuest(response2.data.currentRound);
+        setTotalQuests(response2.data.numberRounds);
 
         const response1 = await api.get("/games/" + gameId + "/winningSubmission", { headers });
         console.log("API Response:", response1.data);
@@ -161,7 +170,6 @@ const VotingResults = () => {
   }, []);
 
   useEffect(() => {
-    let client = new Client();
     const websocketUrl = getWebsocketDomain();
     client.configure({
       brokerURL: websocketUrl,
@@ -174,9 +182,19 @@ const VotingResults = () => {
             stopInactivityTimer();
             navigate(`/game/${gameId}/`);
           } else if (messageParsed.status === "game_over") {
-            stopInactivityTimer();
-            localStorage.clear();
-            navigate(`/gamesummary/${messageParsed.summaryId}/`);
+            if (currentQuest !== totalQuests) {
+              stopInactivityTimer();
+              client && client.deactivate();
+              localStorage.setItem("submissionDone", "false");
+              console.log("Game ended prematurely");
+              setErrorMessage("The game ended prematurely since less than three participants are remaining. You are being transferred to the summary page to see all completed rounds.");
+              setErrorModalOpen(true);
+              setSummaryId(messageParsed.summaryId);
+            } else {
+              stopInactivityTimer();
+              localStorage.clear();
+              navigate(`/gamesummary/${messageParsed.summaryId}/`);
+            }
           } else if (messageParsed.status === "left") {
             openNotification(messageParsed.username + " left");
           }
@@ -210,13 +228,18 @@ const VotingResults = () => {
 
     return `${baseUrl}?${params}`;
   }
-  const currentQuest = parseInt(localStorage.getItem("currentQuest"), 10)
-  const totalQuests = parseInt(localStorage.getItem("totalQuests"), 10)
-  const questProgress = ( currentQuest/ totalQuests) * 100;
+
   const calculateProgressValue = () => {
 
     return (remainingTime / roundDurationSeconds) * 100;
   };
+
+  function handlePrematureGameEnd() {
+    setErrorModalOpen(false)
+    localStorage.clear();
+    navigate("/gamesummary/" + summaryId);
+  }
+
   const circularProgressStyles = {
     svg: "w-368 h-36 drop-shadow-md",
     indicator: "stroke-white",
@@ -227,6 +250,11 @@ const VotingResults = () => {
 
   return (
     <div className="relative min-h-screen w-screen flex flex-col items-center">
+      {errorModalOpen && <ErrorMessageModal isOpen={errorModalOpen} onClose={() => handlePrematureGameEnd()} errorMessage={errorMessage} />}
+      <ToastContainer
+        pauseOnFocusLoss={false}
+        pauseOnHover={false}
+      />
       {pageLoading ? (
         <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50">
           <div className="flex flex-col items-center">
@@ -244,15 +272,11 @@ const VotingResults = () => {
       ) : (
         <BaseContainer
           size="large" className="flex flex-col items-center justify-center min-h-screen">
-          <ToastContainer
-            pauseOnFocusLoss={false}
-            pauseOnHover={false}
-          />
           <Progress
             aria-label="Progress"
             disableAnimation
-            maxValue={parseInt(localStorage.getItem("totalQuests"), 10)}
-            value={currQuestNr - 1}
+            maxValue={totalQuests}
+            value={currentQuest}
             color="success"
             className="absolute right-0 top-0 w-full" />
           <div className="flex flex-col items-center justify-center w-full h-full">
@@ -276,7 +300,7 @@ const VotingResults = () => {
                   }}
                   variant="bordered"
                 >
-                  NEXT ROUND:
+                  {currentQuest === totalQuests ? "GAME SUMMARY:" : "NEXT ROUND:"}
                 </Chip>
                 <CircularProgress
                   classNames={{

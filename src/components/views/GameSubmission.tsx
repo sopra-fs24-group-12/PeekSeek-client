@@ -15,9 +15,8 @@ import BaseContainer from "../ui/BaseContainer";
 import SubmissionCard from "../ui/SubmissionCard";
 import SubmitButton from "../ui/SubmitButton";
 import StreetViewModal from "../ui/StreetViewModal"; //TODO: Get this working
-import Timer from "../ui/Timer";
-import { ThreeDots, MagnifyingGlass, TailSpin } from "react-loader-spinner";
-import { set } from "lodash";
+import ErrorMessageModal from "components/ui/ErrorMessageModal";
+import { MagnifyingGlass, TailSpin } from "react-loader-spinner";
 
 const google = window.google;
 
@@ -73,11 +72,16 @@ const GameSubmission = () => {
   const [cardsData, setCardsData] = useState<CardData[]>([]);
   const [submissionDone, setSubmissionDone] = useState((localStorage.getItem("submissionDone") !== "false"));
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [currQuestNr, setQuestNr] = useState(parseInt(localStorage.getItem("currentQuest")));
   const [pageLoading, setPageLoading] = useState(true);
   const [remainingTime, setRemainingTime] = useState(0);
   const [roundDurationSeconds, setRoundDurationSeconds] = useState(0);
   let timerId;
+  const [errorModalOpen, setErrorModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [summaryId, setSummaryId] = useState(null);
+  let client = new Client();
+  const [currentQuest, setCurrentQuest] = useState(1);
+  const [totalQuests, setTotalQuests] = useState(1);
 
   const mergeDataForSubmission = (): ExtendedDictionary => {
     const updatedBanned = new ExtendedDictionary();
@@ -150,7 +154,6 @@ const GameSubmission = () => {
   }
 
   useEffect(() => {
-    let client = new Client();
     const websocketUrl = getWebsocketDomain();
     client.configure({
       brokerURL: websocketUrl,
@@ -168,9 +171,12 @@ const GameSubmission = () => {
             openNotification(messageParsed.username + " left");
           } else if (messageParsed.status === "game_over") {
             stopInactivityTimer();
+            client && client.deactivate();
             localStorage.setItem("submissionDone", "false");
-            //setModalOpen(false);
-            navigate("/gamesummary/" + messageParsed.summaryId);
+            console.log("Game ended prematurely");
+            setErrorMessage("The game ended prematurely since less than three participants are remaining. You are being transferred to the summary page to see all completed rounds.");
+            setErrorModalOpen(true);
+            setSummaryId(messageParsed.summaryId);
           }
         });
         client && client.subscribe(timerDestination, (message) => {
@@ -197,7 +203,6 @@ const GameSubmission = () => {
       try {
         const response1 = await api.get("/games/" + gameId + "/round", { headers });
         console.log("API Response 2:", response1.data);
-        setRoundDurationSeconds(response1.data.roundTime)
 
         const roundStatus = response1.data.roundStatus;
         if (roundStatus !== "VOTING") {
@@ -213,6 +218,9 @@ const GameSubmission = () => {
             return
           }
         }
+        setRoundDurationSeconds(response1.data.roundTime - 2);
+        setCurrentQuest(response1.data.currentRound);
+        setTotalQuests(response1.data.numberRounds);
 
         const response = await api.get("/games/" + gameId + "/submissions", { headers });
         const animalNames = ["Koala", "Bear", "Giraffe", "Zebra", "Gazelle", "Elephant"];
@@ -320,6 +328,12 @@ const GameSubmission = () => {
 
   };
 
+  function handlePrematureGameEnd() {
+    setErrorModalOpen(false)
+    localStorage.clear();
+    navigate("/gamesummary/" + summaryId);
+  }
+
   const handleUnbanClick = (index) => {
     const updatedBanned = new ExtendedDictionary();
     updatedBanned.data = { ...banned.data };
@@ -329,25 +343,18 @@ const GameSubmission = () => {
 
   };
 
-  const currentQuest = parseInt(localStorage.getItem("currentQuest"), 10)
-  const totalQuests = parseInt(localStorage.getItem("totalQuests"), 10)
-  const questProgress = ( currentQuest/ totalQuests) * 100;
-
-
   const calculateProgressValue = () => {
 
     return (remainingTime / roundDurationSeconds) * 100;
   };
-  const circularProgressStyles = {
-    svg: "w-368 h-36 drop-shadow-md",
-    indicator: "stroke-white",
-    track: "stroke-white/10",
-    value: "text-2xl font-semibold text-white",
-  };
-
 
   return (
     <div className="relative min-h-screen w-screen flex flex-col items-center">
+      {errorModalOpen && <ErrorMessageModal isOpen={errorModalOpen} onClose={() => handlePrematureGameEnd()} errorMessage={errorMessage} />}
+      <ToastContainer
+        pauseOnFocusLoss={false}
+        pauseOnHover={false}
+      />
       {submissionDone ? (
         <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50">
           <div className="flex flex-col items-center">
@@ -380,25 +387,20 @@ const GameSubmission = () => {
       ) : (
         <BaseContainer
           size="large"
-          className="flex flex-col items-center"
-        >
-          <ToastContainer
-            pauseOnFocusLoss={false}
-            pauseOnHover={false}
-          />
+          className="flex flex-col items-center overflow-hidden min-h-screen max-w-full">
           <Progress
             aria-label="Progress"
             disableAnimation
-            maxValue= {parseInt(localStorage.getItem("totalQuests"), 10)}
-            value={currQuestNr-1}
+            maxValue= {totalQuests}
+            value={currentQuest}
             color="success"
             className="absolute right-0 top-0 w-full" />
-          <div className="order-first text-center p-4">
+          <div className="order-first text-center p-2">
             <h1 className="text-3xl font-bold text-gray-700">Choose your Favourite Pick</h1>
           </div>
           <div className="flex flex-col md:flex-row w-full h-full">
             {/* Container for the submission cards */}
-            <div className="md:w-3/4 w-full p-4 flex flex-col">
+            <div className="md:w-3/4 w-full flex flex-col">
               <div className="grid lg:grid-cols-3 grid-cols-1 gap-4">
                 {cardsData.map((card, index) => (
                   <SubmissionCard
@@ -432,7 +434,7 @@ const GameSubmission = () => {
                   selectedCoords.pitch.toString()
                 )}
               />
-              <div className="w-full flex justify-center p-4">
+              <div className="absolute bottom-8 w-full flex justify-center p-4">
                 <SubmitButton voteData={mergeDataForSubmission()} gameId={gameId} setSubmissionDone={setSubmissionDone} />
               </div>
             </div>
@@ -445,7 +447,7 @@ const GameSubmission = () => {
               <div className="flex-1 flex justify-center">
 
               </div>
-              <div className="flex-1 flex flex-col items-center justify-center">
+              <div className="absolute bottom-8 flex-1 flex flex-col items-center justify-center">
                 <Chip
                   classNames={{
                     base: "border-1 customStroke",

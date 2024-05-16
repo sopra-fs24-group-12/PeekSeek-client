@@ -7,6 +7,7 @@ import { getWebsocketDomain } from "helpers/getDomain";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { MagnifyingGlass, TailSpin, ThreeDots } from "react-loader-spinner";
+import ErrorMessageModal from "components/ui/ErrorMessageModal";
 
 
 //imports for UI
@@ -55,9 +56,14 @@ function MyGoogleMap() {
   const [noSubmission, setNoSubmission] = useState<boolean>(false);
   const [remainingTime, setRemainingTime] = useState(0);
   const [submissionDone, setSubmissionDone] = useState((localStorage.getItem("submissionDone") !== "false"));
-  const [currQuestNr, setQuestNr] = useState(parseInt(localStorage.getItem("currentQuest"))-1);
   const [pageLoading, setPageLoading] = useState(true);
   let timerId;
+  const [errorModalOpen, setErrorModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [summaryId, setSummaryId] = useState(null);
+  let client = new Client();
+  const [currentQuest, setCurrentQuest] = useState(1);
+  const [totalQuests, setTotalQuests] = useState(1);
 
   const openNotification = (message: string) => {
     toast.info(message, {autoClose: 3000});
@@ -86,7 +92,7 @@ function MyGoogleMap() {
     timerId = setInterval(async () => {
       try {
         await api.put(`/games/${gameId}/active`, null, { headers });
-        console.log("sent active message")
+        console.log("sent active message");
       } catch (error) {
         stopInactivityTimer();
         alert(
@@ -110,7 +116,6 @@ function MyGoogleMap() {
         const headers = {
           "Authorization": localStorage.getItem("token"),
         };
-        console.log("Game ID:", headers.Authorization);
         const response = await api.get("/games/" + gameId + "/round", { headers });
         console.log("API Response:", response.data);
 
@@ -129,9 +134,12 @@ function MyGoogleMap() {
           }
         }
 
+        setCurrentQuest(response.data.currentRound);
+        setTotalQuests(response.data.numberRounds);
+
         setQuest(response.data.quest);
         setCityName(response.data.geoCodingData.formAddress);
-        setRoundDurationSeconds(response.data.roundTime);
+        setRoundDurationSeconds(response.data.roundTime - 2);
         setLat(response.data.geoCodingData.lat);
         setLng(response.data.geoCodingData.lng);
         setResLatNe(response.data.geoCodingData.resLatNe);
@@ -139,7 +147,6 @@ function MyGoogleMap() {
         setResLatSw(response.data.geoCodingData.resLatSw);
         setResLngSw(response.data.geoCodingData.resLngSw);
         setMapCenter({ lat, lng });
-        setQuestNr(parseInt(localStorage.getItem("currentQuest"), 10))
       } catch (error) {
         stopInactivityTimer();
         alert(
@@ -154,7 +161,6 @@ function MyGoogleMap() {
   }, []);
 
   useEffect(() => {
-    let client = new Client();
     const websocketUrl = getWebsocketDomain();
     client.configure({
       brokerURL: websocketUrl,
@@ -171,8 +177,12 @@ function MyGoogleMap() {
             openNotification(messageParsed.username + " left");
           } else if (messageParsed.status === "game_over") {
             stopInactivityTimer();
+            client && client.deactivate();
             localStorage.setItem("submissionDone", "false");
-            navigate("/gamesummary/" + messageParsed.summaryId);
+            console.log("Game ended prematurely");
+            setErrorMessage("The game ended prematurely since less than three participants are remaining. You are being transferred to the summary page to see all completed rounds.");
+            setErrorModalOpen(true);
+            setSummaryId(messageParsed.summaryId);
           }
         });
         client && client.subscribe(timerDestination, (message) => {
@@ -212,8 +222,6 @@ function MyGoogleMap() {
     value: "text-xl font-semibold text-white",
   };
 
-
-  console.log("rounddurationseconds: ", roundDurationSeconds);
   const handleCenterChanged = (map) => {
     if (map) {
       // Get the new center of the map
@@ -238,7 +246,6 @@ function MyGoogleMap() {
     };
     const body = JSON.stringify({ lat, lng, heading, pitch, noSubmission });
     try {
-      localStorage.setItem("currentQuest", String(currQuestNr+1))
       const response = await api.post("games/" + gameId + "/submission", body, { headers });
       console.log("API Response:", response.data);
       localStorage.setItem("submissionDone", "true");
@@ -248,6 +255,12 @@ function MyGoogleMap() {
         `There was an error during the submission. \n${handleError(error)}`,
       );
     }
+  }
+
+  function handlePrematureGameEnd() {
+    setErrorModalOpen(false)
+    localStorage.clear();
+    navigate("/gamesummary/" + summaryId);
   }
 
   const submitNow = () => {
@@ -274,6 +287,7 @@ function MyGoogleMap() {
 
   return (
     <div className="relative min-h-screen w-screen flex flex-col items-center">
+      {errorModalOpen && <ErrorMessageModal isOpen={errorModalOpen} onClose={() => handlePrematureGameEnd()} errorMessage={errorMessage} />}
       <ToastContainer
         pauseOnFocusLoss={false}
         pauseOnHover={false}
@@ -294,7 +308,7 @@ function MyGoogleMap() {
           </div>
         </div>
       ) : pageLoading ? (
-        <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50">
+        <div className="absolute w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50">
           <div className="flex flex-col items-center">
             <TailSpin
               visible={true}
@@ -316,16 +330,16 @@ function MyGoogleMap() {
           {/*<div className="absolute top-4 left-4">
         <BackButton />
       </div>*/}
-          <div className="w-3/4 flex flex-col items-center">
-            <BaseContainer size="medium" className="flex flex-col items-center mb-32">
+          <div className="w-3/4 flex flex-col">
+            <BaseContainer size="game" className="flex flex-col items-center overflow-hidden max-w-full mb-32">
               <Progress
                 aria-label="Progress"
                 // disableAnimation
-                maxValue= {parseInt(localStorage.getItem("totalQuests"), 10)}
-                value={currQuestNr}
+                maxValue= {totalQuests}
+                value={currentQuest}
                 color="success"
                 className="absolute right-0 top-0 w-full" />
-              <h3 className="text-xl font-bold my-4">Find a {quest} in {cityName}!</h3>
+              <h3 className="text-xl font-bold my-2">Find a {quest} in {cityName}!</h3>
               {lat && lng && (
                 <LoadScript googleMapsApiKey={API_Key} libraries={libs}>
                   <ReactGoogleMap
@@ -379,14 +393,14 @@ function MyGoogleMap() {
                 </LoadScript>
               )}
             </BaseContainer>
-            <div className="w-3/4 flex items-center justify-between px-4 absolute bottom-16" style={{ minHeight: "10vh"}}>
+            <div className="w-3/4 flex items-center justify-between px-4 fixed bottom-8" style={{ minHeight: "10vh" }}>
               <div className="flex-1 flex justify-start">
                 <GameButton onClick={submitEmptyNow} />
               </div>
               <div className="flex-1 flex justify-center">
                 <CircularProgress
                   classNames={circularProgressStyles}
-                  size="md"
+                  size="lg"
                   value={calculateProgressValue()}
                   valueLabel={`${remainingTime}s`}
                   strokeWidth={3}

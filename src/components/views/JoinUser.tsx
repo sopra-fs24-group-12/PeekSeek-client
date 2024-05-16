@@ -75,7 +75,7 @@ const JoinUser = () => {
   };
 
   const handleUsernameChange = (e) => {
-    const newUsername = e.target.value.trim().slice(0, 20);
+    const newUsername = e.target.value.slice(0, 20);
     setUsername(newUsername);
 
     if (e.target.value.trim().length === 20 && !usernameNotificationShown) {
@@ -101,7 +101,7 @@ const JoinUser = () => {
         <div className="flex justify-center items-center h-full">
           <BaseContainer
             size="small"
-            className="flex flex-col items-center">
+            className="flex flex-col items-center overflow-hidden max-w-full">
             <div className="flex-row flex-wrap md:flex-nowrap mt-16 mb-16 mr-16 ml-16 gap-4">
               <text>Username</text>
               <Input
@@ -126,9 +126,9 @@ const JoinUser = () => {
                 placeholder="..."
                 onChange={(e) => setLobbyPassword(e.target.value)} />
             </div>
-            <div className="w-full flex justify-center mt-auto mb-4">
+            <div className="absolute bottom-2 w-full flex flex-col items-center mt-auto gap-2">
               <JoinButton
-                isDisabled={!username || (lobbyRequiresPassword && !lobbyPassword)}
+                isDisabled={!username.trim() || (lobbyRequiresPassword && !lobbyPassword)}
                 onClick={handleJoinClick} />
             </div>
             <Button
