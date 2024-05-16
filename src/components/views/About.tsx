@@ -8,7 +8,7 @@ import PolicyContainer from "../ui/PolicyContainer";
 const About = () => {
   const navigate = useNavigate();
 
-  // Function to handle back navigation
+
   const goBack = () => {
     navigate("/landing");
   };
@@ -20,9 +20,9 @@ const About = () => {
         <BackButton />
       </div>
 
-      <div className="flex items-center h-full flex-col mt-6 mr-40 ml-40 mb-10">
+      <div className="flex items-center h-full flex-col mt-10 mr-40 ml-40 mb-10">
         <h1
-          className="text-4xl text-center mb-8"
+          className="text-4xl text-center mb-10"
           style={{
             fontFamily: "'Permanent Marker', cursive",
             fontSize: "4rem",
@@ -63,16 +63,16 @@ const About = () => {
       </div>
 
 
-      <div className="flex items-center h-full flex-col  mb-10 mt-auto">
-        <Button
-          color="primary"
-          onClick={goBack}
-          radius = "full"
-        >
-          Back
-        </Button>
+      {/*<div className="flex items-center h-full flex-col  mb-10 mt-auto">*/}
+      {/*  <Button*/}
+      {/*    color="primary"*/}
+      {/*    onClick={goBack}*/}
+      {/*    radius = "full"*/}
+      {/*  >*/}
+      {/*    Back*/}
+      {/*  </Button>*/}
 
-      </div>
+      {/*</div>*/}
     </div>
 
 
