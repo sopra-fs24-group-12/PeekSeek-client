@@ -10,7 +10,7 @@ import ContentWrapper from "components/ui/ContentWrapper";
 import ScrollableContentWrapper from "components/ui/ScrollableContentWrapper";
 import FlexWrapper from "components/ui/FlexWrapper";
 import CityInputWrapper from "components/ui/CityInputWrapper";
-import TimeButtons from "../ui/TimeButtons";
+import TimeSlider from "../ui/TimeSlider";
 import { getWebsocketDomain } from "helpers/getDomain";
 import HowToPlayModal from "components/ui/HowToPlayModal";
 import { InfoCircleTwoTone } from "@ant-design/icons";
@@ -343,7 +343,7 @@ const Lobby = () => {
         <h1 className="text-3xl font-bold text-gray-700 my-0 text-center">{lobbyName}</h1>
         <div className="flex flex-col md:flex-row w-full justify-between space-y-6 md:space-y-0 md:space-x-6 overflow-auto">
           <div className="md:w-1/3 p-4 gap-4 flex flex-col">
-            <TimeButtons
+            <TimeSlider
               disabled={!admin}
               selectedDuration={roundDurationSeconds}
               setRoundDurationSeconds={setRoundDurationSeconds}
