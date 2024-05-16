@@ -57,8 +57,10 @@ const JoinLobby = () => {
         console.log("Error caught:", error.response.data.message);
         setErrorMessage(error.response.data.message);
         setErrorModalOpen(true);
+        setIsLoading(false);
         localStorage.clear()
       }
+       setIsLoading(false);
     }
 
     fetchData();
@@ -104,7 +106,7 @@ const JoinLobby = () => {
                 </TableHeader>
                 <TableBody
                   isLoading={isLoading}
-                  emptyContent={<Spinner size="md" color="default" />}
+                  emptyContent={lobbies ? (<Spinner size="md" color="default" />) : (<> </>)}
                 >
                   {lobbies.map((lobby: Lobby) => (
                     <TableRow
