@@ -60,7 +60,7 @@ const VotingResults = () => {
     timerId = setInterval(async () => {
       try {
         await api.put(`/games/${gameId}/active`, null, { headers });
-        console.log("sent active message")
+        console.log("sent active message");
       } catch (error) {
         alert(
           `Something went wrong while sending active ping: \n${handleError(error)}`,
