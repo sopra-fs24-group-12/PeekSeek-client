@@ -300,7 +300,7 @@ const VotingResults = () => {
                   }}
                   variant="bordered"
                 >
-                  NEXT ROUND:
+                  {currentQuest === totalQuests ? "GAME SUMMARY:" : "NEXT ROUND:"}
                 </Chip>
                 <CircularProgress
                   classNames={{
