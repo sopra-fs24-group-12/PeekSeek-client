@@ -5,7 +5,7 @@ import CreateButton from "components/ui/CreateButton";
 import BackButton from "components/ui/BackButton";
 import Lobby from "models/Lobby";
 import { useNavigate } from "react-router-dom";
-import { api, handleError } from "helpers/api";
+import { api } from "helpers/api";
 import HowToPlayModal from "components/ui/HowToPlayModal";
 import { InfoCircleTwoTone } from "@ant-design/icons";
 import {
@@ -104,7 +104,7 @@ const JoinLobby = () => {
                 </TableHeader>
                 <TableBody
                   isLoading={isLoading}
-                  emptyContent={<Spinner size="md" color="default" />}
+                  emptyContent={!isLoading && lobbies.length === 0 ? "No Lobbies exist yet. Create one below 👇🏻" : <Spinner size="md" color="default" />}
                 >
                   {lobbies.map((lobby: Lobby) => (
                     <TableRow
