@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { api, handleError } from "helpers/api";
 import HowToPlayModal from "components/ui/HowToPlayModal";
 import ErrorMessageModal from "components/ui/ErrorMessageModal";
@@ -11,8 +11,9 @@ import BackDashboardButton from "../ui/BackDashboardButton";
 import { useParams } from "react-router-dom";
 import StartButton from "../ui/StartButton";
 import { MutatingDots, ThreeDots, DNA, BallTriangle, TailSpin } from "react-loader-spinner";
-import { LoadScript, Marker, GoogleMap as ReactGoogleMap} from '@react-google-maps/api';
+import { LoadScript, Marker, DirectionsService, DirectionsRenderer, GoogleMap as ReactGoogleMap} from "@react-google-maps/api";
 import { Library } from "@googlemaps/js-api-loader";
+import { set } from "lodash";
 
 const API_Key = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
@@ -41,36 +42,51 @@ const GameSummary = () => {
   const [mapCenter, setMapCenter] = useState({ lat: 47.3768866, lng: 8.541694 });
   const [map, setMap] = useState(null);
   const [markers, setMarkers] = useState([]);
+  const [markersURL, setMarkersURL] = useState("");
+  const [markersURLunordered, setMarkersURLunordered] = useState("");
+
+  const [directionsResponse, setDirectionsResponse] = useState(null);
+  const [areMarkersOptimized, setAreMarkersOptimized] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
       try {
         const response = await api.get("/summaries/" + summaryId);
-
-        const linkList = response.data.quests.map((quest, index) => {
-          return { url: quest.link, label: index + 1 + ": " + quest.description + " found by " + quest.name };
-        });
-        setResLatNe(response.data.resLatNe);
-        setResLngNe(response.data.resLngNe);
-        setResLatSw(response.data.resLatSw);
-        setResLngSw(response.data.resLngSw);
-        setLat(parseFloat(response.data.lat));
-        setLng(parseFloat(response.data.lng));
-        setMapCenter({ lat, lng });
-        setExternalLinks(linkList);
-        setSuccessfulRounds(linkList.length);
-        setCity(response.data.cityName);
-        setNrOfQuests(response.data.roundsPlayed);
-        console.log("Response data:", response.data);
-        response.data.quests.forEach(quest => {
-          lats.push(quest.lat);
-          lngs.push(quest.lng);
-        });
-        const newMarkers = lats.map((lat, index) => new google.maps.Marker({
-          position: { lat: parseFloat(lat), lng: parseFloat(lngs[index]) },
-          map: map,
-        }));
-        setMarkers(newMarkers);
+        if(response && response.data){
+          console.log("Response data:", response.data);
+          const linkList = response.data.quests.map((quest, index) => {
+            return { url: quest.link, label: index + 1 + ": " + quest.description + " found by " + quest.name };
+          });
+          setResLatNe(response.data.resLatNe);
+          setResLngNe(response.data.resLngNe);
+          setResLatSw(response.data.resLatSw);
+          setResLngSw(response.data.resLngSw);
+          setLat(parseFloat(response.data.lat));
+          setLng(parseFloat(response.data.lng));
+          const center = { lat: parseFloat(response.data.lat), lng: parseFloat(response.data.lng) };
+          setMapCenter(center);
+          console.log("Map Center:", mapCenter);
+          setExternalLinks(linkList);
+          setSuccessfulRounds(linkList.length);
+          setCity(response.data.cityName);
+          setNrOfQuests(response.data.roundsPlayed);
+          console.log("Response data:", response.data);
+          response.data.quests.forEach(quest => {
+            lats.push(quest.lat);
+            lngs.push(quest.lng);
+          });
+          const newMarkers = lats.map((lat, index) => ({
+            position: { 
+              lat: parseFloat(lat), 
+              lng: parseFloat(lngs[index]) 
+            },
+          }));
+          setMarkers(newMarkers);
+          const baseURL = "https://www.google.com/maps/dir/";
+          const waypoints = lats.map((lat, index) => `${lat},${lngs[index]}`).join("/");
+          const endOfURL = "/data=!3m1!4b1!4m2!4m1!3e2";
+          setMarkersURLunordered(`${baseURL}${waypoints}${endOfURL}`);
+        }
       } catch (error) {
         console.log("Error caught:", error.response.data.message);
         setErrorMessage(error.response.data.message);
@@ -80,7 +96,68 @@ const GameSummary = () => {
     }
 
     fetchData();
-  }, []);
+  }, [summaryId]);
+
+  const shortestPathMarkers = useCallback((directionsService) => {
+    console.log("Markers:", markers);
+
+    const waypoints = markers.slice(1, markers.length - 1).map(marker => ({
+      location: marker.position,
+      stopover: true,
+    }));
+
+    console.log("Waypoints:", waypoints);
+
+    directionsService.route({
+      origin: markers[0].position,
+      destination: markers[waypoints.length - 1].position,
+      waypoints: waypoints,
+      optimizeWaypoints: true,
+      travelMode: "WALKING",
+    }, (response, status) => {
+      if (status === "OK") {
+        setDirectionsResponse(response);
+        const route = response.routes[0];
+        const optimizedOrder = route.waypoint_order;
+        console.log("Optimized Order:", optimizedOrder);
+        const orderedMarks = getOrderedMarkers(markers, optimizedOrder);
+        setMarkers(orderedMarks);
+        updateMarkersURL(orderedMarks);
+        setAreMarkersOptimized(true);
+      } else {
+        console.error(`error fetching directions ${response}`);
+      }
+    });
+  }, [markers]);
+
+  const getOrderedMarkers = (markers, optimizedOrder) => {
+
+    const orderedMarkers = [markers[0]];
+
+    optimizedOrder.forEach(index => {
+      orderedMarkers.push(markers[index + 1]);
+    });
+
+    orderedMarkers.push(markers[markers.length - 1]); // ending at the starting point
+
+    console.log("Ordered Markers:", orderedMarkers);
+
+    return orderedMarkers;
+  };
+
+  const updateMarkersURL = (orderedMarkers) => {
+    const baseURL = "https://www.google.com/maps/dir/";
+    const waypoints = orderedMarkers.map(marker => `${marker.position.lat},${marker.position.lng}`).join("/");
+    const endOfURL = "/data=!3m1!4b1!4m2!4m1!3e2";
+    setMarkersURL(`${baseURL}${waypoints}${endOfURL}`);
+  };
+
+  useEffect(() => {
+    if (map && markers.length && !areMarkersOptimized) {
+      const directionsService = new window.google.maps.DirectionsService();
+      shortestPathMarkers(directionsService);
+    }
+  }, [map, markers, areMarkersOptimized, shortestPathMarkers]);
 
   useEffect(() => {
     setInterval(() => {
@@ -88,8 +165,6 @@ const GameSummary = () => {
     }, 1500
     )
   }, []);
-
-  
 
   return (
     <div className="relative min-h-screen w-screen flex flex-col items-center">
@@ -126,35 +201,37 @@ const GameSummary = () => {
             </div>
           </div>
           <div className="flex w-full">
-            <div className="w-1/3 p-4 flex flex-col items-center justify-end h-full space-y-4">
+            <div className="w-1/3 p-4 flex flex-col items-center h-full space-y-4">
               {externalLinks.map(link => (
                 <ExternalLinkButton key={link.url} url={link.url} label={link.label} />
               ))}
+              <ExternalLinkButton label={"Open Directions (shortest distance)"} url={markersURL}/>
+              <ExternalLinkButton label={"Open Directions (ordered by rounds)"} url={markersURLunordered}/>
             </div>
-            <div className="w-2/3 flex flex-col p-4 h-screen h-80vh">
-            {lat && lng && (
-              <LoadScript googleMapsApiKey={API_Key} libraries={libs}>
-                <ReactGoogleMap
-                  mapContainerStyle={{
-                    width: "100%",
-                    height: "100%",
-                  }}
-                  zoom={15}
-                  onLoad={(map) => {
-                    const bounds = new window.google.maps.LatLngBounds(
-                      new window.google.maps.LatLng(resLatSw, resLngSw),  // Southwest
-                      new window.google.maps.LatLng(resLatNe, resLngNe),   // Northeast
-                    );
-                    map.fitBounds(bounds);
-                    setMap(map);
-                  }}
-                  center={mapCenter}
-                >
-                  {markers.map((marker, index) => (
-                    <Marker key={index} position={marker.position} />
-                  ))}
-                </ReactGoogleMap>
-              </LoadScript>
+            <div className="w-2/3 flex flex-col flex-center p-4 h-screen">
+              {lat && lng && markers && (
+                <LoadScript googleMapsApiKey={API_Key} libraries={libs}>
+                  <ReactGoogleMap
+                    mapContainerStyle={{
+                      width: "90%",
+                      height: "60%",
+                    }}
+                    zoom={15}
+                    onLoad={(map) => {
+                      const bounds = new window.google.maps.LatLngBounds(
+                        new window.google.maps.LatLng(resLatSw, resLngSw),  // Southwest
+                        new window.google.maps.LatLng(resLatNe, resLngNe),   // Northeast
+                      );
+                      map.fitBounds(bounds);
+                      setMap(map);
+                    }}
+                    center={mapCenter}
+                  >
+                    {markers.map((marker, index) => (
+                      <Marker key={index} position={marker.position} title={marker.title} />
+                    ))}
+                  </ReactGoogleMap>
+                </LoadScript>
               )}
             </div>
           </div>
