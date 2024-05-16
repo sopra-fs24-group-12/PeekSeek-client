@@ -29,6 +29,11 @@ const MapsRouteButton: React.FC<MapsRouteButtonProps> = ({ normal_order_link, sh
     setSelectedOption(keys as Set<string>);
   };
 
+  const handleButtonClick = () => {
+    const url = selectedOptionValue === "Original" ? normal_order_link : shortest_path_link;
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
   const handleDropdownItemClick = (url: string) => {
     window.open(url, "_blank", "noopener,noreferrer");
   };
@@ -42,6 +47,7 @@ const MapsRouteButton: React.FC<MapsRouteButtonProps> = ({ normal_order_link, sh
           fontWeight: 400,
         }}
         color={"warning"}
+        onClick={handleButtonClick}
       >
         {labelsMap[selectedOptionValue]}
       </Button>
