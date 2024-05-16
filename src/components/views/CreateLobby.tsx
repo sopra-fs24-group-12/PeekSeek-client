@@ -9,6 +9,7 @@ import Lobby from "models/Lobby";
 import HowToPlayModal from "components/ui/HowToPlayModal";
 import { InfoCircleTwoTone } from "@ant-design/icons";
 import { notification } from "antd";
+import ErrorMessageModal from "components/ui/ErrorMessageModal";
 
 const CreateLobby = () => {
   const navigate = useNavigate();
@@ -18,6 +19,8 @@ const CreateLobby = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [usernameNotificationShown, setUsernameNotificationShown] = useState(false);
   const [lobbyNameNotificationShown, setLobbyNameNotificationShown] = useState(false);
+  const [errorModalOpen, setErrorModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   
   const handleLobbyPasswordChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const newPassword = event.target.value;
@@ -81,12 +84,16 @@ const CreateLobby = () => {
 
       navigate("/lobby/" + lobby.id);
     } catch (error) {
-      alert(
-        `Something went wrong during the registration: \n${handleError(error)}`,
-      );
+      console.log("Error caught:", error.response.data.message);
+      setErrorMessage(error.response.data.message);
+      setErrorModalOpen(true);
     }
 
   };
+
+  function handleErrorOnLobbyCreation() {
+    setErrorModalOpen(false);
+  }
 
   return (
     <div className="relative min-h-screen w-screen">
@@ -94,6 +101,7 @@ const CreateLobby = () => {
         <BackButton />
       </div>
       <div className="flex justify-center items-center h-full">
+        {errorModalOpen && <ErrorMessageModal isOpen={errorModalOpen} onClose={() => handleErrorOnLobbyCreation()} errorMessage={errorMessage} />}
         <BaseContainer
           size="small"
           className="flex flex-col items-center overflow-hidden max-w-full">
