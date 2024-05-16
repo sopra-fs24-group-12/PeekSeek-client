@@ -45,6 +45,7 @@ const MapsRouteButton: React.FC<MapsRouteButtonProps> = ({ normal_order_link, sh
         style={{
           fontFamily: "'Lato'",
           fontWeight: 400,
+
         }}
         color={"warning"}
         onClick={handleButtonClick}
