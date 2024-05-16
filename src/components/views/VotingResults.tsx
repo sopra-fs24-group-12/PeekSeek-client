@@ -9,7 +9,6 @@ import "react-toastify/dist/ReactToastify.css";
 import BaseContainer from "../ui/BaseContainer";
 import WinningCard from "../ui/WinningCard";
 import Leaderboard from "../ui/Leaderboard";
-import Timer from "../ui/Timer";
 import { useNavigate, useParams } from "react-router-dom";
 import { Client } from "@stomp/stompjs";
 import { Chip, CircularProgress, Progress } from "@nextui-org/react";
@@ -303,30 +302,31 @@ const VotingResults = () => {
               <div className="max-w-2xl mx-auto"> {/* Leaderboard centered */}
                 <Leaderboard data={formattedLeaderboard} />
               </div>
-              <div className="absolute bottom-0 right-0 mr-5 mb-5 flex flex-col items-center justify-center">
-                <Chip
-                  classNames={{
-                    base: "border-1 customStroke",
-                    content: "text-xs text-customStroke font-semibold"
-                  }}
-                  variant="bordered"
-                >
-                  {currentQuest === totalQuests ? "GAME SUMMARY:" : "NEXT ROUND:"}
-                </Chip>
-                <CircularProgress
-                  classNames={{
-                    svg: "w-36 h-36 drop-shadow-md",
-                    indicator: "customStroke",
-                    track: "stroke-white/20",
-                    value: "text-2xl font-semibold customStroke",
-                  }}
-                  size="md"
-                  value={calculateProgressValue()}
-                  valueLabel={`${remainingTime}s`}
-                  strokeWidth={3}
-                  showValueLabel={true}
-                />
-              </div>
+
+            </div>
+            <div className="absolute bottom-4 right-5 flex-1 flex flex-col items-center justify-center">
+              <Chip
+                classNames={{
+                  base: "border-1 customStroke",
+                  content: "text-xs text-customStroke font-semibold"
+                }}
+                variant="bordered"
+              >
+                {currentQuest === totalQuests ? "GAME SUMMARY:" : "NEXT ROUND:"}
+              </Chip>
+              <CircularProgress
+                classNames={{
+                  svg: "w-36 h-36 drop-shadow-md",
+                  indicator: "customStroke",
+                  track: "stroke-white/20",
+                  value: "text-2xl font-semibold customStroke",
+                }}
+                size="md"
+                value={calculateProgressValue()}
+                valueLabel={`${remainingTime}s`}
+                strokeWidth={3}
+                showValueLabel={true}
+              />
             </div>
           </div>
         </BaseContainer>

@@ -452,7 +452,6 @@ const GameSubmission = () => {
               </div>
             </div>
 
-            {/* Chat Component */}
             <div className="md:w-1/4 w-full p-2 lg:order-none flex justify-center items-center mt-auto mb-1">
               <div className="flex-1 flex justify-start">
 
@@ -460,7 +459,7 @@ const GameSubmission = () => {
               <div className="flex-1 flex justify-center">
 
               </div>
-              <div className="absolute bottom-8 flex-1 flex flex-col items-center justify-center">
+              <div className="absolute bottom-7 right-7 flex-1 flex flex-col items-center justify-center">
                 <Chip
                   classNames={{
                     base: "border-1 customStroke",
