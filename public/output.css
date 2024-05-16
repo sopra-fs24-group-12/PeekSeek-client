@@ -7523,8 +7523,8 @@ video {
     max-height: 100vh;
   }
 
-  .lg\:w-1\/2 {
-    width: 50%;
+  .lg\:w-1\/3 {
+    width: 33.333333%;
   }
 
   .lg\:w-2\/3 {
@@ -7559,10 +7559,6 @@ video {
 
   .xl\:max-h-screen {
     max-height: 100vh;
-  }
-
-  .xl\:w-1\/2 {
-    width: 50%;
   }
 
   .xl\:w-1\/3 {
