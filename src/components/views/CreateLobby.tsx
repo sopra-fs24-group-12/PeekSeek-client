@@ -107,13 +107,13 @@ const CreateLobby = () => {
           className="flex flex-col items-center overflow-hidden max-w-full">
           <div className="flex-row flex-wrap md:flex-nowrap mt-16 mb-16 mr-16 ml-16 gap-4">
             <text>Admin Username</text>
-            <Input className="mb-8 shadow-lg" isRequired onChange={handleLobbyAdminChange} radius={"sm"} type="username" label="required " placeholder="..." maxLength={20}
+            <Input className="mb-8 shadow-lg" isRequired isClearable onClear={() => setUsername("")} onChange={handleLobbyAdminChange} radius={"sm"} type="username" label="required " placeholder="..." maxLength={20}
             />
             <text>Lobby Name</text>
-            <Input className="mb-8 shadow-lg" isRequired onChange={handleLobbyNameChange} type="name" label="required " placeholder="..." maxLength={20}
+            <Input className="mb-8 shadow-lg" isRequired isClearable onClear={() => setLobbyname("")} onChange={handleLobbyNameChange} type="name" label="required " placeholder="..." maxLength={20}
             />
             <text>Lobby Password</text>
-            <Input className="mb-8 shadow-lg" onChange={handleLobbyPasswordChange} type="password" label="(optional)" placeholder="..." 
+            <Input className="mb-8 shadow-lg" isClearable onClear={() => setLobbypassword("")} onChange={handleLobbyPasswordChange} type="password" label="(optional)" placeholder="..."
             />
           </div>
           <div className="absolute bottom-2 w-full flex flex-col items-center mt-auto gap-2">

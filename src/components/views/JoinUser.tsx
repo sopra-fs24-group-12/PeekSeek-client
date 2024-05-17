@@ -124,6 +124,7 @@ const JoinUser = () => {
                 className="mb-8 shadow-lg"
                 isRequired
                 isClearable
+                onClear={() => setUsername("")}
                 radius={"sm"}
                 type="username"
                 label="required "
@@ -136,6 +137,7 @@ const JoinUser = () => {
                 className="mb-8 shadow-lg"
                 isDisabled= {!lobbyRequiresPassword}
                 isClearable
+                onClear={() => setLobbyPassword("")}
                 value={lobbyPassword}
                 type="password"
                 label="  "
