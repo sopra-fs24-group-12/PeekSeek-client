@@ -15,7 +15,7 @@ const MapsRouteButton: React.FC<MapsRouteButtonProps> = ({ normal_order_link, sh
     Original:
       "Show directions of route in order of rounds played in this game.",
     Shortest:
-      "Show directions of route in shortest possible way to get to all winning places.",
+      "Show directions of route in shortest possible way between the first and the last round.",
   };
 
   const labelsMap = {
