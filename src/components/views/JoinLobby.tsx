@@ -33,8 +33,6 @@ const JoinLobby = () => {
 
   const handleClickList = () => {
     console.log("Join button clicked!");
-    localStorage.setItem("undefined", String(lobbyRequiresPassword));
-    console.log(String(lobbyRequiresPassword));
     navigate("/join/" + selectedLobbyId);
   };
 

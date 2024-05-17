@@ -34,13 +34,29 @@ const JoinUser = () => {
   useEffect(() => {
     const sendRequest = async () => {
       try {
-        if (localStorage.getItem("undefined") === "true"){
-          setLobbyRequiresPassword(true);
+        const response = await api.get("/lobbies");
+
+
+        console.log("request to:", response.request.responseURL);
+        console.log("status code:", response.status);
+        console.log("status text:", response.statusText);
+        console.log("requested data:", response.data);
+
+        console.log(response);
+
+        const lobbyToJoin = response.data.find(obj => obj.id === parseInt(id));
+
+        console.log(id)
+        console.log(lobbyToJoin)
+
+        if (lobbyToJoin) {
+          setLobbyRequiresPassword(lobbyToJoin.passwordProtected)
         }
       } catch (error) {
         console.log("Error caught:", error.response.data.message);
         setErrorMessage(error.response.data.message);
         setErrorModalOpen(true);
+        localStorage.clear()
       }
     };
     sendRequest();
