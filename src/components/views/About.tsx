@@ -45,11 +45,11 @@ const About = () => {
           </p>
 
           <h2 className="text-medium font-bold text-gray-700 my-0 mb-2">
-            Our Vision
+            Advice/Information
           </h2>
           <p className="text-medium text-gray-700 my-0 mb-2">
-            Our vision at PeekSeek is to become the leading platform for group travel planning, where every trip begins with excitement and collaboration. We envision a world where planning a vacation is as enjoyable as the vacation itself, where friends can come together to explore new cities, uncover hidden gems, and create unforgettable memories. Through our innovative approach and commitment to user satisfaction, we strive to set new standards in the travel industry, ensuring that every journey planned with PeekSeek is seamless, enjoyable, and filled with adventure. We aim to foster a global community of explorers who share their experiences, learn from each other, and turn every travel plan into a shared adventure.          </p>
-
+            PeekSeek is optimized for Google Chrome and a screen size of 1920x1080.
+          </p>
           <h2 className="text-medium font-bold text-gray-700 my-0 mb-2">The Team</h2>
           <ul className="text-medium text-gray-700 my-0 mb-2">
             <li className="text-medium text-gray-700 my-0 mb-2">Nils Reusch</li>
