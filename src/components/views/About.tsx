@@ -41,7 +41,7 @@ const About = () => {
             Our Mission
           </h2>
           <p className="text-medium text-gray-700 my-0 mb-2">
-            At PeekSeek, our mission is to revolutionize group travel planning by transforming it into an engaging and collaborative adventure. We aim to simplify the process of creating memorable travel experiences by blending the thrill of exploration with practical itinerary planning. By leveraging a google maps to explore new cities, we foster teamwork and reduce potential conflicts, ensuring a fun and harmonious journey for all participants. PeekSeek is committed to enhancing group travel experiences by making planning both enjoyable and efficient, providing a platform that encourages discovery and collaboration among friends.
+            At PeekSeek, our mission is to revolutionize group travel planning by transforming it into an engaging and collaborative adventure. We aim to simplify the process of creating memorable travel experiences by blending the thrill of exploration with practical itinerary planning. PeekSeek is committed to enhancing group travel experiences by making planning both enjoyable and efficient, providing a platform that encourages discovery and collaboration among friends.
           </p>
 
           <h2 className="text-medium font-bold text-gray-700 my-0 mb-2">
