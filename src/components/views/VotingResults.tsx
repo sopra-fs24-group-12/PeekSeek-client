@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { api, handleError } from "helpers/api";
 import { getWebsocketDomain } from "helpers/getDomain";
 import { ToastContainer, toast } from "react-toastify";
@@ -40,10 +40,17 @@ const VotingResults = () => {
   let client = new Client();
   const [currentQuest, setCurrentQuest] = useState(1);
   const [totalQuests, setTotalQuests] = useState(1);
+  const currentQuestRef = useRef(currentQuest);
+  const totalQuestsRef = useRef(totalQuests);
 
   const openNotification = (message: string) => {
     toast.info(message, {autoClose: 3000});
   };
+
+  useEffect(() => {
+    currentQuestRef.current = currentQuest;
+    totalQuestsRef.current = totalQuests;
+  }, [currentQuest, totalQuests]);
 
   useEffect(() => {
     let tempId = startInactivityTimer();
@@ -185,7 +192,7 @@ const VotingResults = () => {
             stopInactivityTimer();
             navigate(`/game/${gameId}/`);
           } else if (messageParsed.status === "game_over") {
-            if (currentQuest !== totalQuests) {
+            if (currentQuestRef.current !== totalQuestsRef.current) {
               stopInactivityTimer();
               client && client.deactivate();
               localStorage.clear();
