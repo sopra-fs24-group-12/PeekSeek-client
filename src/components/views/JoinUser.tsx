@@ -25,11 +25,7 @@ const JoinUser = () => {
   const [usernameNotificationShown, setUsernameNotificationShown] = useState(false);
   const [errorModalOpen, setErrorModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
-  const handleBackClick = () => {
-    console.log("Button clicked!");
-    navigate("/join");
-  };
+  const [lobbyNotExisting, setLobbyNotExisting] = useState(false);
 
   useEffect(() => {
     const sendRequest = async () => {
@@ -51,10 +47,16 @@ const JoinUser = () => {
 
         if (lobbyToJoin) {
           setLobbyRequiresPassword(lobbyToJoin.passwordProtected)
+        } else {
+          setErrorMessage("A lobby with this ID does not exist");
+          setErrorModalOpen(true);
+          setLobbyNotExisting(true);
+          localStorage.clear()
         }
       } catch (error) {
         console.log("Error caught:", error.response.data.message);
         setErrorMessage(error.response.data.message);
+        setLobbyNotExisting(true);
         setErrorModalOpen(true);
         localStorage.clear()
       }
@@ -107,9 +109,16 @@ const JoinUser = () => {
   };
   console.log("Error Modal Open:", errorModalOpen, "Message:", errorMessage);
 
+  function handleErrorOnJoin() {
+    setErrorModalOpen(false);
+    if (lobbyNotExisting) {
+      navigate("/landing/");
+    }
+  }
+
   return (
     <>
-      {errorModalOpen && <ErrorMessageModal isOpen={errorModalOpen} onClose={() => setErrorModalOpen(false)} errorMessage={errorMessage} />}
+      {errorModalOpen && <ErrorMessageModal isOpen={errorModalOpen} onClose={() => handleErrorOnJoin()} errorMessage={errorMessage} />}
       <div className="relative min-h-screen w-screen">
         <div className="absolute top-4 left-4 z-50">
           <BackButton />
