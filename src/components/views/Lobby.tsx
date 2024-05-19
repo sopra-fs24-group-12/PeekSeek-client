@@ -160,8 +160,8 @@ const Lobby = () => {
           console.log("Received message:", messageParsed);
 
           if (messageParsed.status === "joined") {
-            addPlayer(messageParsed.username);
-            openNotification(messageParsed.username + " joined");
+            setPlayers(messageParsed.usernames)
+            openNotification(messageParsed.usernames.slice(-1) + " joined");
           } else if (messageParsed.status === "left") {
             removePlayer(messageParsed.username);
             openNotification(messageParsed.username + " left");
