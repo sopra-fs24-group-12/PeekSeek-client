@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@nextui-org/react";
 import { api, handleError } from "helpers/api";
 import styled from "styled-components";
@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 interface StartButtonProps {
   disabled?: boolean;
   lobbyId: string;
+  unsavedChanges: boolean; // New prop to track unsaved changes
 }
 
 const Tooltip = styled.div<{ show: boolean }>`
@@ -52,12 +53,12 @@ const StyledButton = styled(Button)<{ disabled: boolean }>`
   }
 `;
 
-const StartButton: React.FC<StartButtonProps> = ({ disabled, lobbyId }) => {
+const StartButton: React.FC<StartButtonProps> = ({ disabled, lobbyId, unsavedChanges }) => {
   const [hovered, setHovered] = useState(false);
 
   async function doStart() {
-    if (disabled) {
-      toast.info("Peeking requires 3-6 players.", { autoClose: 3000 });
+    if (disabled || unsavedChanges) {
+      toast.info(unsavedChanges ? "You have unsaved changes!" : "Peeking requires 3-6 players.", { autoClose: 3000 });
       
       return;
     }
@@ -80,11 +81,11 @@ const StartButton: React.FC<StartButtonProps> = ({ disabled, lobbyId }) => {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <StyledButton disabled={disabled} onClick={doStart}>
+      <StyledButton disabled={disabled || unsavedChanges} onClick={doStart}>
         Start!
       </StyledButton>
-      <Tooltip show={disabled && hovered}>
-        Need minimum 3 players in lobby to start!
+      <Tooltip show={(disabled || unsavedChanges) && hovered}>
+        {unsavedChanges ? "You have unsaved changes!" : "Need minimum 3 players in lobby to start!"}
       </Tooltip>
     </StartButtonContainer>
   );

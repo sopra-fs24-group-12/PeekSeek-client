@@ -20,7 +20,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ErrorMessageModal from "components/ui/ErrorMessageModal";
 
-
 const Lobby = () => {
   const [quests, setQuests] = React.useState(["", "", "", ""]);
   const [players, setPlayers] = useState([]);
@@ -28,11 +27,12 @@ const Lobby = () => {
   const navigate = useNavigate();
   const [lobbyName, setLobbyName] = useState("");
   const [admin, setAdmin] = useState(false);
-  const [roundDurationSeconds, setRoundDurationSeconds] = useState(120);   // Default to 2mins
+  const [roundDurationSeconds, setRoundDurationSeconds] = useState(120); // Default to 2mins
   const [lat, setLat] = useState("");
   const [lng, setLng] = useState("");
   const [cityName, setCityName] = useState("");
   const [settingsConfirmed, setSettingsConfirmed] = useState(false);
+  const [unsavedChanges, setUnsavedChanges] = useState(false); // New state to track unsaved changes
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   let timerId;
   const [errorModalOpen, setErrorModalOpen] = useState(false);
@@ -59,15 +59,15 @@ const Lobby = () => {
   }
 
   const openNotification = (message: string) => {
-    toast.info(message, {autoClose: 3000});
+    toast.info(message, { autoClose: 3000 });
   };
 
   const addPlayer = (newPlayer: String) => {
-    setPlayers(prevPlayers => [...prevPlayers, newPlayer]);
+    setPlayers((prevPlayers) => [...prevPlayers, newPlayer]);
   };
 
   const removePlayer = (usernameToRemove) => {
-    setPlayers(prevPlayers => prevPlayers.filter(player => player !== usernameToRemove));
+    setPlayers((prevPlayers) => prevPlayers.filter((player) => player !== usernameToRemove));
   };
 
   useEffect(() => {
@@ -100,6 +100,7 @@ const Lobby = () => {
           setLng("0");
         }
         setSettingsConfirmed(response.data.quests && response.data.quests.length > 0 && response.data.gameLocation);
+        setUnsavedChanges(false); // Reset unsaved changes after fetching data
       } catch (error) {
         console.log("Error caught:", error.response.data.message);
         stopInactivityTimer();
@@ -110,7 +111,7 @@ const Lobby = () => {
     }
 
     fetchData();
-  }, []);
+  }, [lobbyId]); // Re-fetch data when lobbyId changes
 
   useEffect(() => {
     let tempId = startInactivityTimer();
@@ -128,7 +129,7 @@ const Lobby = () => {
     timerId = setInterval(async () => {
       try {
         await api.put(`/lobbies/${lobbyId}/active`, null, { headers });
-        console.log("sent active message")
+        console.log("sent active message");
       } catch (error) {
         console.log("Error caught:", error.response.data.message);
         stopInactivityTimer();
@@ -149,7 +150,7 @@ const Lobby = () => {
     const websocketUrl = getWebsocketDomain();
     client.configure({
       brokerURL: websocketUrl,
-      debug: function(str) {
+      debug: function (str) {
         console.log(str);
       },
       onConnect: () => {
@@ -201,7 +202,7 @@ const Lobby = () => {
     return () => {
       client && client.deactivate();
     };
-  }, []);
+  }, [lobbyId]); // Reconnect websocket when lobbyId changes
 
   const handleQuestChange = (index, value) => {
     const updatedQuests = [...quests];
@@ -212,6 +213,7 @@ const Lobby = () => {
     }
 
     setQuests(updatedQuests);
+    setUnsavedChanges(true); // Mark unsaved changes when quest changes
   };
 
   const deleteQuest = (index) => {
@@ -222,6 +224,7 @@ const Lobby = () => {
       updatedQuests.push("");
     }
     setQuests(updatedQuests);
+    setUnsavedChanges(true); // Mark unsaved changes when quest changes
   };
 
   const SaveButton: React.FC = () => {
@@ -237,6 +240,7 @@ const Lobby = () => {
       try {
         await api.put("/lobbies/" + lobbyId, body, { headers });
         setSettingsConfirmed(true);
+        setUnsavedChanges(false); // Reset unsaved changes after saving
       } catch (error) {
         console.log("Error caught:", error.response.data.message);
         stopInactivityTimer();
@@ -309,7 +313,7 @@ const Lobby = () => {
     const imageUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${latitude},${longitude}&zoom=${zoom}&size=400x400&maptype=roadmap&key=${apiKey}`;
 
     return (
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>       
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
         <div
           style={{
             borderRadius: "50%",
@@ -350,7 +354,10 @@ const Lobby = () => {
             <TimeSlider
               disabled={!admin}
               selectedDuration={roundDurationSeconds}
-              setRoundDurationSeconds={setRoundDurationSeconds}
+              setRoundDurationSeconds={(value) => {
+                setRoundDurationSeconds(value);
+                setUnsavedChanges(true); // Mark unsaved changes when round duration changes
+              }}
             />
             <PlayerTable
               players={players} />
@@ -365,7 +372,10 @@ const Lobby = () => {
                   title="city name"
                   placeholder="Enter city name"
                   value={cityName}
-                  onChange={(e) => setCityName(e.target.value)}
+                  onChange={(e) => {
+                    setCityName(e.target.value);
+                    setUnsavedChanges(true); // Mark unsaved changes when city name changes
+                  }}
                   style={admin ? { width: "300px" } : { width: "300px", cursor: "not-allowed",}}
                 />
               </div>
@@ -381,7 +391,7 @@ const Lobby = () => {
                   <Input
                     disabled={!admin}
                     isClearable
-                    key={`quest-${index}`}  // Unique key for each input
+                    key={`quest-${index}`} // Unique key for each input
                     placeholder={`Quest #${index + 1}`}
                     value={quest}
                     onChange={(e) => handleQuestChange(index, e.target.value)}
@@ -402,7 +412,7 @@ const Lobby = () => {
                 ) : ( <> {quests.filter(item => item !== "").map((quest, index) => (
                   <Input
                     disabled
-                    key={`quest-${index}`}  // Unique key for each input
+                    key={`quest-${index}`} // Unique key for each input
                     placeholder={`Quest #${index + 1}`}
                     value={quest}
                     className="mb-2"
@@ -424,6 +434,7 @@ const Lobby = () => {
                   <StartButton
                     disabled={!settingsConfirmed || players.length < 3}
                     lobbyId={lobbyId}
+                    unsavedChanges={unsavedChanges} // Pass unsaved changes state
                   />
                   <SaveButton />
                 </>
