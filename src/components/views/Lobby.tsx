@@ -255,14 +255,31 @@ const Lobby = () => {
         disabled={!admin}
         radius="full"
         size="lg"
-        color="default"
-        className="flex-end mr-4 shadow-lg"
+        color={unsavedChanges ? "warning" : "default"}
+        className={`flex-end mr-4 shadow-lg ${unsavedChanges ? "pulsate" : ""}`}
         onClick={() => {
           console.log("Saving settings");
           save();
         }}
       >
         Save Settings
+        <style>{`
+            @keyframes pulse {
+                0% {
+                    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
+                }
+                50% {
+                    box-shadow: 0 0 0 20px rgba(0, 0, 0, 0);
+                }
+                100% {
+                    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+                }
+            }
+
+            .pulsate {
+                animation: pulse 1s infinite;
+            }
+        `}</style>
       </Button>
     );
   };
