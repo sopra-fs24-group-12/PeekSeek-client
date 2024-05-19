@@ -5,9 +5,10 @@ import {ChevronDownIcon} from "./ChevronDownIcon";
 interface MapsRouteButtonProps {
   normal_order_link: string;
   shortest_path_link: string;
+  nrOfQuests: number;
 }
 
-const MapsRouteButton: React.FC<MapsRouteButtonProps> = ({ normal_order_link, shortest_path_link }) => {
+const MapsRouteButton: React.FC<MapsRouteButtonProps> = ({ normal_order_link, shortest_path_link, nrOfQuests }) => {
 
   const [selectedOption, setSelectedOption] = React.useState(new Set(["Original"]));
 
@@ -38,6 +39,30 @@ const MapsRouteButton: React.FC<MapsRouteButtonProps> = ({ normal_order_link, sh
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
+  const handleSingleButtonClick = () => {
+    window.open(normal_order_link, "_blank", "noopener,noreferrer");
+  };
+
+  if (nrOfQuests < 4) {
+    return (
+      <Button
+        size="lg"
+        radius="md"
+        variant={"flat"}
+        className="shadow-md"
+        style={{
+          fontFamily: "'Lato'",
+          fontWeight: 400,
+        }}
+        color={"warning"}
+        onClick={handleSingleButtonClick}
+      >
+        Google Maps Directions
+      </Button>
+    );
+  }
+
+
   return (
     <ButtonGroup variant="flat">
       <Button
@@ -45,14 +70,15 @@ const MapsRouteButton: React.FC<MapsRouteButtonProps> = ({ normal_order_link, sh
         style={{
           fontFamily: "'Lato'",
           fontWeight: 400,
-
         }}
         color={"warning"}
         onClick={handleButtonClick}
       >
         {labelsMap[selectedOptionValue]}
       </Button>
-      <Dropdown placement="bottom-end">
+      <Dropdown
+        placement="bottom-end"
+      >
         <DropdownTrigger>
           <Button
             size = "lg"

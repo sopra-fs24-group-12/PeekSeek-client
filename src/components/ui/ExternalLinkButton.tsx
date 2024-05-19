@@ -14,7 +14,7 @@ const ExternalLinkButton: React.FC<ExternalLinkButtonProps> = ({ url, label }) =
       as={Link}
       target="_blank"
       rel="noopener noreferrer"
-      className="w-[300px] shadow-md"
+      className="w-[300px] shadow-md justify-start text-left"
       showAnchorIcon
       variant="flat"
       radius="md"

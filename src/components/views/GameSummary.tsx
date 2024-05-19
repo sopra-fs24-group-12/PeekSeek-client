@@ -234,7 +234,7 @@ const GameSummary = () => {
                 >
                   ROUTE DIRECTIONS
                 </Chip>
-                <MapsRouteButton normal_order_link={markersURLunordered} shortest_path_link={markersURL}/>
+                <MapsRouteButton normal_order_link={markersURLunordered} shortest_path_link={markersURL} nrOfQuests={nrOfQuests}/>
               </div>
             </div>
             <div className="w-2/3 flex flex-col flex-center p-4 h-screen">
