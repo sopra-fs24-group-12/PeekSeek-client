@@ -16,6 +16,7 @@ import HowToPlayModal from "components/ui/HowToPlayModal";
 import { InfoCircleTwoTone } from "@ant-design/icons";
 import BackIcon from "../ui/BackIcon";
 import UpdateSettingsIcon from "../ui/UpdateSettingsIcon";
+import BackDashboardButton from "../ui/BackDashboardButton";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ErrorMessageModal from "components/ui/ErrorMessageModal";
@@ -270,13 +271,14 @@ const Lobby = () => {
         radius="full"
         size="lg"
         color={unsavedChanges ? "warning" : "default"}
-        className={`flex-end mr-4 shadow-lg ${unsavedChanges ? "pulsate" : ""}`}
+        startContent={<UpdateSettingsIcon size={40}/>}
+        className={`items-center mr-4 shadow-lg ${unsavedChanges ? "bg-gradient-to-tr from-yellow-500 to-yellow-400 text-black pulsate" : "bg-gradient-to-tr from-gray-400 to-gray-300 text-black"}`}
         onClick={() => {
           console.log("Saving settings");
           save();
         }}
       >
-        Save Settings
+        Update
         <style>{`
             @keyframes pulse {
                 0% {
@@ -324,13 +326,14 @@ const Lobby = () => {
         radius="full"
         size="lg"
         color="default"
-        className="shadow-lg"
+        className="items-center bg-gradient-to-tr from-gray-400 to-gray-300 text-black shadow-lg"
+        startContent={<BackIcon />}
         onClick={() => {
           console.log("Leaving lobby");
           leave();
         }}
       >
-        Leave Lobby
+        Leave
       </Button>
     );
   };
@@ -458,7 +461,7 @@ const Lobby = () => {
             </ScrollableContentWrapper>}
           </div>
           <div className="fixed bottom-0 left-0 right-0 flex justify-between items-center p-4">
-            <LeaveButton />
+            <LeaveButton/>
             {!admin ?
               (<p className="text-xl font-bold">Waiting for the admin to configure and start the game...</p>) : (
                 <>
