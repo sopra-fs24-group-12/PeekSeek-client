@@ -270,6 +270,10 @@ const Lobby = () => {
         disabled={!admin}
         radius="full"
         size="lg"
+        style={{
+          fontFamily: "'Lato'",
+          fontWeight: 400
+        }}
         color={unsavedChanges ? "warning" : "default"}
         startContent={<UpdateSettingsIcon size={40}/>}
         className={`items-center mr-4 shadow-lg ${unsavedChanges ? "bg-gradient-to-tr from-yellow-500 to-yellow-400 text-black pulsate" : "bg-gradient-to-tr from-gray-400 to-gray-300 text-black"}`}
@@ -326,6 +330,10 @@ const Lobby = () => {
         radius="full"
         size="lg"
         color="default"
+        style={{
+          fontFamily: "'Lato'",
+          fontWeight: 400
+        }}
         className="items-center bg-gradient-to-tr from-gray-400 to-gray-300 text-black shadow-lg"
         startContent={<BackIcon />}
         onClick={() => {
