@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 import { api } from "helpers/api";
 import HowToPlayModal from "components/ui/HowToPlayModal";
 import { InfoCircleTwoTone } from "@ant-design/icons";
+import { FaC, FaLocationDot } from "react-icons/fa6";
+import { FaClock } from "react-icons/fa";
 import {
   Table,
   TableBody,
@@ -15,15 +17,13 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-  Spinner, 
-  Button, 
-  useDisclosure
+  Spinner,
+  Button,
+  useDisclosure, Chip, Avatar
 } from "@nextui-org/react";
 import ErrorMessageModal from "components/ui/ErrorMessageModal";
-
 const JoinLobby = () => {
   const navigate = useNavigate();
-  const [lobbyRequiresPassword, setLobbyRequiresPassword] = useState(false);
   const [lobbies, setLobbies] = useState<Lobby[]>([]);
   const [selectedLobbyId, setSelectedLobbyId] = useState();
   const [isLoading, setIsLoading] = useState(true);
@@ -95,9 +95,9 @@ const JoinLobby = () => {
                 }}
               >
                 <TableHeader>
-                  <TableColumn>ID</TableColumn>
                   <TableColumn>LOBBY</TableColumn>
                   <TableColumn>PLAYERS</TableColumn>
+                  <TableColumn>SETTINGS</TableColumn>
                   <TableColumn>🔒</TableColumn>
                 </TableHeader>
                 <TableBody
@@ -109,16 +109,25 @@ const JoinLobby = () => {
                       key={lobby.id}
                       onClick={() => {
                         selectLobby(lobby.id);
-                        setLobbyRequiresPassword(lobby.passwordProtected);
                       }}
                       className={
                         selectedLobbyId === lobby.id ? "selected-row" : ""
                       }
                     >
-                      <TableCell>{lobby.id}</TableCell>
                       <TableCell>{lobby.name}</TableCell>
                       <TableCell>
                         {lobby.joinedParticipants} / {lobby.maxParticipants}
+                      </TableCell>
+                      <TableCell>
+                        {lobby.gameLocation ? (
+                          <Chip avatar={<FaLocationDot />} color="default" size="sm">
+                            {lobby.gameLocation}
+                          </Chip>
+                        ) : ""}
+                        {lobby.gameLocation && <>&nbsp;</>}
+                        <Chip avatar={<FaClock />} color="default" size="sm">
+                          {lobby.roundDurationSeconds - 2}s
+                        </Chip>
                       </TableCell>
                       <TableCell>
                         {lobby.passwordProtected ? "🔒" : ""}
