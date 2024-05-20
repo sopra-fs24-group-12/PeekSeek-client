@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button } from "@nextui-org/react";
 import { api, handleError } from "helpers/api";
 import styled from "styled-components";
@@ -43,7 +43,7 @@ const StyledButton = styled(Button)<{ disabled: boolean }>`
   font-family: "Roboto", sans-serif;
   font-size: 18px;
   font-weight: bold;
-  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.6);
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.4);
   background: linear-gradient(to bottom right, #38a169, #48bb78);
   cursor: ${props => (props.disabled ? "not-allowed" : "pointer")};
   filter: ${props => (props.disabled ? "blur(0.1px)" : "none")};

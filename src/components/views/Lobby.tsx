@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { api, handleError } from "helpers/api";
+import { api } from "helpers/api";
 import { Client } from "@stomp/stompjs";
 import { useNavigate, useParams } from "react-router-dom";
 import BaseContainer from "../ui/BaseContainer";
 import StartButton from "../ui/StartButton";
 import PlayerTable from "../ui/PlayerTable";
 import { Button, Input, useDisclosure } from "@nextui-org/react";
-import ContentWrapper from "components/ui/ContentWrapper";
+
 import ScrollableContentWrapper from "components/ui/ScrollableContentWrapper";
-import FlexWrapper from "components/ui/FlexWrapper";
+
 import CityInputWrapper from "components/ui/CityInputWrapper";
 import TimeSlider from "../ui/TimeSlider";
 import { getWebsocketDomain } from "helpers/getDomain";
@@ -19,6 +19,7 @@ import UpdateSettingsIcon from "../ui/UpdateSettingsIcon";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ErrorMessageModal from "components/ui/ErrorMessageModal";
+import { notification } from "antd";
 
 const Lobby = () => {
   const [quests, setQuests] = React.useState(["", "", "", ""]);
@@ -38,6 +39,7 @@ const Lobby = () => {
   const [errorModalOpen, setErrorModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [emptyQ, setEmptyQ] = useState(true);
+  const [questNotificationShown, setQuestNotificationShown] = useState(false);
   let client = new Client();
 
   interface InputQuestsProps {
@@ -205,8 +207,9 @@ const Lobby = () => {
   }, [lobbyId]); // Reconnect websocket when lobbyId changes
 
   const handleQuestChange = (index, value) => {
+    const newValue = value.slice(0, 20);
     const updatedQuests = [...quests];
-    updatedQuests[index] = value;
+    updatedQuests[index] = newValue;
 
     if (index === updatedQuests.length - 1 && value.trim() !== "") {
       updatedQuests.push("");
@@ -214,6 +217,17 @@ const Lobby = () => {
 
     setQuests(updatedQuests);
     setUnsavedChanges(true); // Mark unsaved changes when quest changes
+
+    if (value.trim().length === 20 && !questNotificationShown) {
+      notification.warning({
+        message: "Quest can be maximum 20 characters long!",
+        duration: 2,
+        key: "quest-limit"
+      });
+      setQuestNotificationShown(true);
+    } else if (value.trim().length < 20 && questNotificationShown) {
+      setQuestNotificationShown(false);
+    }
   };
 
   const deleteQuest = (index) => {
