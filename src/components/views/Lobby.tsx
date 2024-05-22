@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { api, handleError } from "helpers/api";
+import { api } from "helpers/api";
 import { Client } from "@stomp/stompjs";
 import { useNavigate, useParams } from "react-router-dom";
 import BaseContainer from "../ui/BaseContainer";
 import StartButton from "../ui/StartButton";
 import PlayerTable from "../ui/PlayerTable";
 import { Button, Input, useDisclosure } from "@nextui-org/react";
-import ContentWrapper from "components/ui/ContentWrapper";
+
 import ScrollableContentWrapper from "components/ui/ScrollableContentWrapper";
-import FlexWrapper from "components/ui/FlexWrapper";
+
 import CityInputWrapper from "components/ui/CityInputWrapper";
 import TimeSlider from "../ui/TimeSlider";
 import { getWebsocketDomain } from "helpers/getDomain";
@@ -16,9 +16,11 @@ import HowToPlayModal from "components/ui/HowToPlayModal";
 import { InfoCircleTwoTone } from "@ant-design/icons";
 import BackIcon from "../ui/BackIcon";
 import UpdateSettingsIcon from "../ui/UpdateSettingsIcon";
+import BackDashboardButton from "../ui/BackDashboardButton";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ErrorMessageModal from "components/ui/ErrorMessageModal";
+import { notification } from "antd";
 
 const Lobby = () => {
   const [quests, setQuests] = React.useState(["", "", "", ""]);
@@ -38,6 +40,7 @@ const Lobby = () => {
   const [errorModalOpen, setErrorModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [emptyQ, setEmptyQ] = useState(true);
+  const [questNotificationShown, setQuestNotificationShown] = useState(false);
   let client = new Client();
 
   interface InputQuestsProps {
@@ -205,8 +208,9 @@ const Lobby = () => {
   }, [lobbyId]); // Reconnect websocket when lobbyId changes
 
   const handleQuestChange = (index, value) => {
+    const newValue = value.slice(0, 20);
     const updatedQuests = [...quests];
-    updatedQuests[index] = value;
+    updatedQuests[index] = newValue;
 
     if (index === updatedQuests.length - 1 && value.trim() !== "") {
       updatedQuests.push("");
@@ -214,6 +218,17 @@ const Lobby = () => {
 
     setQuests(updatedQuests);
     setUnsavedChanges(true); // Mark unsaved changes when quest changes
+
+    if (value.trim().length === 20 && !questNotificationShown) {
+      notification.warning({
+        message: "Quest can be maximum 20 characters long!",
+        duration: 2,
+        key: "quest-limit"
+      });
+      setQuestNotificationShown(true);
+    } else if (value.trim().length < 20 && questNotificationShown) {
+      setQuestNotificationShown(false);
+    }
   };
 
   const deleteQuest = (index) => {
@@ -255,14 +270,19 @@ const Lobby = () => {
         disabled={!admin}
         radius="full"
         size="lg"
+        style={{
+          fontFamily: "'Lato'",
+          fontWeight: 400
+        }}
         color={unsavedChanges ? "warning" : "default"}
-        className={`flex-end mr-4 shadow-lg ${unsavedChanges ? "pulsate" : ""}`}
+        startContent={<UpdateSettingsIcon size={40}/>}
+        className={`items-center mr-4 shadow-lg ${unsavedChanges ? "bg-gradient-to-tr from-yellow-500 to-yellow-400 text-black pulsate" : "bg-gradient-to-tr from-gray-400 to-gray-300 text-black"}`}
         onClick={() => {
           console.log("Saving settings");
           save();
         }}
       >
-        Save Settings
+        Update
         <style>{`
             @keyframes pulse {
                 0% {
@@ -310,13 +330,18 @@ const Lobby = () => {
         radius="full"
         size="lg"
         color="default"
-        className="shadow-lg"
+        style={{
+          fontFamily: "'Lato'",
+          fontWeight: 400
+        }}
+        className="items-center bg-gradient-to-tr from-gray-400 to-gray-300 text-black shadow-lg"
+        startContent={<BackIcon />}
         onClick={() => {
           console.log("Leaving lobby");
           leave();
         }}
       >
-        Leave Lobby
+        Leave
       </Button>
     );
   };
@@ -444,7 +469,7 @@ const Lobby = () => {
             </ScrollableContentWrapper>}
           </div>
           <div className="fixed bottom-0 left-0 right-0 flex justify-between items-center p-4">
-            <LeaveButton />
+            <LeaveButton/>
             {!admin ?
               (<p className="text-xl font-bold">Waiting for the admin to configure and start the game...</p>) : (
                 <>
