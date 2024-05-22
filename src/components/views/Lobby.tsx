@@ -81,7 +81,6 @@ const Lobby = () => {
 
       try {
         const response = await api.get(`/lobbies/${lobbyId}`, { headers });
-        console.log("API Response:", response.data);
 
         setLobbyName(response.data.name);
         setPlayers(response.data.participants);
@@ -132,7 +131,7 @@ const Lobby = () => {
     timerId = setInterval(async () => {
       try {
         await api.put(`/lobbies/${lobbyId}/active`, null, { headers });
-        console.log("sent active message");
+        //console.log("sent active message");
       } catch (error) {
         console.log("Error caught:", error.response.data.message);
         stopInactivityTimer();
@@ -154,13 +153,13 @@ const Lobby = () => {
     client.configure({
       brokerURL: websocketUrl,
       debug: function (str) {
-        console.log(str);
+        //console.log(str);
       },
       onConnect: () => {
         const destination = "/topic/lobby/" + lobbyId;
         client && client.subscribe(destination, (message) => {
           let messageParsed = JSON.parse(message.body);
-          console.log("Received message:", messageParsed);
+          //console.log("Received message:", messageParsed);
 
           if (messageParsed.status === "joined") {
             setPlayers(messageParsed.usernames)
@@ -278,7 +277,6 @@ const Lobby = () => {
         startContent={<UpdateSettingsIcon size={40}/>}
         className={`items-center mr-4 shadow-lg ${unsavedChanges ? "bg-gradient-to-tr from-yellow-500 to-yellow-400 text-black pulsate" : "bg-gradient-to-tr from-gray-400 to-gray-300 text-black"}`}
         onClick={() => {
-          console.log("Saving settings");
           save();
         }}
       >
@@ -337,7 +335,6 @@ const Lobby = () => {
         className="items-center bg-gradient-to-tr from-gray-400 to-gray-300 text-black shadow-lg"
         startContent={<BackIcon />}
         onClick={() => {
-          console.log("Leaving lobby");
           leave();
         }}
       >

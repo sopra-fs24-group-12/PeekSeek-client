@@ -14,7 +14,6 @@ const LandingPage = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const handleClick = () => {
-    console.log("Join Button clicked!");
     navigate("/join/");
   };
 

@@ -68,7 +68,7 @@ const VotingResults = () => {
     timerId = setInterval(async () => {
       try {
         await api.put(`/games/${gameId}/active`, null, { headers });
-        console.log("sent active message");
+        // console.log("sent active message");
       } catch (error) {
         console.log("Error caught:", error.response.data.message);
         stopInactivityTimer();
@@ -93,7 +93,6 @@ const VotingResults = () => {
       };
       try {
         const response2 = await api.get("/games/" + gameId + "/round", { headers });
-        console.log("API Response:", response2.data);
 
         const roundStatus = response2.data.roundStatus;
         if (roundStatus !== "SUMMARY") {
@@ -114,7 +113,6 @@ const VotingResults = () => {
         setTotalQuests(response2.data.numberRounds);
 
         const response1 = await api.get("/games/" + gameId + "/winningSubmission", { headers });
-        console.log("API Response:", response1.data);
 
         const noSubmission = response1.data.noSubmission;
 
@@ -155,12 +153,12 @@ const VotingResults = () => {
           }));
 
           setFormattedLeaderboard(formattedLeaderboard);
-          console.log(formattedLeaderboard);
+          //console.log(formattedLeaderboard);
         } else {
-          console.log("Invalid or empty response data");
+          //console.log("Invalid or empty response data");
         }
       } catch (error) {
-        console.log("Error caught:", error.response.data.message);
+        //console.log("Error caught:", error.response.data.message);
         stopInactivityTimer();
         client && client.deactivate();
         localStorage.setItem("submissionDone", "false");

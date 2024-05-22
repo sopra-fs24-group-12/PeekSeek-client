@@ -31,12 +31,11 @@ export default function App() {
     //alert(selectedKeys);
     const selectedKey = selectedKeys[0];
     setSelectedLobbyId(selectedKeys);
-    console.log("selected key" + selectedKeys.values);
+    // console.log("selected key" + selectedKeys.values);
     //alert(selectedKey);
   };
 
   const handleClick = () => {
-    console.log('Button clicked!');
     //localStorage.setItem("token");
     //const response = await api.post("/lobbies/" + id + "/join", localStorage.getItem("token"));
     //alert(selectedLobbyId);
@@ -55,13 +54,13 @@ export default function App() {
 
         // This is just some data for you to see what is available.
         // Feel free to remove it.
-        console.log("request to:", response.request.responseURL);
-        console.log("status code:", response.status);
-        console.log("status text:", response.statusText);
-        console.log("requested data:", response.data);
+        // console.log("request to:", response.request.responseURL);
+        // console.log("status code:", response.status);
+        // console.log("status text:", response.statusText);
+        // console.log("requested data:", response.data);
 
         // See here to get more data.
-        console.log(response);
+        //console.log(response);
       } catch (error) {
         console.error(
           `Something went wrong while fetching the lobbies: \n${handleError(

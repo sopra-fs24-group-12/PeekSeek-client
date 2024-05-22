@@ -45,10 +45,10 @@ const JoinLobby = () => {
           setLobbies(response.data);
           setIsLoading(false);
         }, 1000);
-        console.log("request to:", response.request.responseURL);
-        console.log("status code:", response.status);
-        console.log("status text:", response.statusText);
-        console.log("requested data:", response.data);
+        // console.log("request to:", response.request.responseURL);
+        // console.log("status code:", response.status);
+        // console.log("status text:", response.statusText);
+        // console.log("requested data:", response.data);
 
         console.log(response);
       } catch (error) {
