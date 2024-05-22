@@ -61,7 +61,7 @@ const SubmissionCard: React.FC<SubmissionCardProps> = ({ cityName, quest, anonym
   return (
     <Card
       style={determineBorderStyle()}
-      className={`py-2 px-2 mx-auto max-w-xs ${noSubmission ? "opacity-50 pointer-events-none" : ""}`} 
+      className={`py-1 px-0 mx-auto max-w-xs ${noSubmission ? "opacity-50 pointer-events-none" : ""}`}
     >
       <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
         <div className="mb-0.5">

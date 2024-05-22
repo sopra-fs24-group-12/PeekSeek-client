@@ -14,9 +14,10 @@ import "react-toastify/dist/ReactToastify.css";
 import BaseContainer from "../ui/BaseContainer";
 import SubmissionCard from "../ui/SubmissionCard";
 import SubmitButton from "../ui/SubmitButton";
-import StreetViewModal from "../ui/StreetViewModal"; //TODO: Get this working
+import StreetViewModal from "../ui/StreetViewModal";
 import ErrorMessageModal from "components/ui/ErrorMessageModal";
 import { MagnifyingGlass, TailSpin } from "react-loader-spinner";
+
 
 const google = window.google;
 
@@ -63,7 +64,7 @@ class ExtendedDictionary {
   }
 }
 
-const GameSubmission = () => {
+const TestGameSubmission = () => {
   const { gameId, setGameId } = useParams();
   const [pickedCardId, setPickedCardId] = useState<number | null>(null);
   const [banned, setBanned] = useState(new ExtendedDictionary());
@@ -109,28 +110,14 @@ const GameSubmission = () => {
 
   useEffect(() => {
     setInterval(() => {
-      setPageLoading(false);
-    }, 2000
+        setPageLoading(false);
+      }, 2000
     )
   }, []);
 
   function startInactivityTimer() {
-    const headers = {
-      "Authorization": localStorage.getItem("token"),
-    };
-
-    timerId = setInterval(async () => {
-      try {
-        await api.put(`/games/${gameId}/active`, null, { headers });
-        //console.log("sent active message")
-      } catch (error) {
-        console.log("Error caught:", error.response.data.message);
-        stopInactivityTimer();
-        client && client.deactivate();
-        localStorage.setItem("submissionDone", "false");
-        setErrorMessage("You were kicked due to inactivity! Check for a stable internet connection");
-        setErrorModalOpen(true);
-      }
+    timerId = setInterval(() => {
+      // Simulating the inactivity timer
     }, 2000);
 
     return timerId;
@@ -157,118 +144,16 @@ const GameSubmission = () => {
   }
 
   useEffect(() => {
-    const websocketUrl = getWebsocketDomain();
-    client.configure({
-      brokerURL: websocketUrl,
-      onConnect: () => {
-        const destination = "/topic/games/" + gameId;
-        const timerDestination = "/topic/games/" + gameId + "/timer";
-        client && client.subscribe(destination, (message) => {
-          let messageParsed = JSON.parse(message.body);
-          if (messageParsed.status === "summary") {
-            stopInactivityTimer();
-            localStorage.setItem("submissionDone", "false");
-            //setModalOpen(false);
-            navigate(`/voting/${gameId}/`);
-          } else if (messageParsed.status === "left") {
-            openNotification(messageParsed.username + " left");
-          } else if (messageParsed.status === "game_over") {
-            stopInactivityTimer();
-            client && client.deactivate();
-            localStorage.clear();
-            console.log("Game ended prematurely");
-            setGameEndMessage("The game ended prematurely since less than three participants are remaining. You are being transferred to the summary page to see all completed rounds.");
-            setGameEndModalOpen(true);
-            setSummaryId(messageParsed.summaryId);
-          }
-        });
-        client && client.subscribe(timerDestination, (message) => {
-          let messageParsed = JSON.parse(message.body);
-          setRemainingTime(messageParsed.secondsRemaining);
-        });
-      },
+    const dummySubmissions: CardData[] = [
+      { id: 1, cityName: "City 1", quest: "Quest 1", anonymousName: "Anonymous Koala", lat: "40.748817", lng: "-73.985428", heading: "0", pitch: "0", imageUrl: "", link: "", noSubmission: false, ownSubmission: false },
+      { id: 2, cityName: "City 2", quest: "Quest 2", anonymousName: "Anonymous Bear", lat: "34.052235", lng: "-118.243683", heading: "0", pitch: "0", imageUrl: "", link: "", noSubmission: false, ownSubmission: false },
+      { id: 3, cityName: "City 3", quest: "Quest 3", anonymousName: "Anonymous Giraffe", lat: "51.507351", lng: "-0.127758", heading: "0", pitch: "0", imageUrl: "", link: "", noSubmission: false, ownSubmission: false },
+      { id: 4, cityName: "City 4", quest: "Quest 4", anonymousName: "Anonymous Zebra", lat: "48.856613", lng: "2.352222", heading: "0", pitch: "0", imageUrl: "", link: "", noSubmission: false, ownSubmission: false },
+      { id: 4, cityName: "City 4", quest: "Quest 4", anonymousName: "Anonymous Zebra", lat: "48.856613", lng: "2.352222", heading: "0", pitch: "0", imageUrl: "", link: "", noSubmission: false, ownSubmission: false },
 
-    });
-    client.activate();
 
-    return () => {
-      client && client.deactivate();
-    };
-  }, []);
-
-  useEffect(() => {
-
-    async function fetchData() {
-      const headers = {
-        "Authorization": localStorage.getItem("token"),
-      };
-
-      try {
-        const response1 = await api.get("/games/" + gameId + "/round", { headers });
-        //console.log("API Response 2:", response1.data);
-
-        const roundStatus = response1.data.roundStatus;
-        if (roundStatus !== "VOTING") {
-          if (roundStatus === "PLAYING") {
-            stopInactivityTimer();
-            navigate("/game/" + gameId);
-
-            return
-          } else if (roundStatus === "SUMMARY") {
-            stopInactivityTimer();
-            navigate("/voting/" + gameId);
-
-            return
-          }
-        }
-        setRoundDurationSeconds(response1.data.roundTime - 2);
-        setCurrentQuest(response1.data.currentRound);
-        setTotalQuests(response1.data.numberRounds);
-
-        const response = await api.get("/games/" + gameId + "/submissions", { headers });
-        const animalNames = ["Koala", "Bear", "Giraffe", "Zebra", "Gazelle", "Elephant"];
-        //console.log("API Response 1:", response.data);
-
-        const transformedData: CardData[] = [];
-        response.data.forEach((item: any, index: number) => {
-          const transformedItem: CardData = {
-            id: item.id,
-            cityName: response1.data.geoCodingData.location,
-            quest: response1.data.quest,
-            anonymousName: `Anonymous ${animalNames[index]}`,
-            lat: item.submittedLocation.lat,
-            lng: item.submittedLocation.lng,
-            heading: item.submittedLocation.heading,
-            pitch: item.submittedLocation.pitch,
-            imageUrl: !item.noSubmission
-              ? generateStreetViewImageLink(
-                item.submittedLocation.lat,
-                item.submittedLocation.lng,
-                item.submittedLocation.heading,
-                item.submittedLocation.pitch
-              )
-              : "",
-            noSubmission: item.noSubmission,
-            link: "",
-            ownSubmission: localStorage.getItem("username") === item.username,
-          };
-          if (!transformedItem.ownSubmission) {
-            transformedData.push(transformedItem);
-          }
-        });
-
-        setCardsData(transformedData);
-      } catch (error) {
-        console.log("Error caught:", error.response.data.message);
-        stopInactivityTimer();
-        client && client.deactivate();
-        localStorage.setItem("submissionDone", "false");
-        setErrorMessage(error.response.data.message);
-        setErrorModalOpen(true);
-      }
-    }
-
-    fetchData();
+    ];
+    setCardsData(dummySubmissions);
   }, []);
 
   function generateStreetViewSubmissionLink(lat: string, long: string, heading: string, pitch: string): string {
@@ -314,12 +199,10 @@ const GameSubmission = () => {
       banned.delete(index);
     }
     setPickedCardId(index);
-    //console.log(banned);
   };
 
   const handleUnpickClick = (index) => {
     setPickedCardId(null);
-    //console.log(banned);
   };
 
   const handleBanClick = (index) => {
@@ -330,40 +213,21 @@ const GameSubmission = () => {
     updatedBanned.data = { ...banned.data };
     updatedBanned.set(index, "ban");
     setBanned(updatedBanned);
-    //console.log(banned);
-
   };
-
-  function handlePrematureGameEnd() {
-    setGameEndModalOpen(false)
-    localStorage.clear();
-    navigate("/gamesummary/" + summaryId);
-  }
-
-  function handleGameError() {
-    setErrorModalOpen(false)
-    localStorage.clear();
-    navigate("/landing/");
-  }
 
   const handleUnbanClick = (index) => {
     const updatedBanned = new ExtendedDictionary();
     updatedBanned.data = { ...banned.data };
     updatedBanned.delete(index);
     setBanned(updatedBanned);
-    //console.log(banned);
-
   };
 
   const calculateProgressValue = () => {
-
     return (remainingTime / roundDurationSeconds) * 100;
   };
 
   return (
     <div className="relative min-h-screen w-screen flex flex-col items-center overflow-auto">
-      {gameEndModalOpen && <ErrorMessageModal isOpen={gameEndModalOpen} onClose={() => handlePrematureGameEnd()} errorMessage={gameEndMessage} />}
-      {errorModalOpen && <ErrorMessageModal isOpen={errorModalOpen} onClose={() => handleGameError()} errorMessage={errorMessage} />}
       <ToastContainer
         pauseOnFocusLoss={false}
         pauseOnHover={false}
@@ -512,9 +376,10 @@ const GameSubmission = () => {
           </Button>
           <HowToPlayModal isOpen={isOpen} onOpenChange={onOpenChange} context="gamesubmission" />
         </BaseContainer>
+
       )}
     </div>
   );
 };
 
-export default GameSubmission;
+export default TestGameSubmission;

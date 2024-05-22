@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {Card, CardBody} from "@nextui-org/react";
 
-type ContainerSize = "waiting" | "landing" | "small" | "medium" | "large" | "game" | "policy";
+type ContainerSize = "waiting" | "landing" | "small" | "medium" | "large" |"voting" | "game" | "policy";
 
 interface BaseContainerProps {
   className?: string;
@@ -12,11 +12,13 @@ interface BaseContainerProps {
 
 const BaseContainer: React.FC<BaseContainerProps> = ({ className, children, size, initialSize = "large" }) => {
   const [containerSize, setContainerSize] = useState<ContainerSize>(size || initialSize);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   const containerClasses = {
     waiting: "w-full max-h-full shadow-lg",
     landing: "w-full sm:w-2/3 md:w-1/2 lg:w-2/5 xl:w-1/3 max-h-full md:max-h-screen lg:max-h-screen xl:max-h-screen shadow-lg overflow",
     large: "w-full md:w-[95%] lg:w-[95%] xl:w-[95%] h-full md:h-[95vh] lg:h-[95vh] xl:h-[95vh] shadow-lg",
+    voting: "w-full md:w-[95%] lg:w-[95%] xl:w-[95%] h-full md:h-[95vh] lg:h-[95vh] xl:h-[95vh] shadow-lg overflow-y-auto",
     game: "w-full md:w-[95%] lg:w-[95%] xl:w-[95%] h-full md:h-[75vh] lg:h-[75vh] xl:h-[75vh] shadow-lg",
     medium: "w-full sm:w-4/5 md:w-3/4 lg:w-2/3 xl:w-2/3 max-h-full sm:max-h-screen md:max-h-screen lg:max-h-screen xl:max-h-screen shadow-lg",
     small: "w-full sm:w-3/4 md:w-3/5 lg:w-5/12 xl:w-5/12 h-full sm:h-4/5 md:h-4/5 lg:h-4/5 xl:h-4/5 shadow-lg",
@@ -42,9 +44,11 @@ const BaseContainer: React.FC<BaseContainerProps> = ({ className, children, size
   useEffect(() => {
     setContainerSize(size || initialSize); // Set size on mount
     window.addEventListener("resize", determineContainerSize);
+    window.addEventListener("resize", () => setWindowWidth(window.innerWidth));
     
     return () => {
       window.removeEventListener("resize", determineContainerSize); // Clean up on unmount
+      window.removeEventListener("resize", () => setWindowWidth(window.innerWidth));
     };
   }, []);
   
@@ -56,7 +60,15 @@ const BaseContainer: React.FC<BaseContainerProps> = ({ className, children, size
         className={`${containerClass} flex flex-col overflow-hidden`}
         isBlurred
       >
-        <CardBody className="flex-grow overflow-hidden mb-2">
+        <CardBody
+          className={`flex-grow mb-2 ${
+            containerSize !== "voting"
+              ? "overflow-hidden"
+              : windowWidth <= 1024
+                ? "overflow-x-hidden"
+                : "overflow-hidden"
+          }`}
+        >
           {children}
         </CardBody>
       </Card>
