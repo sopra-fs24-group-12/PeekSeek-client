@@ -100,7 +100,7 @@ function MyGoogleMap() {
         stopInactivityTimer();
         client && client.deactivate();
         localStorage.setItem("submissionDone", "false");
-        setErrorMessage("You were kicked due to inactivity!");
+        setErrorMessage("You were kicked due to inactivity! Check for a stable internet connection");
         setErrorModalOpen(true);
       }
     }, 2000);

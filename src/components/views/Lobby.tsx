@@ -137,7 +137,7 @@ const Lobby = () => {
         console.log("Error caught:", error.response.data.message);
         stopInactivityTimer();
         client && client.deactivate();
-        setErrorMessage("You were kicked due to inactivity!");
+        setErrorMessage("You were kicked due to inactivity! Check for a stable internet connection");
         setErrorModalOpen(true);
       }
     }, 2000);
