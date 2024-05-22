@@ -207,7 +207,7 @@ const Lobby = () => {
   }, [lobbyId]); // Reconnect websocket when lobbyId changes
 
   const handleQuestChange = (index, value) => {
-    const newValue = value.slice(0, 20);
+    const newValue = value.slice(0, 30);
     const updatedQuests = [...quests];
     updatedQuests[index] = newValue;
 
@@ -218,14 +218,14 @@ const Lobby = () => {
     setQuests(updatedQuests);
     setUnsavedChanges(true); // Mark unsaved changes when quest changes
 
-    if (value.trim().length === 20 && !questNotificationShown) {
+    if (value.trim().length === 30 && !questNotificationShown) {
       notification.warning({
-        message: "Quest can be maximum 20 characters long!",
+        message: "Quest can be maximum 30 characters long!",
         duration: 2,
         key: "quest-limit"
       });
       setQuestNotificationShown(true);
-    } else if (value.trim().length < 20 && questNotificationShown) {
+    } else if (value.trim().length < 30 && questNotificationShown) {
       setQuestNotificationShown(false);
     }
   };

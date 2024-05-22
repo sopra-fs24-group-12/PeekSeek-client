@@ -42,6 +42,7 @@ const GameSummary = () => {
   const [mapCenter, setMapCenter] = useState({ lat: 47.3768866, lng: 8.541694 });
   const [map, setMap] = useState(null);
   const [markers, setMarkers] = useState([]);
+  const [orderedMarkers, setOrderedMarkers] = useState([]);
   const [markersURL, setMarkersURL] = useState("");
   const [markersURLunordered, setMarkersURLunordered] = useState("");
   const navigate = useNavigate();
@@ -84,6 +85,7 @@ const GameSummary = () => {
             },
           }));
           setMarkers(newMarkers);
+          setOrderedMarkers(newMarkers);
           const baseURL = "https://www.google.com/maps/dir/";
           const waypoints = lats.map((lat, index) => `${lat},${lngs[index]}`).join("/");
           const endOfURL = "/data=!3m1!4b1!4m2!4m1!3e2";
@@ -103,7 +105,7 @@ const GameSummary = () => {
   const shortestPathMarkers = useCallback((directionsService) => {
     //console.log("Markers:", markers);
 
-    const waypoints = markers.slice(1, markers.length - 1).map(marker => ({
+    const waypoints = orderedMarkers.slice(1, markers.length - 1).map(marker => ({
       location: marker.position,
       stopover: true,
     }));
@@ -111,8 +113,8 @@ const GameSummary = () => {
     //console.log("Waypoints:", waypoints);
 
     directionsService.route({
-      origin: markers[0].position,
-      destination: markers[markers.length - 1].position,
+      origin: orderedMarkers[0].position,
+      destination: orderedMarkers[orderedMarkers.length - 1].position,
       waypoints: waypoints,
       optimizeWaypoints: true,
       travelMode: "WALKING",
@@ -122,15 +124,15 @@ const GameSummary = () => {
         const route = response.routes[0];
         const optimizedOrder = route.waypoint_order;
         //console.log("Optimized Order:", optimizedOrder);
-        const orderedMarks = getOrderedMarkers(markers, optimizedOrder);
-        setMarkers(orderedMarks);
+        const orderedMarks = getOrderedMarkers(orderedMarkers, optimizedOrder);
+        setOrderedMarkers(orderedMarks);
         updateMarkersURL(orderedMarks);
         setAreMarkersOptimized(true);
       } else {
         console.error(`error fetching directions ${response}`);
       }
     });
-  }, [markers]);
+  }, [orderedMarkers]);
 
   const getOrderedMarkers = (markers, optimizedOrder) => {
 
@@ -155,11 +157,11 @@ const GameSummary = () => {
   };
 
   useEffect(() => {
-    if (map && markers.length && !areMarkersOptimized) {
+    if (map && orderedMarkers.length && !areMarkersOptimized) {
       const directionsService = new window.google.maps.DirectionsService();
       shortestPathMarkers(directionsService);
     }
-  }, [map, markers, areMarkersOptimized, shortestPathMarkers]);
+  }, [map, orderedMarkers, areMarkersOptimized, shortestPathMarkers]);
 
   useEffect(() => {
     setInterval(() => {
@@ -257,7 +259,7 @@ const GameSummary = () => {
                     center={mapCenter}
                   >
                     {markers.map((marker, index) => (
-                      <Marker key={index} position={marker.position} title={marker.title} />
+                      <Marker key={index} position={marker.position} title={marker.title} label={(index + 1).toString()}/>
                     ))}
                   </ReactGoogleMap>
                 </LoadScript>
