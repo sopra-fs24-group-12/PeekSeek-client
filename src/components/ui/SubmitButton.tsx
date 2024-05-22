@@ -55,7 +55,7 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({voteData, gameId, setSubmiss
 
       console.log(body);
       const response = await api.post("/games/" + gameId + "/voting", body, {headers});
-      console.log("Submitted votes");
+      // console.log("Submitted votes");
       //navigate("/waiting/" + gameId);
       localStorage.setItem("submissionDone", "true");
       setSubmissionDone(true);

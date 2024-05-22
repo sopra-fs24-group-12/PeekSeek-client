@@ -33,17 +33,14 @@ const JoinUser = () => {
         const response = await api.get("/lobbies");
 
 
-        console.log("request to:", response.request.responseURL);
-        console.log("status code:", response.status);
-        console.log("status text:", response.statusText);
-        console.log("requested data:", response.data);
+        // console.log("request to:", response.request.responseURL);
+        // console.log("status code:", response.status);
+        // console.log("status text:", response.statusText);
+        // console.log("requested data:", response.data);
 
-        console.log(response);
+        //console.log(response);
 
         const lobbyToJoin = response.data.find(obj => obj.id === parseInt(id));
-
-        console.log(id)
-        console.log(lobbyToJoin)
 
         if (lobbyToJoin) {
           setLobbyRequiresPassword(lobbyToJoin.passwordProtected)
@@ -77,7 +74,7 @@ const JoinUser = () => {
       localStorage.setItem("token", response.headers["authorization"]);
       localStorage.setItem("username", username);
       localStorage.setItem("submissionDone", "false");
-      console.log(localStorage.getItem("token"));
+      //console.log(localStorage.getItem("token"));
       if (response.status >= 300) {
         navigate("/join");
       } else {

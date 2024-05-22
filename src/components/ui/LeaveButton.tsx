@@ -30,7 +30,6 @@ const LeaveButton: React.FC<LeaveButtonProps> = ({lobbyId}) => {
       color = "default"
       className="shadow-lg flex-start"
       onClick={() => {
-        console.log("Leaving lobby");
         leave();
       }}
     >

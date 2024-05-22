@@ -57,7 +57,6 @@ const CreateLobby = () => {
   };
 
   const handleClick = () => {
-    console.log("Button clicked!");
     if (!username.trim()){
       alert("Username required!");
     }
@@ -80,7 +79,7 @@ const CreateLobby = () => {
       localStorage.setItem("token", response.headers["authorization"]);
       localStorage.setItem("username", username);
       localStorage.setItem("submissionDone", "false");
-      console.log("This should be the token" + response.headers);
+      // console.log("This should be the token" + response.headers);
 
       navigate("/lobby/" + lobby.id);
     } catch (error) {

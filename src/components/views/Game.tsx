@@ -94,9 +94,9 @@ function MyGoogleMap() {
     timerId = setInterval(async () => {
       try {
         await api.put(`/games/${gameId}/active`, null, { headers });
-        console.log("sent active message");
+        // console.log("sent active message");
       } catch (error) {
-        console.log("Error caught:", error.response.data.message);
+        // console.log("Error caught:", error.response.data.message);
         stopInactivityTimer();
         client && client.deactivate();
         localStorage.setItem("submissionDone", "false");
@@ -119,7 +119,6 @@ function MyGoogleMap() {
           "Authorization": localStorage.getItem("token"),
         };
         const response = await api.get("/games/" + gameId + "/round", { headers });
-        console.log("API Response:", response.data);
 
         const roundStatus = response.data.roundStatus;
         if (roundStatus !== "PLAYING") {
@@ -249,7 +248,6 @@ function MyGoogleMap() {
     const body = JSON.stringify({ lat, lng, heading, pitch, noSubmission });
     try {
       const response = await api.post("games/" + gameId + "/submission", body, { headers });
-      console.log("API Response:", response.data);
       localStorage.setItem("submissionDone", "true");
       setSubmissionDone(true);
     } catch (error) {
@@ -275,7 +273,7 @@ function MyGoogleMap() {
   }
 
   const submitNow = () => {
-    console.log("Successfully submitted");
+    //console.log("Successfully submitted");
     console.log("Latitude: " + lat);
     console.log("Longitude: " + lng);
     console.log("Heading: " + heading);
@@ -284,13 +282,12 @@ function MyGoogleMap() {
   };
 
   function submitEmptyNow() {
-    console.log("Can't find it submission button clicked!");
     setNoSubmission(true); // This sets the state
   }
 
   useEffect(() => {
     if (noSubmission) {
-      console.log(`Setting noSubmission to: ${noSubmission}`);
+      //console.log(`Setting noSubmission to: ${noSubmission}`);
       submit(); // Perform the submission after state update
       setNoSubmission(false); // Optionally reset if needed
     }
@@ -346,7 +343,7 @@ function MyGoogleMap() {
             <BaseContainer size="game" className="flex flex-col items-center overflow-hidden max-w-full mb-32">
               <Progress
                 aria-label="Progress"
-                // disableAnimation
+                // disableAnimation 
                 maxValue= {totalQuests}
                 value={currentQuest}
                 color="success"
@@ -383,8 +380,8 @@ function MyGoogleMap() {
                           setLng(newLng);
 
                           // Now you can use newLat and newLng as needed
-                          console.log("New street view latitude: " + newLat);
-                          console.log("New street view longitude: " + newLng);
+                          // console.log("New street view latitude: " + newLat);
+                          // console.log("New street view longitude: " + newLng);
                         });
                         panorama.addListener("pov_changed", () => {
                           const pov = panorama.getPov();
@@ -396,8 +393,8 @@ function MyGoogleMap() {
                           setHeading(newHeading);
 
                           // Now you can use newPitch and newHeading as needed
-                          console.log("New street view pitch: " + newPitch);
-                          console.log("New street view heading: " + newHeading);
+                          // console.log("New street view pitch: " + newPitch);
+                          // console.log("New street view heading: " + newHeading);
                         });
                       }}
                     />

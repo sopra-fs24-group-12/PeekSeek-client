@@ -122,7 +122,7 @@ const GameSubmission = () => {
     timerId = setInterval(async () => {
       try {
         await api.put(`/games/${gameId}/active`, null, { headers });
-        console.log("sent active message")
+        //console.log("sent active message")
       } catch (error) {
         console.log("Error caught:", error.response.data.message);
         stopInactivityTimer();
@@ -205,7 +205,7 @@ const GameSubmission = () => {
 
       try {
         const response1 = await api.get("/games/" + gameId + "/round", { headers });
-        console.log("API Response 2:", response1.data);
+        //console.log("API Response 2:", response1.data);
 
         const roundStatus = response1.data.roundStatus;
         if (roundStatus !== "VOTING") {
@@ -227,7 +227,7 @@ const GameSubmission = () => {
 
         const response = await api.get("/games/" + gameId + "/submissions", { headers });
         const animalNames = ["Koala", "Bear", "Giraffe", "Zebra", "Gazelle", "Elephant"];
-        console.log("API Response 1:", response.data);
+        //console.log("API Response 1:", response.data);
 
         const transformedData: CardData[] = [];
         response.data.forEach((item: any, index: number) => {
@@ -314,12 +314,12 @@ const GameSubmission = () => {
       banned.delete(index);
     }
     setPickedCardId(index);
-    console.log(banned);
+    //console.log(banned);
   };
 
   const handleUnpickClick = (index) => {
     setPickedCardId(null);
-    console.log(banned);
+    //console.log(banned);
   };
 
   const handleBanClick = (index) => {
@@ -330,7 +330,7 @@ const GameSubmission = () => {
     updatedBanned.data = { ...banned.data };
     updatedBanned.set(index, "ban");
     setBanned(updatedBanned);
-    console.log(banned);
+    //console.log(banned);
 
   };
 
@@ -351,7 +351,7 @@ const GameSubmission = () => {
     updatedBanned.data = { ...banned.data };
     updatedBanned.delete(index);
     setBanned(updatedBanned);
-    console.log(banned);
+    //console.log(banned);
 
   };
 
@@ -361,7 +361,7 @@ const GameSubmission = () => {
   };
 
   return (
-    <div className="relative min-h-screen w-screen flex flex-col items-center">
+    <div className="relative min-h-screen w-screen flex flex-col items-center overflow-auto">
       {gameEndModalOpen && <ErrorMessageModal isOpen={gameEndModalOpen} onClose={() => handlePrematureGameEnd()} errorMessage={gameEndMessage} />}
       {errorModalOpen && <ErrorMessageModal isOpen={errorModalOpen} onClose={() => handleGameError()} errorMessage={errorMessage} />}
       <ToastContainer
@@ -400,7 +400,7 @@ const GameSubmission = () => {
       ) : (
         <BaseContainer
           size="large"
-          className="flex flex-col items-center overflow-hidden min-h-screen max-w-full">
+          className="flex flex-col items-center min-h-screen w-full overflow-auto">
           <Progress
             aria-label="Progress"
             disableAnimation
@@ -413,7 +413,7 @@ const GameSubmission = () => {
           </div>
           <div className="flex flex-col md:flex-row w-full h-full">
             {/* Container for the submission cards */}
-            <div className="md:w-3/4 w-full flex flex-col">
+            <div className="md:w-3/4 w-full flex flex-col overflow-auto">
               <div className="grid lg:grid-cols-3 grid-cols-1 gap-2">
                 {cardsData.map((card, index) => (
                   <SubmissionCard

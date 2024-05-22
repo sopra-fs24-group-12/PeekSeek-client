@@ -16,7 +16,6 @@ const BackButton: React.FC = () => {
       color = "default"
       startContent={<BackIcon />}
       onClick={() => {
-        console.log("Back Button clicked!");
         // Navigate to previous page, fallback to a landing if history is empty
         if (window.history.length > 1) {
           navigate(-1);

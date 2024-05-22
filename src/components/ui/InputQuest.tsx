@@ -8,7 +8,7 @@ const InputQuest: React.FC = () => {
 
   // Handler for input change
   const handleQuestChange = (index: number, value: string) => {
-    console.log(`Input changed at index ${index} with value: '${value}'`);
+    // console.log(`Input changed at index ${index} with value: '${value}'`);
 
     const newQuests = [...quests];
     newQuests[index] = value;

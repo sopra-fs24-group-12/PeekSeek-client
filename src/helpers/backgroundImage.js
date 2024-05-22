@@ -1,8 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     const container = document.querySelector(".background-image-container");
 
-    console.log("hello");
-
     if (!container) {
         return;
       }

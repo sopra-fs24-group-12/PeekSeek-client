@@ -22,7 +22,7 @@ export const handleError = error => {
       info += `\nerror message:\n${response.data}`;
     }
 
-    console.log("The request was made and answered but was unsuccessful.", error.response);
+    // console.log("The request was made and answered but was unsuccessful.", error.response);
     
     return info;
   } else {

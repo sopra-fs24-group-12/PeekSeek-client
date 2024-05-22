@@ -55,7 +55,7 @@ const GameSummary = () => {
       try {
         const response = await api.get("/summaries/" + summaryId);
         if(response && response.data){
-          console.log("Response data:", response.data);
+          //console.log("Response data:", response.data);
           const linkList = response.data.quests.map((quest, index) => {
             return { url: quest.link, label: index + 1 + ": " + quest.description + " found by " + quest.name };
           });
@@ -67,12 +67,12 @@ const GameSummary = () => {
           setLng(parseFloat(response.data.lng));
           const center = { lat: parseFloat(response.data.lat), lng: parseFloat(response.data.lng) };
           setMapCenter(center);
-          console.log("Map Center:", mapCenter);
+          //console.log("Map Center:", mapCenter);
           setExternalLinks(linkList);
           setSuccessfulRounds(linkList.length);
           setCity(response.data.cityName);
           setNrOfQuests(response.data.roundsPlayed);
-          console.log("Response data:", response.data);
+          //console.log("Response data:", response.data);
           response.data.quests.forEach(quest => {
             lats.push(quest.lat);
             lngs.push(quest.lng);
@@ -101,14 +101,14 @@ const GameSummary = () => {
   }, [summaryId]);
 
   const shortestPathMarkers = useCallback((directionsService) => {
-    console.log("Markers:", markers);
+    //console.log("Markers:", markers);
 
     const waypoints = markers.slice(1, markers.length - 1).map(marker => ({
       location: marker.position,
       stopover: true,
     }));
 
-    console.log("Waypoints:", waypoints);
+    //console.log("Waypoints:", waypoints);
 
     directionsService.route({
       origin: markers[0].position,
@@ -121,7 +121,7 @@ const GameSummary = () => {
         setDirectionsResponse(response);
         const route = response.routes[0];
         const optimizedOrder = route.waypoint_order;
-        console.log("Optimized Order:", optimizedOrder);
+        //console.log("Optimized Order:", optimizedOrder);
         const orderedMarks = getOrderedMarkers(markers, optimizedOrder);
         setMarkers(orderedMarks);
         updateMarkersURL(orderedMarks);
@@ -142,7 +142,7 @@ const GameSummary = () => {
 
     orderedMarkers.push(markers[markers.length - 1]); // ending at the starting point
 
-    console.log("Ordered Markers:", orderedMarkers);
+    //console.log("Ordered Markers:", orderedMarkers);
 
     return orderedMarkers;
   };
