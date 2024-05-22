@@ -110,8 +110,8 @@ const TestGameSubmission = () => {
 
   useEffect(() => {
     setInterval(() => {
-        setPageLoading(false);
-      }, 2000
+      setPageLoading(false);
+    }, 2000
     )
   }, []);
 
