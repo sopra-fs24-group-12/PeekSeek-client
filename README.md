@@ -1,65 +1,50 @@
-# SoPra FS24 - Client Template with build pack
+# Welcome to PeekSeek!
+### SoPra FS24
 
-## Getting started
+## Project Goal & Motivation
+Can you think of a time when you and your friends were planning to travel together but couldn't agree on a destination? Was everyone excited and motivated, yet planning the itinerary seemed like too much hustle? PeekSeek transforms this challenge into a fun, gamified exploration! 
 
-Read and go through these Tutorials. It will make your life easier:)
+PeekSeek is an interactive game where player virtually explore various destinations on Google Maps in an engaging way while competing with friends. Players choose a city they might want to visit and complete multiple quests by finding specific locations in that city, like landmarks or a brunch spot. At the end of the game, all locations are marked on the city map, giving a sense of an itinerary. This makes travel planning more enjoyable and less stressful, ensuring your trip does actually happen!
 
-- Read the React [Docs](https://react.dev/learn)
-- Do this React [Getting Started](https://react.dev/learn/tutorial-tic-tac-toe) Tutorial (it doesn't assume any existing React knowledge)
-- Get an Understanding of [CSS](https://www.w3schools.com/Css/), [SCSS](https://sass-lang.com/documentation/syntax), and [HTML](https://www.w3schools.com/html/html_intro.asp)!
+## Technologies
+- React
+- Tailwind CSS
+- Next UI
+- Google JavaScript API
+- Google Geocoding API
+- Google Static Image API
 
-Next, there are two other technologies that you should look at:
+## High-level components
+_Identify your project’s 3-5 main components. What is their role?_
+_How are they correlated? Reference the main class, file, or function in the README text
+with a link._
 
-* [react-router-dom](https://reactrouter.com/en/main/start/concepts) offers declarative routing for React. It is a collection of navigational components that fit nicely with the application. 
-* [react-hooks](https://blog.logrocket.com/using-hooks-react-router/) let you access the router's state and perform navigation from inside your components.
+## Launch & Deployment
+_Write down the steps a new developer joining your team would have to take to get started with your application. What commands are required to build and run your project locally? How can they run the tests? Do you have external dependencies or a database that needs to be running? How can they do releases?_
 
-## Prerequisites and Installation
-For your  local development environment, you will need Node.js.\
-We urge you to install the exact version **v20.11.0** which comes with the npm package manager. You can download it [here](https://nodejs.org/download/release/v20.11.0/).\
-If you are confused about which download to choose, feel free to use these direct links:
+## Illustrations
+_In your client repository, briefly describe and illustrate the main user flow(s) of your interface. How does it work (without going into too much detail)? Feel free to include a few screenshots of your application._
+1. You will start by creating a lobby or joining an existing lobby. If joining a lobby, sit back and enjoy. If creating the lobby, you will have the honors of choosing the destination and quests.
+  - Created lobbies are saved for other players to benefit as well. If you would like to make the lobby private, you can password protect it to     share the password with your friends only.
+2. All players will navigate on Google Maps to find the locations defined in the quest. 
+  - Example: Find a landmark in Paris.
+3. Once all the players submit their selected location, it's time to vote! You will pick the location you would like to visit the most and ban the one(s) you think are not reflective of the quest.
+4. Each player will collect points based other players' votes and on how quickly they spotted the location.
+5. Completed all the quests? Congratulations, you have explored your destination! You will now have a final map marked with all winning locations and direct links for each. Additionally, you will see an itinerary created for you, so that you can follow the directions on Google Maps when you arrive at your destination!
+  - The game summary page will also be stored so that you can revisit your past game's winning submissions and route direction, or visit other player's game summaries!
 
-- **MacOS:** [node-v20.11.0.pkg](https://nodejs.org/download/release/v20.11.0/node-v20.11.0.pkg)
-- **Windows 32-bit:** [node-v20.11.0-x86.msi](https://nodejs.org/download/release/v20.11.0/node-v20.11.0-x86.msi)
-- **Windows 64-bit:** [node-v20.11.0-x64.msi](https://nodejs.org/download/release/v20.11.0/node-v20.11.0-x64.msi)
-- **Linux:** [node-v20.11.0.tar.xz](https://nodejs.org/dist/v20.11.0/node-v20.11.0-linux-x64.tar.xz) (use this [installation guide](https://github.com/nodejs/help/wiki/Installation#how-to-install-nodejs-via-binary-archive-on-linux) if you are new to Linux)
+## Roadmap
+_The top 2-3 features that new developers who want to contribute to your project could add._
 
-If you happen to have a package manager the following commands can be used:
+## Authors and acknowledgment
+Nils Reusch
+Ece Asirim
+Youssef Farag
+Georg Emmermann
+Silvan Schlegel
 
-- **Homebrew:** `brew install node@20.11.0`
-- **Chocolatey:** `choco install nodejs-lts --version=20.11.0`
+We thank Marion An for her guidance as well as all teaching assistants of the module Software Engineering Praktikum at the University of Zurich for their feedback and considerations on our project.
 
-After the installation, update the npm package manager to **10.4.0** by running ```npm install -g npm@10.4.0```\
-You can ensure the correct version of node and npm by running ```node -v``` and ```npm --version```, which should give you **v20.11.0** and **10.4.0** respectively.\
-Before you start your application for the first time, run this command to install all other dependencies, including React:
+## License
+_Say how your project is licensed (see License guide3)._
 
-```npm install```
-
-Next, you can start the app with:
-
-```npm run dev```
-
-Now you can open [http://localhost:3000](http://localhost:3000) to view it in the browser.\
-Notice that the page will reload if you make any edits. You will also see any lint errors in the console (use a Chrome-based browser).\
-The client will send HTTP requests to the server which can be found [here](https://github.com/HASEL-UZH/sopra-fs24-template-server).\
-In order for these requests to work, you need to install and start the server as well.
-
-### Testing
-Testing is optional, and you can run the tests with `npm run test`\
-This launches the test runner in an interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-> For macOS user running into a 'fsevents' error: https://github.com/jest-community/vscode-jest/issues/423
-
-### Build
-Finally, `npm run build` builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance:\
-The build is minified, and the filenames include hashes.<br>
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-## Learn More
-
-To learn React, check out the [React documentation](https://react.dev/).
-
-
-> Thanks to Lucas Pelloni Kyrill Hux and Marco Leder for working on the template.
