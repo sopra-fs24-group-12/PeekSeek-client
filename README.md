@@ -37,11 +37,11 @@ _In your client repository, briefly describe and illustrate the main user flow(s
 _The top 2-3 features that new developers who want to contribute to your project could add._
 
 ## Authors and acknowledgment
-Nils Reusch
-Ece Asirim
-Youssef Farag
-Georg Emmermann
-Silvan Schlegel
+Nils Reusch  
+Ece Asirim  
+Youssef Farag  
+Georg Emmermann  
+Silvan Schlegel  
 
 We thank Marion An for her guidance as well as all teaching assistants of the module Software Engineering Praktikum at the University of Zurich for their feedback and considerations on our project.
 
