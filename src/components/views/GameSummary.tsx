@@ -265,7 +265,7 @@ const GameSummary = () => {
           </div>
           <Button
             onPress={onOpen}
-            className="absolute bottom-2 right-2 p-2 sm rounded-full bg-transparent"
+            className="absolute bottom-2 right-2 p-2 sm rounded-full bg-transparent z-50"
             isIconOnly
           >
             <InfoCircleTwoTone style={{ fontSize: "20px"}}/>
