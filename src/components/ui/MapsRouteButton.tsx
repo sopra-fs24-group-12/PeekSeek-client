@@ -5,10 +5,10 @@ import {ChevronDownIcon} from "./ChevronDownIcon";
 interface MapsRouteButtonProps {
   normal_order_link: string;
   shortest_path_link: string;
-  nrOfQuests: number;
+  nrOfWinningSubmissions: number;
 }
 
-const MapsRouteButton: React.FC<MapsRouteButtonProps> = ({ normal_order_link, shortest_path_link, nrOfQuests }) => {
+const MapsRouteButton: React.FC<MapsRouteButtonProps> = ({ normal_order_link, shortest_path_link, nrOfWinningSubmissions }) => {
 
   const [selectedOption, setSelectedOption] = React.useState(new Set(["Original"]));
 
@@ -43,7 +43,7 @@ const MapsRouteButton: React.FC<MapsRouteButtonProps> = ({ normal_order_link, sh
     window.open(normal_order_link, "_blank", "noopener,noreferrer");
   };
 
-  if (nrOfQuests < 4) {
+  if (nrOfWinningSubmissions < 4) {
     return (
       <Button
         size="lg"

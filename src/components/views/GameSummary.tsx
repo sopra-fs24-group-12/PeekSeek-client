@@ -21,8 +21,7 @@ const API_Key = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 const libs: Library[] = ["places"];
 
 const GameSummary = () => {
-  // Mock data for city and number of quests
-  const [city, setCity] = useState("Rome");
+  const [city, setCity] = useState("NaN");
   const [nrOfQuests, setNrOfQuests] = useState(5);
   const { summaryId } = useParams();
   const [externalLinks, setExternalLinks] = useState([]);
@@ -234,7 +233,7 @@ const GameSummary = () => {
                 >
                   ROUTE DIRECTIONS
                 </Chip>
-                <MapsRouteButton normal_order_link={markersURLunordered} shortest_path_link={markersURL} nrOfQuests={nrOfQuests}/>
+                <MapsRouteButton normal_order_link={markersURLunordered} shortest_path_link={markersURL} nrOfWinningSubmissions={successfulRounds}/>
               </div>
             </div>
             <div className="w-2/3 flex flex-col flex-center p-4 h-screen">
