@@ -361,7 +361,7 @@ const GameSubmission = () => {
   };
 
   return (
-    <div className="relative min-h-screen w-screen flex flex-col items-center">
+    <div className="relative min-h-screen w-screen flex flex-col items-center overflow-auto">
       {gameEndModalOpen && <ErrorMessageModal isOpen={gameEndModalOpen} onClose={() => handlePrematureGameEnd()} errorMessage={gameEndMessage} />}
       {errorModalOpen && <ErrorMessageModal isOpen={errorModalOpen} onClose={() => handleGameError()} errorMessage={errorMessage} />}
       <ToastContainer
@@ -400,7 +400,7 @@ const GameSubmission = () => {
       ) : (
         <BaseContainer
           size="large"
-          className="flex flex-col items-center overflow-auto min-h-screen max-w-full">
+          className="flex flex-col items-center min-h-screen w-full overflow-auto">
           <Progress
             aria-label="Progress"
             disableAnimation
@@ -413,7 +413,7 @@ const GameSubmission = () => {
           </div>
           <div className="flex flex-col md:flex-row w-full h-full">
             {/* Container for the submission cards */}
-            <div className="md:w-3/4 w-full flex flex-col">
+            <div className="md:w-3/4 w-full flex flex-col overflow-auto">
               <div className="grid lg:grid-cols-3 grid-cols-1 gap-2">
                 {cardsData.map((card, index) => (
                   <SubmissionCard
