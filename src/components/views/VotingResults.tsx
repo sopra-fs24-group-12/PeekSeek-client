@@ -151,6 +151,7 @@ const VotingResults = () => {
             basePoints: user.score,
             bonusPoints: user.pointsThisRound,
             streak: user.streak,
+            hasLeft: user.leftGame,
           }));
 
           setFormattedLeaderboard(formattedLeaderboard);

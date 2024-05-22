@@ -10,6 +10,7 @@ interface LeaderboardEntry {
   basePoints: number;
   bonusPoints: number;
   streak: number;
+  hasLeft: boolean;
 }
 
 interface LeaderboardProps {
@@ -56,13 +57,21 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ data }) => {
                 if (columnKey === "totalPoints") {
                   return (
                     <TableCell>
-                      {item.basePoints} <span style={{ color: "green" }}>+{ item.bonusPoints }</span>
+                      <span style={{ color: item.hasLeft ? "grey" : "inherit" }}>
+                        {item.basePoints}
+                      </span>{" "}
+                      <span style={{ color: item.hasLeft ? "grey": "green" }}>+{item.bonusPoints}</span>
                     </TableCell>
                   );
                 }
-                // Default rendering for other cells
-              
-                return <TableCell>{getKeyValue(item, columnKey)}</TableCell>;
+
+                return (
+                  <TableCell>
+                    <span style={{ color: item.hasLeft ? "grey" : "inherit" }}>
+                      {getKeyValue(item, columnKey)}
+                    </span>
+                  </TableCell>
+                );
               }}
             </TableRow>
           )}
