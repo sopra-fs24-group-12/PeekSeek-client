@@ -257,7 +257,7 @@ const GameSummary = () => {
                     center={mapCenter}
                   >
                     {markers.map((marker, index) => (
-                      <Marker key={index} position={marker.position} title={marker.title} />
+                      <Marker key={index} position={marker.position} title={marker.title} label={(index + 1).toString()}/>
                     ))}
                   </ReactGoogleMap>
                 </LoadScript>
