@@ -471,7 +471,7 @@ const Lobby = () => {
           <div className="fixed bottom-0 left-0 right-0 flex justify-between items-center p-4">
             <LeaveButton/>
             {!admin ?
-              (<p className="text-xl font-bold">Waiting for the admin to configure and start the game...</p>) : (
+              (<p className="text-xl font-bold p-6">Waiting for the admin to configure and start the game...</p>) : (
                 <>
                   <StartButton
                     disabled={!settingsConfirmed || players.length < 3}

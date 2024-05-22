@@ -61,7 +61,7 @@ const SubmissionCard: React.FC<SubmissionCardProps> = ({ cityName, quest, anonym
   return (
     <Card
       style={determineBorderStyle()}
-      className={`py-4 mx-auto max-w-xs ${noSubmission ? "opacity-50 pointer-events-none" : ""}`}
+      className={`py-2 px-2 mx-auto max-w-xs ${noSubmission ? "opacity-50 pointer-events-none" : ""}`} 
     >
       <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
         <div className="mb-0.5">
@@ -80,7 +80,7 @@ const SubmissionCard: React.FC<SubmissionCardProps> = ({ cityName, quest, anonym
           </Skeleton>
         </div>
       </CardHeader>
-      <CardBody className="overflow-visible py-2">
+      <CardBody className="overflow-visible py-1"> 
         <Skeleton data-loaded={hideSkeleton} className="rounded-lg">
           <Image
             alt="Card image"
@@ -94,7 +94,7 @@ const SubmissionCard: React.FC<SubmissionCardProps> = ({ cityName, quest, anonym
           />
         </Skeleton>
       </CardBody>
-      <CardFooter className="flex justify-center space-x-4">
+      <CardFooter className="flex justify-center space-x-2 py-2"> 
         <Button
           isIconOnly
           onClick={!isPicked ? onPickClick : onUnpickClick}

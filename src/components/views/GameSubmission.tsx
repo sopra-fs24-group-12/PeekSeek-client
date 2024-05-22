@@ -414,7 +414,7 @@ const GameSubmission = () => {
           <div className="flex flex-col md:flex-row w-full h-full">
             {/* Container for the submission cards */}
             <div className="md:w-3/4 w-full flex flex-col">
-              <div className="grid lg:grid-cols-3 grid-cols-1 gap-4">
+              <div className="grid lg:grid-cols-3 grid-cols-1 gap-2">
                 {cardsData.map((card, index) => (
                   <SubmissionCard
                     key={card.id}

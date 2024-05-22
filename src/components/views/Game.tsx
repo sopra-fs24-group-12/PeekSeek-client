@@ -351,7 +351,7 @@ function MyGoogleMap() {
                 value={currentQuest}
                 color="success"
                 className="absolute right-0 top-0 w-full" />
-              <h3 className="text-xl font-bold my-2">Find a {quest} in {cityName}!</h3>
+              <h3 className="text-xl font-bold my-2 justify-text text-center">Find a {quest} in {cityName}!</h3>
               {lat && lng && (
                 <LoadScript googleMapsApiKey={API_Key} libraries={libs}>
                   <ReactGoogleMap
