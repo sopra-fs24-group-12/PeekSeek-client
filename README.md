@@ -25,13 +25,13 @@ _Write down the steps a new developer joining your team would have to take to ge
 ## Illustrations
 _In your client repository, briefly describe and illustrate the main user flow(s) of your interface. How does it work (without going into too much detail)? Feel free to include a few screenshots of your application._
 1. You will start by creating a lobby or joining an existing lobby. If joining a lobby, sit back and enjoy. If creating the lobby, you will have the honors of choosing the destination and quests.
-  - Created lobbies are saved for other players to benefit as well. If you would like to make the lobby private, you can password protect it to     share the password with your friends only.
+    - Created lobbies are saved for other players to benefit as well. If you would like to make the lobby private, you can password protect it to     share the password with your friends only.
 2. All players will navigate on Google Maps to find the locations defined in the quest. 
-  - Example: Find a landmark in Paris.
+    - Example: Find a landmark in Paris.
 3. Once all the players submit their selected location, it's time to vote! You will pick the location you would like to visit the most and ban the one(s) you think are not reflective of the quest.
 4. Each player will collect points based other players' votes and on how quickly they spotted the location.
 5. Completed all the quests? Congratulations, you have explored your destination! You will now have a final map marked with all winning locations and direct links for each. Additionally, you will see an itinerary created for you, so that you can follow the directions on Google Maps when you arrive at your destination!
-  - The game summary page will also be stored so that you can revisit your past game's winning submissions and route direction, or visit other player's game summaries!
+    - The game summary page will also be stored so that you can revisit your past game's winning submissions and route direction, or visit other player's game summaries!
 
 ## Roadmap
 _The top 2-3 features that new developers who want to contribute to your project could add._
