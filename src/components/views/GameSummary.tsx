@@ -201,9 +201,9 @@ const GameSummary = () => {
             <div className="w-1/6">
             </div>
             <div className="w-2/3 text-center">
-            <h1 className="text-3xl font-bold text-gray-700">
-              You&apos;ve just explored {city} in {nrOfQuests} {nrOfQuests === 1 ? "round" : "rounds"} of which {successfulRounds} had a winning submission!
-            </h1>
+              <h1 className="text-3xl font-bold text-gray-700">
+                You&apos;ve just explored {city} in {nrOfQuests} {nrOfQuests === 1 ? "round" : "rounds"} of which {successfulRounds} had a winning submission!
+              </h1>
             </div>
             <div className="w-1/6">
             </div>
