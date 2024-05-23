@@ -2,6 +2,9 @@
 ### SoPra FS24
 
 ## Project Goal & Motivation
+PeekSeek transforms travel planning into a fun, gamified exploration! This interactive game allows players to virtually explore various destinations on Google Maps while competing with friends. Players choose a city they might want to visit and complete multiple quests by finding specific locations in that city, such as landmarks or brunch spots. At the end of the game, all locations are marked on the city map, giving a sense of an itinerary. This makes travel planning more enjoyable and less stressful, ensuring your trip actually happens!
+
+(TBD- OR A MORE ENGAGING INTRO:)
 Can you think of a time when you and your friends were planning to travel together but couldn't agree on a destination? Was everyone excited and motivated, yet planning the itinerary seemed like too much hustle? PeekSeek transforms this challenge into a fun, gamified exploration! 
 
 PeekSeek is an interactive game where player virtually explore various destinations on Google Maps in an engaging way while competing with friends. Players choose a city they might want to visit and complete multiple quests by finding specific locations in that city, like landmarks or a brunch spot. At the end of the game, all locations are marked on the city map, giving a sense of an itinerary. This makes travel planning more enjoyable and less stressful, ensuring your trip does actually happen!
@@ -15,6 +18,25 @@ PeekSeek is an interactive game where player virtually explore various destinati
 - Google Static Image API
 
 ## High-level components
+Below are the main frontend components:
+
+### Lobby Component (Lobby.tsx):
+- Role: Manages the initial game setup where players join the game.
+- Correlation: Connects to the game server to initialize game sessions.
+
+### GameSubmission Component (GameSubmission.tsx):
+- Role: Handles player submissions of locations they find on the map.
+- Correlation: Interacts with the backend to verify and store submissions.
+
+### VotingResults Component (VotingResults.tsx):
+- Role: Manages the voting process to decide on the winning submissions to display on leaderboard and to determine the final map based on players' inputs.
+- Correlation: Aggregates and displays voting results, contributing to the final decision-making.
+  
+### GameSummary Component (GameSummary.tsx):
+- Role: Displays the summary of the game, including direct links for each winning submission and route directions (both in round order or by shortest distance), and the final map marked with all winning submissions.
+- Correlation: Compiles and presents data from the game sessions.
+
+
 _Identify your project’s 3-5 main components. What is their role?_
 _How are they correlated? Reference the main class, file, or function in the README text
 with a link._
