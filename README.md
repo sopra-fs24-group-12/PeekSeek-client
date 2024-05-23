@@ -52,13 +52,17 @@ The below command builds the app for production to the build folder:
 ## Walkthroug and Illustrations
 1. You will start by creating a lobby or joining an existing lobby. If joining a lobby, sit back and enjoy. If creating the lobby, you will have the honors of choosing the destination and quests.
     - Created lobbies are saved for other players to benefit as well. If you would like to make the lobby private, you can password protect it and share the password with your friends only.
-![ScreenShot](https://raw.github.com/PeekSeek-client/public/images/lobby-illustration.png)
-2. All players will navigate on Google Maps to find the locations defined in the quest. 
-    - Example: Find a landmark in Paris.
-3. Once all the players submit their selected location, it's time to vote! You will pick the location you would like to visit the most and ban the one(s) you think are not reflective of the quest.
+![ScreenShot](https://github.com/PeekSeek-client/public/images/lobby-illustration.png)  
+2. All players will navigate on Google Maps to find the locations defined in the quest, like finding a nice beach view in Sydney.  
+![ScreenShot](https://github.com/PeekSeek-client/public/images/game-illustration.png)  
+3. Once all the players submit their selected location, it's time to vote! You will pick the location you would like to visit the most and ban the one(s) you think are not reflective of the quest.  
+![ScreenShot](https://github.com/PeekSeek-client/public/images/game-illustration.png)  
 4. Each player will collect points based other players' votes and on how quickly they spotted the location.
-5. Completed all the quests? Congratulations, you have explored your destination! You will now have a final map marked with all winning locations and direct links for each. Additionally, you will see an itinerary created for you, so that you can follow the directions on Google Maps when you arrive at your destination!
+![ScreenShot](https://github.com/PeekSeek-client/public/images/leaderboard-illustration.png)
+![ScreenShot](https://github.com/sopra-fs24-group-12/PeekSeek-client/blob/d586c45bc522b4b2305ce3cd55a4d5d19c250e63/public/images/leaderboard-illustration.png)
+6. Completed all the quests? Congratulations, you have explored your destination! You will now have a final map marked with all winning locations and direct links for each. Additionally, you will see an itinerary created for you, so that you can follow the directions on Google Maps when you arrive at your destination!
     - The game summary page will also be stored so that you can revisit your past game's winning submissions and route direction, or visit other player's game summaries!
+![ScreenShot](https://github.com/PeekSeek-client/public/images/gamesummary-illustration.png)  
 
 ## Roadmap
 - Chat functionality to communicate with other players during the game.
