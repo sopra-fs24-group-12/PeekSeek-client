@@ -65,7 +65,7 @@ Youssef Farag
 Georg Emmermann  
 Silvan Schlegel  
 
-We thank Marion An for her guidance as well as all teaching assistants of the module Software Engineering Praktikum at the University of Zurich for their feedback and considerations on our project.
+We thank Marion Andermatt for her guidance as well as all teaching assistants of the module Software Engineering Praktikum at the University of Zurich for their feedback and considerations on our project.
 
 ## License
 _Say how your project is licensed (see License guide3)._
