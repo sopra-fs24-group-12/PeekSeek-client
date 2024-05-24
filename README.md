@@ -63,7 +63,7 @@ The below command builds the app for production to the build folder:
 ![ScreenShot](https://github.com/sopra-fs24-group-12/PeekSeek-client/blob/d586c45bc522b4b2305ce3cd55a4d5d19c250e63/public/images/leaderboard-illustration.png)  
 6. Completed all the quests? Congratulations, you have explored your destination! You will now have a final map marked with all winning locations and direct links for each. Additionally, you will see an itinerary created for you, so that you can follow the directions on Google Maps when you arrive at your destination!  
     - The game summary page will also be stored so that you can revisit your past game's winning submissions and route direction, or visit other player's game summaries!  
-![ScreenShot](https://github.com/sopra-fs24-group-12/PeekSeek-client/blob/5fdb0869b7d24fc2a4e36ef5351c64c7f5c47062/public/images/gamesummary-illustration.png)   
+![ScreenShot](https://github.com/sopra-fs24-group-12/PeekSeek-client/blob/af6b869203364ae7fadc6db8d782c482e5706db7/public/images/gamesummary-illustration.png)   
 
 ## Roadmap
 - Implement a chat to communicate during the game
