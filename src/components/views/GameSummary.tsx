@@ -193,7 +193,7 @@ const GameSummary = () => {
         </div>
       ) : (<>
         {errorModalOpen && <ErrorMessageModal isOpen={errorModalOpen} onClose={() => handleErrorOnSummaryPage()} errorMessage={errorMessage} />}
-        <BaseContainer size="gamesummary" className="flex flex-col items-center">
+        <BaseContainer size="large" className="flex flex-col items-center">
           <Progress
             aria-label="Progress"
             value={100}
@@ -210,6 +210,9 @@ const GameSummary = () => {
             <div className="w-1/6">
             </div>
           </div>
+          <div className="absolute w-full flex justify-between px-4 top-4 mt-4" style={{ bottom: "16px" }}>
+            <BackDashboardButton/>
+          </div>
           <div className="flex w-full">
             <div className="w-1/3 p-4 flex flex-col items-center h-screen space-y-4">
               <Chip
@@ -222,10 +225,15 @@ const GameSummary = () => {
               >
                 WINNING SUBMISSIONS
               </Chip>
-              {externalLinks.map(link => (
-                <ExternalLinkButton key={link.url} url={link.url} label={link.label} />
-              ))}
-              <div className="absolute bottom-28 w-full flex flex-col items-center mt-auto space-y-4">
+              <div className="overflow-y-auto h-[45%] w-full">
+                <div className="flex flex-col items-center space-y-2" style={{ marginLeft: "15px" }}>
+                  {externalLinks.map(link => (
+                    <ExternalLinkButton key={link.url} url={link.url} label={link.label} />
+                  ))}
+                  <div className="h-4" />
+                </div>
+              </div>
+              <div className="w-full flex flex-col items-center mt-auto space-y-4 pb-16">
                 <Chip
                   classNames={{
                     base: "border-1 customStroke",
@@ -237,6 +245,7 @@ const GameSummary = () => {
                   ROUTE DIRECTIONS
                 </Chip>
                 <MapsRouteButton normal_order_link={markersURLunordered} shortest_path_link={markersURL} nrOfWinningSubmissions={successfulRounds}/>
+
               </div>
             </div>
             <div className="w-2/3 flex flex-col flex-center p-4 h-screen">
@@ -277,9 +286,6 @@ const GameSummary = () => {
             isOpen={isOpen}
             onOpenChange={onOpenChange}
             context="gamesummary"  />
-          <div className="absolute w-full flex justify-between px-4 bottom-2 mt-4" style={{ bottom: "16px" }}>
-            <BackDashboardButton/>
-          </div>
         </BaseContainer>
       </>)}
     </div>

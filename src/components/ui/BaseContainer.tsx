@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {Card, CardBody} from "@nextui-org/react";
 
-type ContainerSize = "waiting" | "landing" | "small" | "medium" | "large" |"voting" | "game" | "policy" | "gamesummary";
+type ContainerSize = "waiting" | "landing" | "small" | "medium" | "large" |"voting" | "game" | "policy";
 
 interface BaseContainerProps {
   className?: string;
@@ -23,7 +23,6 @@ const BaseContainer: React.FC<BaseContainerProps> = ({ className, children, size
     medium: "w-full sm:w-4/5 md:w-3/4 lg:w-2/3 xl:w-2/3 max-h-full sm:max-h-screen md:max-h-screen lg:max-h-screen xl:max-h-screen shadow-lg",
     small: "w-full sm:w-3/4 md:w-3/5 lg:w-5/12 xl:w-5/12 h-full sm:h-4/5 md:h-4/5 lg:h-4/5 xl:h-4/5 shadow-lg",
     policy: "w-[80%] h-[80%] max-h-full shadow-lg overflow-y-auto",
-    gamesummary: "w-full md:w-[95%] lg:w-[95%] xl:w-[95%] h-full md:h-[95vh] lg:h-[95vh] xl:h-[95vh] shadow-lg overflow-y-auto",
   };
 
   // Function to determine container size based on window width
@@ -63,13 +62,11 @@ const BaseContainer: React.FC<BaseContainerProps> = ({ className, children, size
       >
         <CardBody
           className={`flex-grow mb-2 ${
-            containerSize === "gamesummary"
-              ? "overflow-x-hidden"
-              : containerSize !== "voting"
-                ? "overflow-hidden"
-                : windowWidth <= 1024
-                  ? "overflow-x-hidden"
-                  : "overflow-hidden"
+            containerSize !== "voting"
+              ? "overflow-hidden"
+              : windowWidth <= 1024
+                ? "overflow-x-hidden"
+                : "overflow-hidden"
           }`}
         >
           {children}
