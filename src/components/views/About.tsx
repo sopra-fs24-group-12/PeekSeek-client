@@ -48,7 +48,7 @@ const About = () => {
             Advice/Information
           </h2>
           <p className="text-medium text-gray-700 my-0 mb-2">
-            PeekSeek is optimized for Google Chrome and a screen size of 1378x766.
+            PeekSeek is optimized for Google Chrome and a screen size of 1366×768.
           </p>
           <h2 className="text-medium font-bold text-gray-700 my-0 mb-2">The Team</h2>
           <ul className="text-medium text-gray-700 my-0 mb-2">
