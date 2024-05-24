@@ -64,17 +64,16 @@ The below command builds the app for production to the build folder:
 ![ScreenShot](https://github.com/sopra-fs24-group-12/PeekSeek-client/blob/5fdb0869b7d24fc2a4e36ef5351c64c7f5c47062/public/images/gamesummary-illustration.png)  
 
 ## Roadmap
-- Chat functionality to communicate with other players during the game.
-- A fun play mode.
-- User registration and a user profile pages to allow users to create a collection of their past itineraries.
+- Implement a chat to communicate during the game
+- Add a fun play mode where it's not about discovering a city but just having fun finding funny things
+- Add trivia/fun facts about the city in the waiting page between the rounds
 
 ## Authors and acknowledgment
-In alphabetical order:
-- Ece Asirim - [Github](https://github.com/asirimece)
-- Georg Emmermann - [Github](https://github.com/emmge)
-- Nils Reusch - [Github](https://github.com/Arche1ion)
-- Silvan Schlegel - [Github](https://github.com/silvanschlegel)
-- Youssef Farag - [Github](https://github.com/Figo2003)
+- [Nils Reusch](https://github.com/Arche1ion)
+- [Ece Asirim](https://github.com/asirimece)  
+- [Youssef Farag](https://github.com/Figo2003)  
+- [Georg Emmermann](https://github.com/emmge)  
+- [Silvan Schlegel](https://github.com/silvanschlegel)
 
 We thank Marion Andermatt for her guidance as well as all teaching assistants of the module Software Engineering Praktikum at the University of Zurich for their feedback and considerations on our project.
 
