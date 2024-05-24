@@ -193,7 +193,7 @@ const GameSummary = () => {
         </div>
       ) : (<>
         {errorModalOpen && <ErrorMessageModal isOpen={errorModalOpen} onClose={() => handleErrorOnSummaryPage()} errorMessage={errorMessage} />}
-        <BaseContainer size="large" className="flex flex-col items-center">
+        <BaseContainer size="gamesummary" className="flex flex-col items-center">
           <Progress
             aria-label="Progress"
             value={100}
