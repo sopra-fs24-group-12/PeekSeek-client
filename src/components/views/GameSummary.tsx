@@ -226,7 +226,8 @@ const GameSummary = () => {
                 WINNING SUBMISSIONS
               </Chip>
               <div className="overflow-y-auto h-[45%] w-full">
-                <div className="flex flex-col items-center space-y-2" style={{ marginLeft: "15px" }}>
+                <div className="flex flex-col items-center space-y-2">
+                  <div className="h-1" />
                   {externalLinks.map(link => (
                     <ExternalLinkButton key={link.url} url={link.url} label={link.label} />
                   ))}
