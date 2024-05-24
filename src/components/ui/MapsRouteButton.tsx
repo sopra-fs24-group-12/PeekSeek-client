@@ -43,7 +43,7 @@ const MapsRouteButton: React.FC<MapsRouteButtonProps> = ({ normal_order_link, sh
     window.open(normal_order_link, "_blank", "noopener,noreferrer");
   };
 
-  if (nrOfWinningSubmissions < 4) {
+  if (nrOfWinningSubmissions < 4 && nrOfWinningSubmissions > 25) {
     return (
       <Button
         size="lg"

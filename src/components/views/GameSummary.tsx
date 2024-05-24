@@ -3,7 +3,7 @@ import { api, handleError } from "helpers/api";
 import HowToPlayModal from "components/ui/HowToPlayModal";
 import ErrorMessageModal from "components/ui/ErrorMessageModal";
 import { InfoCircleTwoTone } from "@ant-design/icons";
-import { Input, Button, useDisclosure, Progress, Chip } from "@nextui-org/react";
+import { Input, Button, useDisclosure, Progress, Chip, Snippet } from "@nextui-org/react";
 import BaseContainer from "../ui/BaseContainer";
 import Leaderboard from "../ui/Leaderboard";
 import ExternalLinkButton from "../ui/ExternalLinkButton";
@@ -15,6 +15,7 @@ import { LoadScript, Marker, DirectionsService, DirectionsRenderer, GoogleMap as
 import { Library } from "@googlemaps/js-api-loader";
 import { set } from "lodash";
 import MapsRouteButton from "../ui/MapsRouteButton";
+import { color } from "framer-motion";
 
 const API_Key = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
@@ -50,7 +51,7 @@ const GameSummary = () => {
 
   const [directionsResponse, setDirectionsResponse] = useState(null);
   const [areMarkersOptimized, setAreMarkersOptimized] = useState(false);
-
+  
   useEffect(() => {
     async function fetchData() {
       try {
@@ -101,6 +102,8 @@ const GameSummary = () => {
 
     fetchData();
   }, [summaryId]);
+
+  const url = window.location.href;
 
   const shortestPathMarkers = useCallback((directionsService) => {
     //console.log("Markers:", markers);
@@ -157,7 +160,7 @@ const GameSummary = () => {
   };
 
   useEffect(() => {
-    if (map && orderedMarkers.length && !areMarkersOptimized) {
+    if (map && !(orderedMarkers.length < 4) && !(orderedMarkers.length > 25) && !areMarkersOptimized) {
       const directionsService = new window.google.maps.DirectionsService();
       shortestPathMarkers(directionsService);
     }
@@ -239,13 +242,13 @@ const GameSummary = () => {
                 <MapsRouteButton normal_order_link={markersURLunordered} shortest_path_link={markersURL} nrOfWinningSubmissions={successfulRounds}/>
               </div>
             </div>
-            <div className="w-2/3 flex flex-col flex-center p-4 h-screen">
+            <div className="w-2/3 flex flex-col flex-center p-4 pr-32 h-screen">
               {lat && lng && markers && (
                 <LoadScript googleMapsApiKey={API_Key} libraries={libs}>
                   <ReactGoogleMap
                     mapContainerStyle={{
-                      width: "90%",
-                      height: "60%",
+                      width: "100%",
+                      height: "70%",
                     }}
                     zoom={15}
                     onLoad={(map) => {
@@ -264,6 +267,19 @@ const GameSummary = () => {
                   </ReactGoogleMap>
                 </LoadScript>
               )}
+              <div className="flex justify-center mt-4">
+                <Snippet
+                  aria-label="URL Snippet"
+                  symbol
+                  style={{
+                    fontFamily: "'Lato'",
+                    fontWeight: 400,
+                  }}
+                  color="success"
+                >
+                  {url}
+                </Snippet>
+              </div>
             </div>
           </div>
           <Button
@@ -280,6 +296,7 @@ const GameSummary = () => {
           <div className="absolute w-full flex justify-between px-4 bottom-2 mt-4" style={{ bottom: "16px" }}>
             <BackDashboardButton/>
           </div>
+          
         </BaseContainer>
       </>)}
     </div>
