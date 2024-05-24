@@ -52,7 +52,7 @@ The below command builds the app for production to the build folder:
 ## Walkthroug and Illustrations
 1. You will start by creating a lobby or joining an existing lobby. If joining a lobby, sit back and enjoy. If creating the lobby, you will have the honors of choosing the destination and quests.
     - Created lobbies are saved for other players to benefit as well. If you would like to make the lobby private, you can password protect it and share the password with your friends only.  
-![ScreenShot](https://github.com/sopra-fs24-group-12/PeekSeek-client/blob/f61b96fca0efbbe998882cfe3043b097713b200a/public/images/lobby-illustration.png)  
+![ScreenShot](https://github.com/sopra-fs24-group-12/PeekSeek-client/blob/0214e928e8fa56753da09f184a430137936e39d7/public/images/lobby-illustration.png)  
 2. All players will navigate on Google Maps to find the locations defined in the quest, like finding a nice beach view in Sydney.   
 ![ScreenShot](https://github.com/sopra-fs24-group-12/PeekSeek-client/blob/f61b96fca0efbbe998882cfe3043b097713b200a/public/images/game-illustration.png)  
 3. Once all the players submit their selected location, it's time to vote! You will pick the location you would like to visit the most and ban the one(s) you think are not reflective of the quest.  
