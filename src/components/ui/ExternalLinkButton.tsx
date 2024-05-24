@@ -7,6 +7,10 @@ interface ExternalLinkButtonProps {
 }
 
 const ExternalLinkButton: React.FC<ExternalLinkButtonProps> = ({ url, label }) => {
+  if (label.length > 39) {
+    label = label.slice(0, 36) + "...";
+  }
+
   return (
     <Button
       size={"md"}
